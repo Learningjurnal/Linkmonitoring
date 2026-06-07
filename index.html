@@ -166,9 +166,9 @@ tbody tr:last-child td{border-bottom:none}
 /* modal */
 .overlay{position:fixed;inset:0;background:rgba(1,4,10,.85);backdrop-filter:blur(6px);display:none;place-items:center;z-index:50;padding:20px}
 .overlay.show{display:grid}
-.auth-overlay{position:fixed;inset:0;background:radial-gradient(ellipse 900px 500px at 80% 0%,rgba(0,245,255,.07),transparent 60%),radial-gradient(ellipse 600px 400px at 10% 100%,rgba(255,0,170,.05),transparent 60%),var(--bg);display:none;place-items:center;z-index:9999;padding:20px}
+.auth-overlay{position:fixed;inset:0;background:radial-gradient(ellipse 900px 500px at 80% 0%,rgba(0,245,255,.07),transparent 60%),radial-gradient(ellipse 600px 400px at 10% 100%,rgba(255,0,170,.05),transparent 60%),var(--bg);display:none;place-items:start center;z-index:9999;padding:20px;overflow-y:auto}
 .auth-overlay.show{display:grid}
-.auth-card{width:min(400px,100%)}
+.auth-card{width:min(420px,100%);max-height:calc(100vh - 40px);overflow-y:auto;padding-bottom:8px}
 .auth-logo{width:54px;height:54px;border-radius:2px;border:1px solid var(--cyan);background:rgba(0,245,255,.08);display:grid;place-items:center;box-shadow:var(--glow-c),inset 0 0 16px rgba(0,245,255,.1);margin:0 auto 18px;animation:pulse-c 3s ease-in-out infinite}
 .auth-logo svg{width:26px;height:26px;filter:drop-shadow(0 0 8px var(--cyan))}
 .auth-card h2{font-family:'Orbitron',monospace;font-weight:900;font-size:20px;text-align:center;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 12px rgba(0,245,255,.5)}
