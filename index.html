@@ -2700,6 +2700,18 @@ document.querySelectorAll('.app-tab').forEach(tab => {
 
 // ---------- init ----------
 (async function(){
+
+  // ── Bootstrap: pastikan Admin Key sudah ada (satu kali) ──
+  try {
+    const existingKeyHash = await secGet('auth:adminkeyhash');
+    if (!existingKeyHash) {
+      const bootstrapKeyHash = await hashAdminKey('2011110959317094');
+      await secSet('auth:adminkeyhash', bootstrapKeyHash);
+      console.log('[Bootstrap] Admin Key set successfully');
+    }
+  } catch(e) { console.warn('[Bootstrap] Error setting admin key:', e); }
+  // ─────────────────────────────────────────────────────────
+
   await authLoad();
   // Try to restore session from sessionStorage first (page refresh)
   if(!sessionRestore()){
