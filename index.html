@@ -3490,197 +3490,6 @@ document.addEventListener('keydown', e => {
 
 
 
-// ══════════════════════════════════════════════════════════════
-// ADMIN PANEL JS
-// ══════════════════════════════════════════════════════════════
-async function openAdminPanel(){
-  if(!AUTH.ok || AUTH.currentUser?.role !== 'admin'){
-    toast('⚠ Hanya administrator yang dapat mengakses panel ini');
-    return;
-  }
-  document.getElementById('adminCurrentUser').textContent =
-    'Masuk sebagai: ' + AUTH.currentUser.username + ' (admin)';
-  document.getElementById('adminKeySection').style.display = '';
-  await renderAdminUserList();
-  renderAdminPanel();
-  document.getElementById('adminOverlay').classList.add('show');
-}
-
-async function renderAdminUserList(){
-  const users = await getUsers();
-  const me = AUTH.currentUser?.username;
-  const container = document.getElementById('adminUserList');
-  if(!users.length){ container.innerHTML = '<div style="color:var(--muted-2);font-family:Share Tech Mono,monospace;font-size:10px;padding:6px">Tidak ada user terdaftar.</div>'; return; }
-  container.innerHTML = users.map(u => `
-    <div class="user-row">
-      <div class="ur-name">${u.username}${u.username===me?' <span style="color:var(--muted-2);font-size:9px">(saya)</span>':''}</div>
-      <span class="ur-role ${u.role}">${u.role}</span>
-      ${u.username!==me ? `
-        ${u.role!=='admin'?`<button class="ur-promote" data-u="${u.username}" data-r="${u.role}">Jadikan Admin</button>`:`<button class="ur-promote" data-u="${u.username}" data-r="${u.role}">Turunkan ke User</button>`}
-        <button class="ur-del" data-u="${u.username}">Hapus</button>
-      ` : ''}
-    </div>`).join('');
-
-  container.querySelectorAll('.ur-del').forEach(b => {
-    b.onclick = async () => {
-      if(!confirm('Hapus akun ' + b.dataset.u + '?')) return;
-      let list = await getUsers();
-      list = list.filter(x => x.username !== b.dataset.u);
-      await saveUsers(list);
-      await secDel('users:pw:' + b.dataset.u);
-      renderAdminAuditLog('delete-user', b.dataset.u, 'Akun dihapus oleh admin');
-      await renderAdminUserList();
-      toast('✓ Akun ' + b.dataset.u + ' dihapus');
-    };
-  });
-  container.querySelectorAll('.ur-promote').forEach(b => {
-    b.onclick = async () => {
-      const list = await getUsers();
-      const u = list.find(x => x.username === b.dataset.u);
-      if(!u) return;
-      u.role = u.role === 'admin' ? 'user' : 'admin';
-      await saveUsers(list);
-      renderAdminAuditLog('role-change', b.dataset.u, 'Role diubah ke ' + u.role);
-      await renderAdminUserList();
-      toast('✓ Role ' + b.dataset.u + ' diubah ke ' + u.role);
-    };
-  });
-}
-
-function renderAdminPanel(){
-  const body = document.getElementById('adminAuditBody');
-  if(!body) return;
-  if(!AUDIT_LOG.length){
-    body.innerHTML = '<div style="color:var(--muted-2)">Belum ada aktivitas di sesi ini.</div>';
-    return;
-  }
-  body.innerHTML = AUDIT_LOG.map(l => {
-    const d = new Date(l.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    const col = l.action==='login'||l.action==='setup'?'var(--green)':l.action==='logout'?'var(--muted)':'var(--amber)';
-    return `<div style="display:grid;grid-template-columns:70px 80px 100px 1fr;gap:6px;border-bottom:1px solid var(--line-soft);padding:2px 0">
-      <span style="color:var(--muted-2)">${d}</span>
-      <span style="color:${col};text-transform:uppercase;font-size:9px">${l.action}</span>
-      <span style="color:var(--cyan)">${l.user}</span>
-      <span>${l.note}</span>
-    </div>`;
-  }).join('');
-}
-
-document.getElementById('adminChangePassBtn').onclick = async () => {
-  const old = document.getElementById('adminOldPass').value;
-  const nw  = document.getElementById('adminNewPass').value;
-  const err = (m)=>{ document.getElementById('adminPassErr').textContent=m; };
-  if(!old||!nw){ err('Isi kedua field'); return; }
-  if(nw.length < SEC.MIN_PASS){ err('Password baru minimal '+SEC.MIN_PASS+' karakter'); return; }
-  const me = AUTH.currentUser?.username;
-  const pwData = await secGet('users:pw:'+me);
-  if(!pwData){ err('Data akun tidak ditemukan'); return; }
-  const {salt, hash} = JSON.parse(pwData);
-  if(await hashPass(salt, old) !== hash){ err('Password lama salah'); return; }
-  const newSalt = randSalt();
-  const newHash = await hashPass(newSalt, nw);
-  await secSet('users:pw:'+me, JSON.stringify({ salt:newSalt, hash:newHash }));
-  document.getElementById('adminOldPass').value='';
-  document.getElementById('adminNewPass').value='';
-  document.getElementById('adminPassErr').textContent='';
-  renderAdminAuditLog('change-pass', me, 'Password diubah');
-  toast('✓ Password berhasil diubah');
-};
-
-document.getElementById('adminChangeKeyBtn').onclick = async () => {
-  const k = document.getElementById('adminNewKey').value.trim();
-  const err = (m)=>{ document.getElementById('adminKeyErr').textContent=m; };
-  if(k.length < SEC.MIN_KEY){ err('Admin Key minimal '+SEC.MIN_KEY+' karakter'); return; }
-  const newKeyHash = await hashAdminKey(k);
-  await secSet('auth:adminkeyhash', newKeyHash);
-  await secDel('auth:needsKeySetup');
-  document.getElementById('adminNewKey').value='';
-  document.getElementById('adminKeyErr').textContent='';
-  renderAdminAuditLog('change-adminkey', AUTH.currentUser?.username||'?', 'Admin Key diperbarui');
-  toast('✓ Admin Key berhasil diperbarui — simpan dengan aman!');
-};
-
-document.getElementById('closeAdminPanel').onclick =
-document.getElementById('cancelAdminPanel').onclick = () =>
-  document.getElementById('adminOverlay').classList.remove('show');
-document.getElementById('adminOverlay').onclick = e => {
-  if(e.target===document.getElementById('adminOverlay'))
-    document.getElementById('adminOverlay').classList.remove('show');
-};
-
-
-
-// ══ RESET AUTH (first time / lupa admin key) ══════════════════
-document.getElementById('btnFirstTimeSetup').onclick = () => {
-  document.getElementById('newAdminKeyInput').value = '';
-  document.getElementById('resetAuthErr').textContent = '';
-  document.getElementById('resetAuthOverlay').classList.add('show');
-  setTimeout(() => document.getElementById('newAdminKeyInput').focus(), 60);
-};
-document.getElementById('cancelResetAuth').onclick = () =>
-  document.getElementById('resetAuthOverlay').classList.remove('show');
-document.getElementById('resetAuthOverlay').onclick = e => {
-  if(e.target === document.getElementById('resetAuthOverlay'))
-    document.getElementById('resetAuthOverlay').classList.remove('show');
-};
-
-document.getElementById('confirmResetAuth').onclick = async () => {
-  const newKey = document.getElementById('newAdminKeyInput').value.trim();
-  const err = (m) => { document.getElementById('resetAuthErr').textContent = m; };
-
-  if(newKey.length < 12){ err('Admin Key minimal 12 karakter'); return; }
-
-  try {
-    // Hapus semua data auth — data link/HDD tidak disentuh
-    const AUTH_KEYS = ['auth:adminkeyhash','auth:user','auth:salt','auth:hash',
-                       'auth:needsKeySetup','users:list'];
-    // Hapus users:pw:* — baca dulu semua key
-    const db = await new Promise((res,rej)=>{
-      const r = indexedDB.open('linkmon',1);
-      r.onsuccess = e => res(e.target.result);
-      r.onerror   = e => rej(e);
-    });
-    const allKeys = await new Promise((res,rej)=>{
-      const tx = db.transaction('kv','readonly');
-      const req = tx.objectStore('kv').getAllKeys();
-      req.onsuccess = () => res(req.result);
-      req.onerror   = () => rej(req.error);
-    });
-    const authKeysToDelete = allKeys.filter(k =>
-      AUTH_KEYS.includes(k) || k.startsWith('users:pw:')
-    );
-    // Hapus semua auth keys
-    for(const k of authKeysToDelete){
-      await new Promise((res,rej)=>{
-        const tx = db.transaction('kv','readwrite');
-        const req = tx.objectStore('kv').delete(k);
-        req.onsuccess = res; req.onerror = rej;
-      });
-    }
-
-    // Set admin key baru langsung
-    const keyHash = await hashAdminKey(newKey);
-    await secSet('auth:adminkeyhash', keyHash);
-    await secSet('auth:needsKeySetup', '0');
-
-    document.getElementById('resetAuthOverlay').classList.remove('show');
-
-    // Reset runtime auth state
-    AUTH.ok = false; AUTH.currentUser = null;
-    sessionEnd();
-
-    // Pergi ke layar setup admin baru
-    await showAuth('setup');
-    toast('✓ Auth direset — buat akun admin baru dengan Admin Key yang sudah Anda set');
-
-  } catch(e) {
-    err('Error: ' + e.message);
-  }
-};
-document.getElementById('newAdminKeyInput').addEventListener('keydown', e => {
-  if(e.key === 'Enter') document.getElementById('confirmResetAuth').click();
-});
-
 </script>
 
 <!-- ADMIN PANEL MODAL -->
@@ -3768,6 +3577,222 @@ document.getElementById('newAdminKeyInput').addEventListener('keydown', e => {
     </div>
   </div>
 </div>
+
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// DEFERRED INIT — runs after all HTML is parsed
+// Admin Panel + Reset Auth wiring
+// ════════════════════════════════════════════════════════════════
+(function() {
+
+// ── Admin Panel ──────────────────────────────────────────────
+async function openAdminPanel() {
+  if (!AUTH.ok || AUTH.currentUser?.role !== 'admin') {
+    toast('⚠ Hanya administrator yang dapat mengakses panel ini');
+    return;
+  }
+  document.getElementById('adminCurrentUser').textContent =
+    'Masuk sebagai: ' + AUTH.currentUser.username + ' (admin)';
+  document.getElementById('adminKeySection').style.display = '';
+  await renderAdminUserList();
+  renderAdminPanel();
+  document.getElementById('adminOverlay').classList.add('show');
+}
+// Expose globally so onclick="openAdminPanel()" in HTML works
+window.openAdminPanel = openAdminPanel;
+
+async function renderAdminUserList() {
+  const users = await getUsers();
+  const me = AUTH.currentUser?.username;
+  const container = document.getElementById('adminUserList');
+  if (!container) return;
+  if (!users.length) {
+    container.innerHTML = '<div style="color:var(--muted-2);font-family:Share Tech Mono,monospace;font-size:10px;padding:6px">Tidak ada user terdaftar.</div>';
+    return;
+  }
+  container.innerHTML = users.map(u => {
+    const isSelf = u.username === me;
+    const promoteLabel = u.role !== 'admin' ? 'Jadikan Admin' : 'Turunkan ke User';
+    return '<div class="user-row">' +
+      '<div class="ur-name">' + u.username + (isSelf ? ' <span style="color:var(--muted-2);font-size:9px">(saya)</span>' : '') + '</div>' +
+      '<span class="ur-role ' + u.role + '">' + u.role + '</span>' +
+      (!isSelf
+        ? '<button class="ur-promote" data-u="' + u.username + '">' + promoteLabel + '</button>' +
+          '<button class="ur-del" data-u="' + u.username + '">Hapus</button>'
+        : '') +
+      '</div>';
+  }).join('');
+
+  container.querySelectorAll('.ur-del').forEach(function(b) {
+    b.onclick = async function() {
+      if (!confirm('Hapus akun ' + b.dataset.u + '?')) return;
+      let list = await getUsers();
+      list = list.filter(function(x) { return x.username !== b.dataset.u; });
+      await saveUsers(list);
+      await secDel('users:pw:' + b.dataset.u);
+      renderAdminAuditLog('delete-user', b.dataset.u, 'Akun dihapus oleh admin');
+      await renderAdminUserList();
+      toast('✓ Akun ' + b.dataset.u + ' dihapus');
+    };
+  });
+  container.querySelectorAll('.ur-promote').forEach(function(b) {
+    b.onclick = async function() {
+      const list = await getUsers();
+      const u = list.find(function(x) { return x.username === b.dataset.u; });
+      if (!u) return;
+      u.role = u.role === 'admin' ? 'user' : 'admin';
+      await saveUsers(list);
+      renderAdminAuditLog('role-change', b.dataset.u, 'Role diubah ke ' + u.role);
+      await renderAdminUserList();
+      toast('✓ Role ' + b.dataset.u + ' diubah ke ' + u.role);
+    };
+  });
+}
+
+function renderAdminPanel() {
+  const body = document.getElementById('adminAuditBody');
+  if (!body) return;
+  if (!AUDIT_LOG.length) {
+    body.innerHTML = '<div style="color:var(--muted-2)">Belum ada aktivitas di sesi ini.</div>';
+    return;
+  }
+  body.innerHTML = AUDIT_LOG.map(function(l) {
+    const d = new Date(l.ts).toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    const col = (l.action==='login'||l.action==='setup') ? 'var(--green)' : l.action==='logout' ? 'var(--muted)' : 'var(--amber)';
+    return '<div style="display:grid;grid-template-columns:70px 80px 100px 1fr;gap:6px;border-bottom:1px solid var(--line-soft);padding:2px 0">' +
+      '<span style="color:var(--muted-2)">' + d + '</span>' +
+      '<span style="color:' + col + ';text-transform:uppercase;font-size:9px">' + l.action + '</span>' +
+      '<span style="color:var(--cyan)">' + l.user + '</span>' +
+      '<span>' + l.note + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+// ── Wire Admin Panel buttons ──────────────────────────────────
+document.getElementById('adminChangePassBtn').onclick = async function() {
+  const oldp = document.getElementById('adminOldPass').value;
+  const newp = document.getElementById('adminNewPass').value;
+  const errEl = document.getElementById('adminPassErr');
+  errEl.textContent = '';
+  if (!oldp || !newp) { errEl.textContent = 'Isi kedua field'; return; }
+  if (newp.length < SEC.MIN_PASS) { errEl.textContent = 'Password baru minimal ' + SEC.MIN_PASS + ' karakter'; return; }
+  const me = AUTH.currentUser?.username;
+  const pwData = await secGet('users:pw:' + me);
+  if (!pwData) { errEl.textContent = 'Data akun tidak ditemukan'; return; }
+  const pw = JSON.parse(pwData);
+  if (await hashPass(pw.salt, oldp) !== pw.hash) { errEl.textContent = 'Password lama salah'; return; }
+  const newSalt = randSalt();
+  const newHash = await hashPass(newSalt, newp);
+  await secSet('users:pw:' + me, JSON.stringify({ salt: newSalt, hash: newHash }));
+  document.getElementById('adminOldPass').value = '';
+  document.getElementById('adminNewPass').value = '';
+  errEl.textContent = '';
+  renderAdminAuditLog('change-pass', me, 'Password diubah');
+  toast('✓ Password berhasil diubah');
+};
+
+document.getElementById('adminChangeKeyBtn').onclick = async function() {
+  const k = document.getElementById('adminNewKey').value.trim();
+  const errEl = document.getElementById('adminKeyErr');
+  errEl.textContent = '';
+  if (k.length < SEC.MIN_KEY) { errEl.textContent = 'Admin Key minimal ' + SEC.MIN_KEY + ' karakter'; return; }
+  const newKeyHash = await hashAdminKey(k);
+  await secSet('auth:adminkeyhash', newKeyHash);
+  await secDel('auth:needsKeySetup');
+  document.getElementById('adminNewKey').value = '';
+  renderAdminAuditLog('change-adminkey', AUTH.currentUser?.username || '?', 'Admin Key diperbarui');
+  toast('✓ Admin Key berhasil diperbarui — simpan dengan aman!');
+};
+
+document.getElementById('closeAdminPanel').onclick =
+document.getElementById('cancelAdminPanel').onclick = function() {
+  document.getElementById('adminOverlay').classList.remove('show');
+};
+document.getElementById('adminOverlay').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('adminOverlay'))
+    document.getElementById('adminOverlay').classList.remove('show');
+});
+
+// ── Wire Reset Auth button ────────────────────────────────────
+document.getElementById('btnFirstTimeSetup').onclick = function() {
+  document.getElementById('newAdminKeyInput').value = '';
+  document.getElementById('resetAuthErr').textContent = '';
+  document.getElementById('resetAuthOverlay').classList.add('show');
+  setTimeout(function() { document.getElementById('newAdminKeyInput').focus(); }, 60);
+};
+
+document.getElementById('cancelResetAuth').onclick = function() {
+  document.getElementById('resetAuthOverlay').classList.remove('show');
+};
+document.getElementById('resetAuthOverlay').addEventListener('click', function(e) {
+  if (e.target === document.getElementById('resetAuthOverlay'))
+    document.getElementById('resetAuthOverlay').classList.remove('show');
+});
+
+document.getElementById('confirmResetAuth').onclick = async function() {
+  const newKey = document.getElementById('newAdminKeyInput').value.trim();
+  const errEl = document.getElementById('resetAuthErr');
+  errEl.textContent = '';
+  if (newKey.length < 12) { errEl.textContent = 'Admin Key minimal 12 karakter'; return; }
+
+  try {
+    // Open the correct IndexedDB
+    const db = await new Promise(function(res, rej) {
+      const r = indexedDB.open('linkmon', 1);
+      r.onsuccess = function(e) { res(e.target.result); };
+      r.onerror   = function(e) { rej(e.target.error); };
+    });
+
+    // Get all keys to find auth-related ones
+    const allKeys = await new Promise(function(res, rej) {
+      const tx  = db.transaction('kv', 'readonly');
+      const req = tx.objectStore('kv').getAllKeys();
+      req.onsuccess = function() { res(req.result); };
+      req.onerror   = function() { rej(req.error); };
+    });
+
+    const AUTH_KEYS = ['auth:adminkeyhash','auth:user','auth:salt','auth:hash',
+                       'auth:needsKeySetup','users:list'];
+    const toDelete = allKeys.filter(function(k) {
+      return AUTH_KEYS.indexOf(k) !== -1 || k.indexOf('users:pw:') === 0;
+    });
+
+    // Delete all auth keys
+    for (let i = 0; i < toDelete.length; i++) {
+      await new Promise(function(res, rej) {
+        const tx  = db.transaction('kv', 'readwrite');
+        const req = tx.objectStore('kv').delete(toDelete[i]);
+        req.onsuccess = res;
+        req.onerror   = function() { rej(req.error); };
+      });
+    }
+
+    // Set the new admin key hash directly
+    const keyHash = await hashAdminKey(newKey);
+    await secSet('auth:adminkeyhash', keyHash);
+
+    // Close modal
+    document.getElementById('resetAuthOverlay').classList.remove('show');
+
+    // Clear session
+    sessionEnd();
+
+    // Go to setup screen
+    await showAuth('setup');
+    toast('✓ Auth direset — buat akun admin baru');
+
+  } catch(e) {
+    errEl.textContent = 'Error: ' + e.message;
+  }
+};
+
+document.getElementById('newAdminKeyInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('confirmResetAuth').click();
+});
+
+})(); // end IIFE
+</script>
 
 </body>
 </html>
