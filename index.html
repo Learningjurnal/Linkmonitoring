@@ -594,6 +594,9 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
       <button class="btn ghost" id="undoBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>Urungkan</button>
       <button class="btn ghost" id="driveBtn"><span class="ddot" id="driveDot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.71 3.5 1.15 15l3.43 6 6.56-11.5z"/><path d="M22.85 15 16.29 3.5H9.43l6.56 11.5z"/><path d="M4.58 21h13.27l3.43-6H8.01z"/></svg>Google</button>
       <button class="btn ghost" id="settingsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
+      <button class="btn ghost" id="backupBtn" title="Backup & Restore semua data">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Backup</button>
       <button class="btn ghost" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export</button>
       <button class="btn danger" id="clearAllBtn" title="Hapus semua data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>Hapus Semua</button>
       <button class="btn primary" id="importBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Update Link</button>
@@ -3687,6 +3690,197 @@ document.addEventListener('keydown', e => {
 
 
 
+
+
+// ════════════════════════════════════════════════════════════════
+// BACKUP & RESTORE — pindah data antar browser/perangkat
+// ════════════════════════════════════════════════════════════════
+$('#backupBtn').onclick = () => {
+  document.getElementById('restorePreview').style.display = 'none';
+  document.getElementById('restoreErr').textContent = '';
+  document.getElementById('doRestore').disabled = true;
+  document.getElementById('backupOverlay').classList.add('show');
+};
+document.getElementById('closeBackup').onclick =
+document.getElementById('cancelBackup').onclick = () =>
+  document.getElementById('backupOverlay').classList.remove('show');
+document.getElementById('backupOverlay').addEventListener('click', e => {
+  if(e.target === document.getElementById('backupOverlay'))
+    document.getElementById('backupOverlay').classList.remove('show');
+});
+
+// ── Backup: download semua data sebagai JSON ──────────────────
+document.getElementById('doBackupAll').onclick = async () => {
+  try {
+    // Kumpulkan semua data dari IndexedDB
+    const db = await new Promise((res,rej) => {
+      const r = indexedDB.open('linkmon',1);
+      r.onsuccess = e => res(e.target.result);
+      r.onerror   = e => rej(e.target.error);
+    });
+    const allKeys = await new Promise((res,rej) => {
+      const tx  = db.transaction('kv','readonly');
+      const req = tx.objectStore('kv').getAllKeys();
+      req.onsuccess = () => res(req.result);
+      req.onerror   = () => rej(req.error);
+    });
+    const data = {};
+    for(const k of allKeys) {
+      // Skip auth data — keamanan
+      if(k.startsWith('auth:') || k.startsWith('users:')) continue;
+      const r = await store.get(k);
+      if(r) data[k] = r.value;
+    }
+    // Juga backup localStorage (HDD data)
+    const lsData = {};
+    try {
+      const hddRaw = localStorage.getItem('hdd_monitor_v1');
+      if(hddRaw) lsData['hdd_monitor_v1'] = hddRaw;
+    } catch(_){}
+
+    const backup = {
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      exportedBy: AUTH.currentUser?.username || 'unknown',
+      idbData: data,
+      lsData: lsData,
+      stats: {
+        linkCount: DATA.length,
+        hddCount: (() => { try { return JSON.parse(lsData['hdd_monitor_v1']||'{}').disks?.length || 0; } catch(_){ return 0; } })()
+      }
+    };
+
+    const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'lnkmon-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('✓ Backup didownload — ' + DATA.length + ' link, ' + backup.stats.hddCount + ' HDD');
+  } catch(e) {
+    toast('⚠ Gagal backup: ' + e.message);
+  }
+};
+
+document.getElementById('doBackupLinks').onclick = exportXlsx;
+
+// ── Restore: load dari file JSON ──────────────────────────────
+let restoreData = null;
+
+function handleRestoreFile(file) {
+  if(!file || !file.name.endsWith('.json')) {
+    document.getElementById('restoreErr').textContent = 'Pilih file .json hasil backup';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const d = JSON.parse(e.target.result);
+      if(!d.version || !d.idbData) throw new Error('Format file tidak valid');
+      restoreData = d;
+      const hddCount = (() => { try { return JSON.parse(d.lsData?.['hdd_monitor_v1']||'{}').disks?.length || 0; } catch(_){ return 0; } })();
+      const linkKeys = Object.keys(d.idbData).filter(k => k.startsWith('links:'));
+      // Estimate link count from chunks
+      let linkCount = 0;
+      try {
+        const metaKey = Object.keys(d.idbData).find(k => k === 'meta');
+        if(d.idbData[metaKey]) {
+          const meta = JSON.parse(d.idbData[metaKey]);
+          linkCount = meta.count || 0;
+        }
+      } catch(_){}
+      document.getElementById('restorePreview').style.display = '';
+      document.getElementById('restorePreview').innerHTML =
+        '<b style="color:var(--cyan)">File valid</b> — diekspor ' + new Date(d.exportedAt).toLocaleString('id-ID') +
+        ' oleh <b style="color:var(--text)">' + (d.exportedBy||'?') + '</b><br>' +
+        'Berisi: ~' + d.stats.linkCount + ' link, ' + d.stats.hddCount + ' HDD, ' +
+        Object.keys(d.idbData).length + ' storage keys<br>' +
+        '<span style="color:var(--red)">Data saat ini akan ditimpa setelah restore.</span>';
+      document.getElementById('restoreErr').textContent = '';
+      document.getElementById('doRestore').disabled = false;
+    } catch(err) {
+      document.getElementById('restoreErr').textContent = 'File tidak valid: ' + err.message;
+      document.getElementById('doRestore').disabled = true;
+      restoreData = null;
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('restoreDrop').onclick = () =>
+  document.getElementById('restoreFileInput').click();
+document.getElementById('restoreFileInput').onchange = e => {
+  if(e.target.files[0]) handleRestoreFile(e.target.files[0]);
+};
+document.getElementById('restoreDrop').addEventListener('dragover', e => {
+  e.preventDefault();
+  document.getElementById('restoreDrop').style.borderColor = 'var(--amber)';
+});
+document.getElementById('restoreDrop').addEventListener('dragleave', () => {
+  document.getElementById('restoreDrop').style.borderColor = '';
+});
+document.getElementById('restoreDrop').addEventListener('drop', e => {
+  e.preventDefault();
+  document.getElementById('restoreDrop').style.borderColor = '';
+  if(e.dataTransfer.files[0]) handleRestoreFile(e.dataTransfer.files[0]);
+});
+
+document.getElementById('doRestore').onclick = async () => {
+  if(!restoreData) return;
+  if(!confirm('Restore akan menimpa semua data link dan HDD saat ini. Lanjutkan?')) return;
+  try {
+    const btn = document.getElementById('doRestore');
+    btn.disabled = true;
+    btn.textContent = 'Sedang restore...';
+
+    // Restore ke IndexedDB
+    const db = await new Promise((res,rej) => {
+      const r = indexedDB.open('linkmon',1);
+      r.onsuccess = e => res(e.target.result);
+      r.onerror   = e => rej(e.target.error);
+    });
+    // Hapus data lama (kecuali auth)
+    const allKeys = await new Promise((res,rej) => {
+      const tx  = db.transaction('kv','readonly');
+      const req = tx.objectStore('kv').getAllKeys();
+      req.onsuccess = () => res(req.result);
+      req.onerror   = () => rej(req.error);
+    });
+    for(const k of allKeys) {
+      if(!k.startsWith('auth:') && !k.startsWith('users:')) {
+        await new Promise((res,rej) => {
+          const tx  = db.transaction('kv','readwrite');
+          const req = tx.objectStore('kv').delete(k);
+          req.onsuccess = res; req.onerror = () => rej(req.error);
+        });
+      }
+    }
+    // Tulis data baru
+    for(const [k,v] of Object.entries(restoreData.idbData)) {
+      await store.set(k, v);
+    }
+    // Restore localStorage (HDD)
+    if(restoreData.lsData) {
+      for(const [k,v] of Object.entries(restoreData.lsData)) {
+        try { localStorage.setItem(k, v); } catch(_){}
+      }
+    }
+    document.getElementById('backupOverlay').classList.remove('show');
+    // Reload data
+    await loadData();
+    await loadSettings();
+    markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog();
+    hddLoad(); render();
+    toast('✓ Restore selesai — ' + restoreData.stats.linkCount + ' link, ' + restoreData.stats.hddCount + ' HDD');
+    restoreData = null;
+  } catch(e) {
+    document.getElementById('restoreErr').textContent = 'Gagal restore: ' + e.message;
+    document.getElementById('doRestore').disabled = false;
+    document.getElementById('doRestore').textContent = 'Restore Data (timpa data saat ini)';
+  }
+};
+
 </script>
 
 <!-- ADMIN PANEL MODAL -->
@@ -3771,6 +3965,70 @@ document.addEventListener('keydown', e => {
         <button class="btn ghost" id="cancelResetAuth">Batal</button>
         <button class="btn warn" id="confirmResetAuth">Reset &amp; Setup Ulang</button>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL: Backup & Restore -->
+<div class="overlay" id="backupOverlay">
+  <div class="modal" style="width:min(520px,100%)">
+    <div class="modal-head">
+      <div>
+        <h2>Backup &amp; Restore</h2>
+        <p>Pindahkan semua data ke browser / perangkat lain</p>
+      </div>
+      <button class="x" id="closeBackup">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="note-box" style="margin-bottom:14px">
+        <b style="color:var(--cyan)">Kenapa data kosong di browser lain?</b><br>
+        Semua data tersimpan di storage <b>browser ini</b> saja (IndexedDB/localStorage). 
+        Untuk pindah ke browser/perangkat lain, gunakan fitur Backup di bawah.
+      </div>
+
+      <!-- BACKUP -->
+      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px rgba(0,245,255,.4);margin-bottom:8px">
+        Export Backup
+      </div>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
+        Download file <b style="color:var(--text)">.json</b> berisi semua link, HDD, dan settings. 
+        Lalu import di browser tujuan.
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+        <button class="btn primary" id="doBackupAll" style="flex:1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Backup (semua data)
+        </button>
+        <button class="btn" id="doBackupLinks" style="flex:1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Link saja (.xlsx)
+        </button>
+      </div>
+
+      <!-- RESTORE -->
+      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 6px rgba(255,204,0,.4);margin-bottom:8px;padding-top:14px;border-top:1px solid var(--line-soft)">
+        Import Restore
+      </div>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
+        Pilih file <b style="color:var(--text)">.json</b> backup untuk restore data ke browser ini.
+        <span style="color:var(--red)">Data yang ada akan ditimpa.</span>
+      </p>
+      <div style="border:1px dashed var(--line-soft);border-radius:2px;padding:16px;text-align:center;background:var(--bg-2);cursor:pointer;transition:.18s" id="restoreDrop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="28" height="28" style="color:var(--amber);margin-bottom:8px;filter:drop-shadow(0 0 6px rgba(255,204,0,.4))"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);margin-bottom:4px">Klik atau seret file backup .json</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2)">File dari tombol "Download Backup" di atas</div>
+        <input type="file" id="restoreFileInput" accept=".json" hidden>
+      </div>
+      <div id="restorePreview" style="display:none;margin-top:10px;padding:10px 12px;background:rgba(0,245,255,.04);border:1px solid var(--cyan-deep);border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7"></div>
+      <div id="restoreErr" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);margin-top:6px;min-height:16px"></div>
+      <button class="btn danger" id="doRestore" disabled style="width:100%;justify-content:center;margin-top:10px">
+        Restore Data (timpa data saat ini)
+      </button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="cancelBackup">Tutup</button>
     </div>
   </div>
 </div>
