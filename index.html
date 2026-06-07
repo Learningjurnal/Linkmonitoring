@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -3745,6 +3746,160 @@ document.addEventListener('keydown', e => {
 
 
 
+
+</script>
+
+<!-- ADMIN PANEL MODAL -->
+<div class="overlay" id="adminOverlay">
+  <div class="modal" style="width:min(680px,100%)">
+    <div class="modal-head">
+      <div>
+        <h2>Admin Panel</h2>
+        <p id="adminCurrentUser">Anda masuk sebagai: —</p>
+      </div>
+      <button class="x" id="closeAdminPanel">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- USERS -->
+      <div class="field-lab" style="color:var(--cyan)">Manajemen User</div>
+      <div id="adminUserList" style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px"></div>
+
+      <!-- CHANGE OWN PASSWORD -->
+      <div class="field-lab" style="color:var(--cyan);margin-top:14px">Ubah Password Saya</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-bottom:14px">
+        <div class="fg" style="margin:0"><label>Password Lama</label><input id="adminOldPass" type="password" placeholder="Password saat ini"></div>
+        <div class="fg" style="margin:0"><label>Password Baru <span style="color:var(--muted-2)">(min 8)</span></label><input id="adminNewPass" type="password" placeholder="Password baru"></div>
+        <button class="btn primary" id="adminChangePassBtn" style="padding:8px 13px;font-size:10px">Ubah</button>
+      </div>
+      <div class="auth-err" id="adminPassErr" style="margin-bottom:8px"></div>
+
+      <!-- CHANGE ADMIN KEY (admin only) -->
+      <div id="adminKeySection">
+        <div class="field-lab" style="color:var(--cyan);margin-top:6px">Admin Key <span style="font-size:9px;color:var(--muted-2);font-family:'Share Tech Mono',monospace;text-transform:none;letter-spacing:.04em;font-weight:400">— dibutuhkan untuk registrasi &amp; reset password</span></div>
+        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-bottom:6px">
+          <div class="fg" style="margin:0">
+            <label>Admin Key Baru <span style="color:var(--muted-2)">(min 12 karakter)</span></label>
+            <input id="adminNewKey" type="text" autocomplete="off" placeholder="Masukkan Admin Key baru">
+          </div>
+          <button class="btn primary" id="adminChangeKeyBtn" style="padding:8px 13px;font-size:10px">Simpan Key</button>
+        </div>
+        <div class="auth-err" id="adminKeyErr" style="margin-bottom:8px"></div>
+        <div class="note-box" style="margin-top:0;margin-bottom:14px">Admin Key tersimpan sebagai hash — tidak ada yang bisa membacanya. Jika hilang, tidak bisa dipulihkan. Tulis di tempat aman.</div>
+      </div>
+
+      <!-- AUDIT LOG -->
+      <div class="field-lab" style="color:var(--cyan);margin-top:6px">Log Aktivitas Sesi Ini</div>
+      <div id="adminAuditBody" style="background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;max-height:180px;overflow-y:auto;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.04em">
+        <div style="color:var(--muted-2)">Belum ada aktivitas di sesi ini.</div>
+      </div>
+
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="cancelAdminPanel">Tutup</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL: Reset Auth (First Time Setup) -->
+<div class="overlay" id="resetAuthOverlay">
+  <div class="modal" style="width:min(420px,100%)">
+    <div class="modal-body" style="padding:24px 22px">
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="width:48px;height:48px;border:1px solid var(--amber);background:var(--amber-bg);border-radius:2px;display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 0 16px rgba(255,204,0,.3)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" width="24" height="24" style="filter:drop-shadow(0 0 5px rgba(255,204,0,.5))"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 8px rgba(255,204,0,.4);margin-bottom:8px">Setup Ulang Auth</div>
+        <p style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;letter-spacing:.04em">
+          Ini akan menghapus semua data login (akun, password, Admin Key).<br>
+          <b style="color:var(--text)">Data link, HDD, dan settings tidak tersentuh.</b><br><br>
+          Setelah ini Anda akan diminta membuat akun admin baru dengan Admin Key baru.
+        </p>
+      </div>
+      <div class="fg" style="margin-bottom:12px">
+        <label style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--amber);letter-spacing:.12em;text-transform:uppercase">Admin Key Baru <span style="color:var(--muted-2)">(min 12 karakter)</span></label>
+        <input id="newAdminKeyInput" type="text" autocomplete="off" placeholder="Buat Admin Key baru — simpan baik-baik"
+          style="background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:9px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;width:100%;margin-top:5px;transition:.18s">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);margin-top:4px;line-height:1.5">
+          Contoh: <span style="color:var(--cyan)">RahasiaAdmin2025!</span> atau <span style="color:var(--cyan)">kunci-monitor-saya</span><br>
+          Tulis di tempat aman — tidak bisa dipulihkan jika lupa.
+        </div>
+      </div>
+      <div class="auth-err" id="resetAuthErr" style="margin-bottom:10px"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn ghost" id="cancelResetAuth">Batal</button>
+        <button class="btn warn" id="confirmResetAuth">Reset &amp; Setup Ulang</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL: Backup & Restore -->
+<div class="overlay" id="backupOverlay">
+  <div class="modal" style="width:min(520px,100%)">
+    <div class="modal-head">
+      <div>
+        <h2>Backup &amp; Restore</h2>
+        <p>Pindahkan semua data ke browser / perangkat lain</p>
+      </div>
+      <button class="x" id="closeBackup">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="note-box" style="margin-bottom:14px">
+        <b style="color:var(--cyan)">Kenapa data kosong di browser lain?</b><br>
+        Semua data tersimpan di storage <b>browser ini</b> saja (IndexedDB/localStorage). 
+        Untuk pindah ke browser/perangkat lain, gunakan fitur Backup di bawah.
+      </div>
+
+      <!-- BACKUP -->
+      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px rgba(0,245,255,.4);margin-bottom:8px">
+        Export Backup
+      </div>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
+        Download file <b style="color:var(--text)">.json</b> berisi semua link, HDD, dan settings. 
+        Lalu import di browser tujuan.
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+        <button class="btn primary" id="doBackupAll" style="flex:1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Backup (semua data)
+        </button>
+        <button class="btn" id="doBackupLinks" style="flex:1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Link saja (.xlsx)
+        </button>
+      </div>
+
+      <!-- RESTORE -->
+      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 6px rgba(255,204,0,.4);margin-bottom:8px;padding-top:14px;border-top:1px solid var(--line-soft)">
+        Import Restore
+      </div>
+      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
+        Pilih file <b style="color:var(--text)">.json</b> backup untuk restore data ke browser ini.
+        <span style="color:var(--red)">Data yang ada akan ditimpa.</span>
+      </p>
+      <div style="border:1px dashed var(--line-soft);border-radius:2px;padding:16px;text-align:center;background:var(--bg-2);cursor:pointer;transition:.18s" id="restoreDrop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="28" height="28" style="color:var(--amber);margin-bottom:8px;filter:drop-shadow(0 0 6px rgba(255,204,0,.4))"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);margin-bottom:4px">Klik atau seret file backup .json</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2)">File dari tombol "Download Backup" di atas</div>
+        <input type="file" id="restoreFileInput" accept=".json" hidden>
+      </div>
+      <div id="restorePreview" style="display:none;margin-top:10px;padding:10px 12px;background:rgba(0,245,255,.04);border:1px solid var(--cyan-deep);border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7"></div>
+      <div id="restoreErr" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);margin-top:6px;min-height:16px"></div>
+      <button class="btn danger" id="doRestore" disabled style="width:100%;justify-content:center;margin-top:10px">
+        Restore Data (timpa data saat ini)
+      </button>
+    </div>
+    <div class="modal-foot">
+      <button class="btn ghost" id="cancelBackup">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<script>
 // ════════════════════════════════════════════════════════════════
 // BACKUP & RESTORE — pindah data antar browser/perangkat
 // ════════════════════════════════════════════════════════════════
@@ -3933,158 +4088,8 @@ document.getElementById('doRestore').onclick = async () => {
     document.getElementById('doRestore').textContent = 'Restore Data (timpa data saat ini)';
   }
 };
-
 </script>
 
-<!-- ADMIN PANEL MODAL -->
-<div class="overlay" id="adminOverlay">
-  <div class="modal" style="width:min(680px,100%)">
-    <div class="modal-head">
-      <div>
-        <h2>Admin Panel</h2>
-        <p id="adminCurrentUser">Anda masuk sebagai: —</p>
-      </div>
-      <button class="x" id="closeAdminPanel">&times;</button>
-    </div>
-    <div class="modal-body">
-
-      <!-- USERS -->
-      <div class="field-lab" style="color:var(--cyan)">Manajemen User</div>
-      <div id="adminUserList" style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px"></div>
-
-      <!-- CHANGE OWN PASSWORD -->
-      <div class="field-lab" style="color:var(--cyan);margin-top:14px">Ubah Password Saya</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-bottom:14px">
-        <div class="fg" style="margin:0"><label>Password Lama</label><input id="adminOldPass" type="password" placeholder="Password saat ini"></div>
-        <div class="fg" style="margin:0"><label>Password Baru <span style="color:var(--muted-2)">(min 8)</span></label><input id="adminNewPass" type="password" placeholder="Password baru"></div>
-        <button class="btn primary" id="adminChangePassBtn" style="padding:8px 13px;font-size:10px">Ubah</button>
-      </div>
-      <div class="auth-err" id="adminPassErr" style="margin-bottom:8px"></div>
-
-      <!-- CHANGE ADMIN KEY (admin only) -->
-      <div id="adminKeySection">
-        <div class="field-lab" style="color:var(--cyan);margin-top:6px">Admin Key <span style="font-size:9px;color:var(--muted-2);font-family:'Share Tech Mono',monospace;text-transform:none;letter-spacing:.04em;font-weight:400">— dibutuhkan untuk registrasi &amp; reset password</span></div>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-bottom:6px">
-          <div class="fg" style="margin:0">
-            <label>Admin Key Baru <span style="color:var(--muted-2)">(min 12 karakter)</span></label>
-            <input id="adminNewKey" type="text" autocomplete="off" placeholder="Masukkan Admin Key baru">
-          </div>
-          <button class="btn primary" id="adminChangeKeyBtn" style="padding:8px 13px;font-size:10px">Simpan Key</button>
-        </div>
-        <div class="auth-err" id="adminKeyErr" style="margin-bottom:8px"></div>
-        <div class="note-box" style="margin-top:0;margin-bottom:14px">Admin Key tersimpan sebagai hash — tidak ada yang bisa membacanya. Jika hilang, tidak bisa dipulihkan. Tulis di tempat aman.</div>
-      </div>
-
-      <!-- AUDIT LOG -->
-      <div class="field-lab" style="color:var(--cyan);margin-top:6px">Log Aktivitas Sesi Ini</div>
-      <div id="adminAuditBody" style="background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;max-height:180px;overflow-y:auto;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.04em">
-        <div style="color:var(--muted-2)">Belum ada aktivitas di sesi ini.</div>
-      </div>
-
-    </div>
-    <div class="modal-foot">
-      <button class="btn ghost" id="cancelAdminPanel">Tutup</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- MODAL: Reset Auth (First Time Setup) -->
-<div class="overlay" id="resetAuthOverlay">
-  <div class="modal" style="width:min(420px,100%)">
-    <div class="modal-body" style="padding:24px 22px">
-      <div style="text-align:center;margin-bottom:16px">
-        <div style="width:48px;height:48px;border:1px solid var(--amber);background:var(--amber-bg);border-radius:2px;display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 0 16px rgba(255,204,0,.3)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" width="24" height="24" style="filter:drop-shadow(0 0 5px rgba(255,204,0,.5))"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 8px rgba(255,204,0,.4);margin-bottom:8px">Setup Ulang Auth</div>
-        <p style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;letter-spacing:.04em">
-          Ini akan menghapus semua data login (akun, password, Admin Key).<br>
-          <b style="color:var(--text)">Data link, HDD, dan settings tidak tersentuh.</b><br><br>
-          Setelah ini Anda akan diminta membuat akun admin baru dengan Admin Key baru.
-        </p>
-      </div>
-      <div class="fg" style="margin-bottom:12px">
-        <label style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--amber);letter-spacing:.12em;text-transform:uppercase">Admin Key Baru <span style="color:var(--muted-2)">(min 12 karakter)</span></label>
-        <input id="newAdminKeyInput" type="text" autocomplete="off" placeholder="Buat Admin Key baru — simpan baik-baik"
-          style="background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:9px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;width:100%;margin-top:5px;transition:.18s">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);margin-top:4px;line-height:1.5">
-          Contoh: <span style="color:var(--cyan)">RahasiaAdmin2025!</span> atau <span style="color:var(--cyan)">kunci-monitor-saya</span><br>
-          Tulis di tempat aman — tidak bisa dipulihkan jika lupa.
-        </div>
-      </div>
-      <div class="auth-err" id="resetAuthErr" style="margin-bottom:10px"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn ghost" id="cancelResetAuth">Batal</button>
-        <button class="btn warn" id="confirmResetAuth">Reset &amp; Setup Ulang</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- MODAL: Backup & Restore -->
-<div class="overlay" id="backupOverlay">
-  <div class="modal" style="width:min(520px,100%)">
-    <div class="modal-head">
-      <div>
-        <h2>Backup &amp; Restore</h2>
-        <p>Pindahkan semua data ke browser / perangkat lain</p>
-      </div>
-      <button class="x" id="closeBackup">&times;</button>
-    </div>
-    <div class="modal-body">
-
-      <div class="note-box" style="margin-bottom:14px">
-        <b style="color:var(--cyan)">Kenapa data kosong di browser lain?</b><br>
-        Semua data tersimpan di storage <b>browser ini</b> saja (IndexedDB/localStorage). 
-        Untuk pindah ke browser/perangkat lain, gunakan fitur Backup di bawah.
-      </div>
-
-      <!-- BACKUP -->
-      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px rgba(0,245,255,.4);margin-bottom:8px">
-        Export Backup
-      </div>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
-        Download file <b style="color:var(--text)">.json</b> berisi semua link, HDD, dan settings. 
-        Lalu import di browser tujuan.
-      </p>
-      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-        <button class="btn primary" id="doBackupAll" style="flex:1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download Backup (semua data)
-        </button>
-        <button class="btn" id="doBackupLinks" style="flex:1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Link saja (.xlsx)
-        </button>
-      </div>
-
-      <!-- RESTORE -->
-      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 6px rgba(255,204,0,.4);margin-bottom:8px;padding-top:14px;border-top:1px solid var(--line-soft)">
-        Import Restore
-      </div>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
-        Pilih file <b style="color:var(--text)">.json</b> backup untuk restore data ke browser ini.
-        <span style="color:var(--red)">Data yang ada akan ditimpa.</span>
-      </p>
-      <div style="border:1px dashed var(--line-soft);border-radius:2px;padding:16px;text-align:center;background:var(--bg-2);cursor:pointer;transition:.18s" id="restoreDrop">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="28" height="28" style="color:var(--amber);margin-bottom:8px;filter:drop-shadow(0 0 6px rgba(255,204,0,.4))"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);margin-bottom:4px">Klik atau seret file backup .json</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2)">File dari tombol "Download Backup" di atas</div>
-        <input type="file" id="restoreFileInput" accept=".json" hidden>
-      </div>
-      <div id="restorePreview" style="display:none;margin-top:10px;padding:10px 12px;background:rgba(0,245,255,.04);border:1px solid var(--cyan-deep);border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7"></div>
-      <div id="restoreErr" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);margin-top:6px;min-height:16px"></div>
-      <button class="btn danger" id="doRestore" disabled style="width:100%;justify-content:center;margin-top:10px">
-        Restore Data (timpa data saat ini)
-      </button>
-    </div>
-    <div class="modal-foot">
-      <button class="btn ghost" id="cancelBackup">Tutup</button>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
