@@ -3,15 +3,14 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Storage & Link Monitor</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Link Monitor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer onload="window.__gsiReady=true" onerror="window.__gsiBlocked=true"></script>
 <style>
-
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
 :root{
   --bg:#020408;
@@ -30,6 +29,7 @@
   --red:#ff2244;--red-bg:rgba(255,34,68,.06);--red-dim:#cc0022;
   --gray:#607080;--gray-bg:rgba(96,112,128,.06);
   --magenta:#ff00aa;--magenta-bg:rgba(255,0,170,.06);
+  --purple:#a855f7;--purple-bg:rgba(168,85,247,.1);
   --blank:#2a3a4a;--blank-bg:rgba(42,58,74,.06);
   --text:#c8f0ff;
   --muted:#4a8099;
@@ -167,22 +167,9 @@ tbody tr:last-child td{border-bottom:none}
 /* modal */
 .overlay{position:fixed;inset:0;background:rgba(1,4,10,.85);backdrop-filter:blur(6px);display:none;place-items:center;z-index:50;padding:20px}
 .overlay.show{display:grid}
-.auth-overlay{position:fixed;inset:0;background:radial-gradient(ellipse 900px 500px at 80% 0%,rgba(0,245,255,.07),transparent 60%),radial-gradient(ellipse 600px 400px at 10% 100%,rgba(255,0,170,.05),transparent 60%),var(--bg);display:none;place-items:start center;z-index:9999;padding:20px;overflow-y:auto}
+.auth-overlay{position:fixed;inset:0;background:radial-gradient(ellipse 900px 500px at 80% 0%,rgba(0,245,255,.07),transparent 60%),radial-gradient(ellipse 600px 400px at 10% 100%,rgba(255,0,170,.05),transparent 60%),var(--bg);display:none;place-items:center;z-index:9999;padding:20px}
 .auth-overlay.show{display:grid}
-.auth-card{width:min(420px,100%);max-height:calc(100vh - 40px);overflow-y:auto;padding-bottom:8px}
-/* Role selector buttons */
-.role-btn{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 8px;border:1px solid var(--line-soft);background:var(--bg-2);border-radius:2px;cursor:pointer;transition:.18s;font-family:'Share Tech Mono',monospace;color:var(--muted);width:100%}
-.role-btn span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600}
-.role-btn small{font-size:9px;letter-spacing:.04em;color:var(--muted-2)}
-.role-btn svg{color:var(--muted)}
-.role-btn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
-.role-btn:hover svg{color:var(--cyan)}
-.role-btn-active{border-color:var(--cyan)!important;background:rgba(0,245,255,.08)!important;color:var(--cyan)!important;box-shadow:0 0 12px rgba(0,245,255,.15)!important}
-.role-btn-active svg{color:var(--cyan)!important}
-.role-btn-active small{color:var(--cyan-dim)!important}
-.role-btn-member-active{border-color:var(--green)!important;background:rgba(57,255,20,.06)!important;color:var(--green)!important;box-shadow:0 0 12px rgba(57,255,20,.15)!important}
-.role-btn-member-active svg{color:var(--green)!important}
-.role-btn-member-active small{color:var(--green-dim)!important}
+.auth-card{width:min(400px,100%)}
 .auth-logo{width:54px;height:54px;border-radius:2px;border:1px solid var(--cyan);background:rgba(0,245,255,.08);display:grid;place-items:center;box-shadow:var(--glow-c),inset 0 0 16px rgba(0,245,255,.1);margin:0 auto 18px;animation:pulse-c 3s ease-in-out infinite}
 .auth-logo svg{width:26px;height:26px;filter:drop-shadow(0 0 8px var(--cyan))}
 .auth-card h2{font-family:'Orbitron',monospace;font-weight:900;font-size:20px;text-align:center;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 12px rgba(0,245,255,.5)}
@@ -275,339 +262,55 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
 .lpedit{width:100%;min-width:80px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:5px 7px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;transition:.18s}
 .lpedit:focus{border-color:var(--cyan-dim);box-shadow:0 0 6px rgba(0,245,255,.15)}
 
-/* ── SETTINGS MODAL ──────────────────────────────────────────── */
-.settings-section{border:1px solid var(--line-soft);border-radius:2px;margin-bottom:13px;overflow:hidden}
-.settings-sec-head{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:rgba(0,245,255,.04);border-bottom:1px solid var(--line-soft)}
-.settings-sec-title{font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px rgba(0,245,255,.4)}
-.settings-sec-note{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);letter-spacing:.06em}
-.settings-list{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;min-height:38px}
-.settings-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 8px;border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.04em;border:1px solid;transition:.14s}
-.settings-chip.locked{cursor:default;opacity:.75}
-.settings-chip.custom{cursor:default}
-.settings-chip .chip-del{background:none;border:none;cursor:pointer;color:inherit;opacity:.55;font-size:13px;line-height:1;padding:0 1px;margin-left:2px;transition:.14s;font-family:monospace}
-.settings-chip .chip-del:hover{opacity:1}
-.settings-chip .chip-dot{width:6px;height:6px;border-radius:50%;flex:none}
-.settings-add-row{display:flex;gap:7px;padding:8px 12px;border-top:1px solid var(--line-soft);background:rgba(0,0,0,.15);flex-wrap:wrap}
-.settings-add-row input{flex:1;min-width:120px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;transition:.18s}
-.settings-add-row input:focus{border-color:var(--cyan-dim);box-shadow:0 0 6px rgba(0,245,255,.12)}
+/* HDD monitoring */
+.hdd-section{background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;overflow:hidden;margin-bottom:16px}
+.hdd-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line-soft);background:linear-gradient(180deg,rgba(0,30,60,.9),rgba(0,20,40,.95))}
+.hdd-head-title{font-family:'Orbitron',monospace;font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 8px rgba(0,245,255,.4);display:flex;align-items:center;gap:8px}
+.hdd-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+.hdd-row:last-child{border-bottom:none}
+.hdd-row:hover{background:rgba(0,245,255,.03)}
+.hdd-name{font-family:'Orbitron',monospace;font-weight:600;font-size:12px;color:var(--text);min-width:120px;letter-spacing:.04em}
+.hdd-sizes{display:flex;gap:12px;font-family:'Share Tech Mono',monospace;font-size:11px;flex-wrap:wrap}
+.hdd-bar-wrap{flex:1;min-width:80px;max-width:200px;height:10px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:1px;overflow:hidden}
+.hdd-bar{height:100%;border-radius:1px;transition:width .5s cubic-bezier(.4,0,.2,1);min-width:2px}
+.hdd-pct{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);min-width:44px;text-align:right}
+.hdd-note{flex:1;min-width:80px;font-size:11px;color:var(--muted);font-family:'Share Tech Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.hdd-empty{padding:40px 20px;text-align:center;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.04em}
 
 /* corner decorations on modal */
 .modal::before,.modal::after{content:'';position:absolute;width:12px;height:12px;border-color:var(--cyan);border-style:solid;pointer-events:none}
 .modal{position:relative}
 .modal::before{top:0;left:0;border-width:2px 0 0 2px}
 .modal::after{top:0;right:0;border-width:2px 2px 0 0}
-
-/* ══ TAB NAVIGATION ═════════════════════════════════ */
-.app-tabs{display:flex;gap:0;border-bottom:1px solid var(--line);margin-bottom:20px}
-.app-tab{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;border:none;background:none;color:var(--muted);padding:11px 18px;cursor:pointer;transition:.18s;position:relative;border-bottom:2px solid transparent;display:flex;align-items:center;gap:7px}
-.app-tab svg{width:13px;height:13px;flex:none}
-.app-tab:hover{color:var(--cyan)}
-.app-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);text-shadow:0 0 8px rgba(0,245,255,.5)}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-
-/* ══ HDD MONITOR CSS ════════════════════════════════ */
-.unit-group{display:flex;gap:3px}
-.utab{border:1px solid var(--line-soft);background:var(--bg-2);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.06em;padding:5px 10px;border-radius:2px;cursor:pointer;transition:.14s;text-transform:uppercase}
-.utab.sel{border-color:var(--cyan);color:var(--cyan);background:rgba(0,245,255,.08);box-shadow:0 0 8px rgba(0,245,255,.15)}
-.hdd-summary{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:18px}
-@media(max-width:700px){.hdd-summary{grid-template-columns:repeat(3,1fr)}}
-.scard{background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;padding:10px 13px;position:relative;overflow:hidden}
-.scard::after{content:'';position:absolute;left:0;top:0;bottom:0;width:2px}
-.scard.tot::after{background:var(--cyan);box-shadow:0 0 5px var(--cyan)}
-.scard.used::after{background:var(--red);box-shadow:0 0 5px var(--red)}
-.scard.free::after{background:var(--green);box-shadow:0 0 5px var(--green)}
-.scard.cnt::after{background:var(--amber);box-shadow:0 0 5px var(--amber)}
-.scard.fol::after{background:var(--magenta);box-shadow:0 0 5px var(--magenta)}
-.scard .sl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-.scard .sv{font-family:'Orbitron',monospace;font-weight:700;font-size:18px;margin-top:6px;line-height:1}
-.scard.tot .sv{color:var(--cyan);text-shadow:0 0 10px rgba(0,245,255,.5)}
-.scard.used .sv{color:var(--red);text-shadow:0 0 8px rgba(255,34,68,.4)}
-.scard.free .sv{color:var(--green);text-shadow:0 0 8px rgba(57,255,20,.4)}
-.scard.cnt .sv{color:var(--amber);text-shadow:0 0 8px rgba(255,204,0,.4)}
-.scard.fol .sv{color:var(--magenta);text-shadow:0 0 8px rgba(255,0,170,.4)}
-.disk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:14px;margin-bottom:22px}
-@media(max-width:600px){.disk-grid{grid-template-columns:1fr}}
-.disk-card{background:var(--panel);border:1px solid var(--line-soft);border-radius:3px;position:relative;transition:.18s}
-.disk-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.4}
-.disk-card:hover{border-color:rgba(0,245,255,.16);box-shadow:0 0 20px rgba(0,245,255,.05)}
-.disk-card.drag-over{border-color:var(--green)!important;box-shadow:0 0 20px rgba(57,255,20,.25)!important;background:rgba(57,255,20,.04)!important}
-.disk-head{display:flex;align-items:center;gap:10px;padding:12px 13px 10px;border-bottom:1px solid var(--line-soft)}
-.disk-icon{width:34px;height:34px;border-radius:2px;border:1px solid var(--cyan-deep);background:var(--cyan-bg);display:grid;place-items:center;flex:none}
-.disk-icon svg{width:17px;height:17px;color:var(--cyan);filter:drop-shadow(0 0 5px rgba(0,245,255,.5))}
-.disk-name{font-family:'Orbitron',monospace;font-weight:700;font-size:12px;letter-spacing:.08em;color:var(--cyan);text-shadow:0 0 8px rgba(0,245,255,.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.disk-label{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.04em;margin-top:2px}
-.disk-acts{margin-left:auto;display:flex;gap:4px;flex:none}
-.dib{width:26px;height:26px;border:1px solid var(--line-soft);background:var(--bg-2);border-radius:2px;display:grid;place-items:center;cursor:pointer;transition:.14s;flex:none}
-.dib svg{width:12px;height:12px;color:var(--muted)}
-.dib:hover{border-color:var(--cyan-dim)}
-.dib.del:hover{border-color:var(--red);box-shadow:0 0 8px rgba(255,34,68,.3)}
-.dib.del:hover svg{color:var(--red)}
-.dib.edit:hover svg{color:var(--amber)}
-.dib.edit:hover{border-color:var(--amber)}
-.dfib{width:20px;height:20px;border:1px solid var(--line-soft);background:none;border-radius:2px;display:grid;place-items:center;cursor:pointer;transition:.12s;flex:none}
-.dfib svg{width:10px;height:10px;color:var(--muted-2)}
-.dfib.del:hover{border-color:var(--red)}
-.dfib.del:hover svg{color:var(--red)}
-.dfib.edit:hover{border-color:var(--amber)}
-.dfib.edit:hover svg{color:var(--amber)}
-
-/* ══ HEALTH SCORE (Backblaze+CrystalDiskInfo+ATA SMART) ══
-   Grade: A≥90 B≥75 C≥60 D≥40 F<40                       */
-.health-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:1px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
-.health-badge .hd{width:5px;height:5px;border-radius:50%;flex:none}
-.hb-excellent{background:rgba(57,255,20,.07);border:1px solid rgba(57,255,20,.3);color:var(--green)}
-.hb-excellent .hd{background:var(--green);box-shadow:0 0 5px var(--green)}
-.hb-good{background:rgba(0,245,255,.06);border:1px solid rgba(0,245,255,.25);color:var(--cyan)}
-.hb-good .hd{background:var(--cyan);box-shadow:0 0 5px var(--cyan)}
-.hb-caution{background:rgba(255,204,0,.07);border:1px solid rgba(255,204,0,.3);color:var(--amber)}
-.hb-caution .hd{background:var(--amber);box-shadow:0 0 5px var(--amber)}
-.hb-warning{background:rgba(255,102,0,.07);border:1px solid rgba(255,102,0,.3);color:var(--orange)}
-.hb-warning .hd{background:var(--orange);box-shadow:0 0 5px var(--orange);animation:hdblink 1.5s ease-in-out infinite}
-.hb-critical{background:rgba(255,34,68,.08);border:1px solid rgba(255,34,68,.35);color:var(--red);animation:hdblink 1s ease-in-out infinite}
-.hb-critical .hd{background:var(--red);box-shadow:0 0 6px var(--red)}
-@keyframes hdblink{0%,100%{opacity:1}50%{opacity:.45}}
-.disk-body{padding:12px 13px}
-.disk-stats{display:flex;align-items:center;gap:12px;margin-bottom:8px}
-.donut-wrap{position:relative;width:76px;height:76px;flex:none}
-.donut-wrap svg{width:76px;height:76px}
-.donut-bg{fill:none;stroke:var(--line-soft);stroke-width:8}
-.donut-fg{fill:none;stroke-width:8;stroke-linecap:butt;transition:stroke-dasharray .6s cubic-bezier(.4,0,.2,1),stroke .4s}
-.donut-pct{position:absolute;inset:0;display:grid;place-items:center;font-family:'Orbitron',monospace;font-weight:700;font-size:13px;line-height:1;text-align:center}
-.disk-nums{flex:1;display:flex;flex-direction:column;gap:5px}
-.dnum{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.dnum-lab{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:4px}
-.dnum-lab .dot{width:5px;height:5px;border-radius:50%;flex:none}
-.dnum-val{font-family:'Orbitron',monospace;font-weight:600;font-size:11px;letter-spacing:.02em}
-.dbar{height:3px;background:var(--line-soft);border-radius:1px;overflow:hidden;margin-top:3px}
-.dbar-f{height:100%;border-radius:1px;transition:width .6s cubic-bezier(.4,0,.2,1)}
-.disk-desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6;letter-spacing:.04em;padding-top:8px;border-top:1px solid var(--line-soft);margin-top:8px}
-/* Health gauge panel inside disk card */
-.health-gauge{margin-top:9px;padding:9px 11px;border:1px solid var(--line-soft);border-radius:2px;background:rgba(0,0,0,.18)}
-.hg-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.hg-left{display:flex;align-items:baseline;gap:8px}
-.hg-grade{font-family:'Orbitron',monospace;font-weight:900;font-size:24px;line-height:1}
-.hg-score{font-family:'Orbitron',monospace;font-weight:700;font-size:12px}
-.hg-label{font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-left:4px;vertical-align:2px}
-.hg-bar{height:5px;background:var(--line-soft);border-radius:1px;overflow:hidden;margin-bottom:6px}
-.hg-bar-fill{height:100%;border-radius:1px;transition:width .7s cubic-bezier(.4,0,.2,1)}
-.hg-factors{display:flex;flex-direction:column;gap:2px}
-.hg-factor{display:grid;grid-template-columns:90px 1fr auto;align-items:center;gap:6px;font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.04em;padding:1px 0}
-.hg-factor .hf-name{color:var(--muted-2)}
-.hg-factor .hf-note{color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:8px}
-.hg-factor .hf-pts{font-family:'Orbitron',monospace;font-weight:700;font-size:9px;color:var(--red);white-space:nowrap}
-.hg-ref{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted-2);margin-top:5px;padding-top:4px;border-top:1px solid var(--line-soft);line-height:1.4;letter-spacing:.04em}
-/* folder section */
-.folder-section{border-top:1px solid var(--line-soft);padding-top:9px;margin-top:8px}
-.folder-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.folder-title{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--cyan);letter-spacing:.14em;text-transform:uppercase;text-shadow:0 0 5px rgba(0,245,255,.3)}
-.folder-add-btn{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.06em;border:1px solid var(--line-soft);background:none;border-radius:2px;padding:3px 7px;cursor:pointer;display:flex;align-items:center;gap:3px;transition:.14s;text-transform:uppercase}
-.folder-add-btn svg{width:9px;height:9px}
-.folder-add-btn:hover{border-color:var(--cyan-dim);color:var(--cyan)}
-.folder-list{display:flex;flex-direction:column;gap:3px}
-.folder-row{border:1px solid rgba(0,245,255,.05);border-radius:2px;background:rgba(0,245,255,.02);overflow:hidden;transition:.14s;cursor:grab}
-.folder-row:hover{background:rgba(0,245,255,.045);border-color:rgba(0,245,255,.12)}
-.folder-row.dragging{opacity:.4;cursor:grabbing}
-.fr-main{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:7px;padding:5px 7px}
-.fr-icon svg{width:11px;height:11px;color:var(--amber);flex:none;filter:drop-shadow(0 0 3px rgba(255,204,0,.4))}
-.fr-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.fr-size{font-family:'Orbitron',monospace;font-size:10px;color:var(--amber);white-space:nowrap;text-shadow:0 0 5px rgba(255,204,0,.3);padding:0 4px}
-.fr-acts{display:flex;gap:2px}
-.fr-desc{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);font-style:italic;padding:0 7px 5px 24px;line-height:1.5}
-.file-list{padding:3px 7px 6px 22px;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line-soft)}
-.file-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:6px;padding:3px 4px;border-radius:1px;transition:.12s}
-.file-row:hover{background:rgba(0,245,255,.04)}
-.file-name{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:4px}
-.file-name svg{width:9px;height:9px;color:var(--muted-2);flex:none}
-.file-size{font-family:'Orbitron',monospace;font-size:9px;color:var(--muted-2);white-space:nowrap}
-.xib{width:16px;height:16px;border:none;background:none;border-radius:1px;display:grid;place-items:center;cursor:pointer;transition:.12s;padding:0}
-.xib svg{width:9px;height:9px;color:var(--muted-2)}
-.xib:hover svg{color:var(--red)}
-.empty-folders{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2);text-align:center;padding:8px 0;letter-spacing:.06em}
-.transfer-panel{background:var(--panel);border:1px solid var(--line-soft);border-radius:3px;padding:14px 16px;margin-bottom:18px;position:relative;overflow:hidden}
-.transfer-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent);opacity:.5}
-.tp-head{display:flex;align-items:center;gap:9px;margin-bottom:12px}
-.tp-title{font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);text-shadow:0 0 8px rgba(57,255,20,.4)}
-.tp-hint{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.04em}
-.tp-body{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.tp-zone{flex:1;min-width:200px;border:1px dashed var(--line-soft);border-radius:2px;padding:12px;min-height:70px;display:flex;flex-direction:column;gap:6px;transition:.2s;background:rgba(0,245,255,.01)}
-.tp-zone.has-item{border-color:rgba(0,245,255,.2);background:rgba(0,245,255,.03)}
-.tp-zone-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);letter-spacing:.12em;text-transform:uppercase}
-.tp-placeholder{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2);text-align:center;padding:10px 0;letter-spacing:.06em}
-.tp-item{display:flex;align-items:center;gap:7px;background:rgba(0,245,255,.05);border:1px solid rgba(0,245,255,.12);border-radius:2px;padding:5px 8px}
-.tp-item-name{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tp-item-size{font-family:'Orbitron',monospace;font-size:10px;color:var(--amber);white-space:nowrap}
-.tp-remove{background:none;border:none;cursor:pointer;color:var(--muted-2);font-size:14px;line-height:1;padding:0 2px;transition:.12s}
-.tp-remove:hover{color:var(--red)}
-.tp-arrow{font-family:'Share Tech Mono',monospace;font-size:20px;color:var(--muted-2);align-self:center;padding-top:20px}
-.tp-result{margin-top:10px;border-top:1px solid var(--line-soft);padding-top:10px}
-.tp-result-ok{font-family:'Orbitron',monospace;font-size:12px;color:var(--green);text-shadow:0 0 8px rgba(57,255,20,.5);letter-spacing:.06em;display:flex;align-items:center;gap:8px}
-.tp-result-fail{font-family:'Orbitron',monospace;font-size:12px;color:var(--red);text-shadow:0 0 8px rgba(255,34,68,.5);letter-spacing:.06em;display:flex;align-items:center;gap:8px}
-.tp-result-detail{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:5px;line-height:1.6;letter-spacing:.04em}
-.hdd-empty{text-align:center;padding:60px 20px;border:1px dashed var(--line-soft);border-radius:3px;background:rgba(0,245,255,.015);margin-bottom:22px}
-.hdd-empty svg{width:46px;height:46px;color:var(--muted-2);margin-bottom:12px;filter:drop-shadow(0 0 8px rgba(0,245,255,.15))}
-.hdd-empty h3{font-family:'Orbitron',monospace;font-weight:700;font-size:14px;color:var(--cyan);letter-spacing:.1em;text-shadow:0 0 10px rgba(0,245,255,.4);margin-bottom:8px}
-.hdd-empty p{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:16px;letter-spacing:.04em}
-.hdd-sec{font-family:'Orbitron',monospace;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--cyan);text-shadow:0 0 8px rgba(0,245,255,.35);margin-bottom:12px;display:flex;align-items:center;gap:9px}
-.hdd-sec-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2);font-weight:400;text-transform:none;letter-spacing:.04em}
-.hdd-fg{display:flex;flex-direction:column;gap:4px;margin-bottom:11px}
-.hdd-fg label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 4px rgba(0,245,255,.3)}
-.hdd-fg input,.hdd-fg select,.hdd-fg textarea{background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;width:100%;transition:.18s}
-.hdd-fg input:focus,.hdd-fg select:focus,.hdd-fg textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 8px rgba(0,245,255,.12)}
-.hdd-fg textarea{min-height:60px;resize:vertical}
-.hdd-fg .hint{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2)}
-.hg2{display:grid;grid-template-columns:1fr 1fr;gap:0 11px}
-.hg3{display:grid;grid-template-columns:1fr 80px 70px;gap:0 8px;align-items:end}
-.smart-sel{display:flex;gap:5px;flex-wrap:wrap}
-.smart-opt{border:1px solid var(--line-soft);background:var(--bg-2);color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 10px;border-radius:2px;cursor:pointer;transition:.14s;text-transform:uppercase}
-.smart-opt.sel-good{border-color:var(--green);color:var(--green);background:var(--green-bg)}
-.smart-opt.sel-warn{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
-.smart-opt.sel-fail{border-color:var(--red);color:var(--red);background:var(--red-bg)}
-.health-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 11px;margin-top:10px}
-.hdg-item{display:flex;flex-direction:column;gap:3px}
-.hdg-item label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 4px rgba(0,245,255,.3)}
-.hdg-item input{background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:7px 9px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;width:100%;transition:.18s}
-.hdg-item input:focus{border-color:var(--cyan-dim);box-shadow:0 0 6px rgba(0,245,255,.1)}
-.hdg-item .hint{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2)}
-.health-score-preview{background:rgba(0,245,255,.03);border:1px solid var(--cyan-deep);border-radius:2px;padding:10px 12px;margin-top:10px}
-.hsp-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.hsp-grade{font-family:'Orbitron',monospace;font-weight:900;font-size:26px;line-height:1}
-.hsp-right{display:flex;flex-direction:column}
-.hsp-score{font-family:'Orbitron',monospace;font-weight:700;font-size:13px}
-.hsp-label{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
-.hsp-bar{height:5px;background:var(--line-soft);border-radius:1px;overflow:hidden;margin-bottom:6px}
-.hsp-bar-fill{height:100%;border-radius:1px;transition:width .4s}
-.hsp-note{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.04em;line-height:1.5}
-.hsp-penalties{display:flex;flex-direction:column;gap:2px;margin-top:5px;max-height:120px;overflow-y:auto}
-.hsp-pen{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);display:flex;justify-content:space-between;gap:8px;line-height:1.4;padding:1px 0}
-.hsp-pen .pp{color:var(--red);font-weight:700;white-space:nowrap;font-family:'Orbitron',monospace}
-.hdd-note{background:rgba(0,245,255,.04);border:1px solid var(--cyan-deep);border-left:2px solid var(--cyan-dim);border-radius:2px;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.5;margin-bottom:10px}
-/* HDD confirm box reuse */
-.confirm-box{text-align:center;padding:8px 4px 4px}
-.confirm-icon{width:46px;height:46px;border:1px solid var(--red);background:var(--red-bg);border-radius:2px;display:grid;place-items:center;margin:0 auto 11px;box-shadow:0 0 14px rgba(255,34,68,.3)}
-.confirm-icon svg{width:20px;height:20px;color:var(--red);filter:drop-shadow(0 0 5px rgba(255,34,68,.5))}
-
-/* ── Admin panel ──────────────────────────────────── */
-.user-row{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--panel);border:1px solid var(--line-soft);border-radius:2px}
-.user-row .ur-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);flex:1;letter-spacing:.04em}
-.user-row .ur-role{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:1px}
-.ur-role.admin{background:rgba(0,245,255,.1);border:1px solid rgba(0,245,255,.3);color:var(--cyan)}
-.ur-role.user{background:rgba(57,255,20,.07);border:1px solid rgba(57,255,20,.2);color:var(--green)}
-.ur-del{border:1px solid var(--line-soft);background:none;color:var(--muted-2);font-size:10px;font-family:'Share Tech Mono',monospace;padding:3px 8px;border-radius:2px;cursor:pointer;transition:.14s;letter-spacing:.06em;text-transform:uppercase}
-.ur-del:hover{border-color:var(--red);color:var(--red);box-shadow:0 0 8px rgba(255,34,68,.2)}
-.ur-promote{border:1px solid var(--line-soft);background:none;color:var(--muted-2);font-size:10px;font-family:'Share Tech Mono',monospace;padding:3px 8px;border-radius:2px;cursor:pointer;transition:.14s;letter-spacing:.06em;text-transform:uppercase}
-.ur-promote:hover{border-color:var(--cyan);color:var(--cyan)}
-
-
-.charts-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:12px;margin-bottom:16px}
-@media(max-width:900px){.charts-grid{grid-template-columns:1fr}}
-
 </style>
+</head>
 <body>
 <div class="auth-overlay show" id="authOverlay">
-  <div class="auth-card modal" id="authCard">
-    <div class="auth-logo" id="authLogoWrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    </div>
-    <div id="authTitle" style="font-family:'Orbitron',monospace;font-weight:900;font-size:17px;text-align:center;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 10px rgba(0,245,255,.5);margin-bottom:4px"></div>
-    <div id="authSubtitle" class="sub" style="text-align:center;margin-bottom:18px"></div>
-    <div id="authLockBanner" style="display:none;background:rgba(255,34,68,.12);border:1px solid var(--red);border-radius:2px;padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);text-align:center;margin-bottom:12px;letter-spacing:.04em"></div>
-
-    <!-- SETUP ADMIN (first time only) -->
+  <div class="auth-card modal" style="padding:26px 24px">
+    <div class="auth-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
     <div id="authSetup" style="display:none">
-      <div class="fg full"><label>Admin Username</label><input id="suUser" type="text" autocomplete="username" placeholder="Nama admin utama"></div>
-      <div class="fg full" style="margin-top:10px"><label>Password <span style="color:var(--muted-2)">(min 8 karakter)</span></label><input id="suPass" type="password" autocomplete="new-password" placeholder="Gunakan password kuat"></div>
-      <div class="fg full" style="margin-top:10px"><label>Ulangi Password</label><input id="suPass2" type="password" autocomplete="new-password" placeholder="Ketik ulang password"></div>
-      <div class="fg full" style="margin-top:10px">
-        <label>Admin Key <span style="color:var(--muted-2)">(kunci rahasia — simpan baik-baik)</span></label>
-        <input id="suAdminKey" type="text" autocomplete="off" placeholder="Min 12 karakter, dibutuhkan untuk daftar user baru">
-        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);margin-top:3px;display:block">Admin Key digunakan untuk verifikasi pendaftaran user baru. Jangan bagikan ke sembarang orang.</span>
-      </div>
+      <h2>Buat akun akses</h2>
+      <p class="sub">Atur username &amp; password untuk mengunci dashboard ini di perangkat ini.</p>
+      <div class="fg full"><label>Username</label><input id="suUser" type="text" autocomplete="username" placeholder="Admin"></div>
+      <div class="fg full" style="margin-top:12px"><label>Password</label><input id="suPass" type="password" autocomplete="new-password" placeholder="minimal 6 karakter"></div>
+      <div class="fg full" style="margin-top:12px"><label>Ulangi password</label><input id="suPass2" type="password" autocomplete="new-password" placeholder="ketik ulang"></div>
       <div class="auth-err" id="suErr"></div>
-      <button class="btn primary block" id="suBtn">Buat Akun Admin &amp; Masuk</button>
+      <button class="btn primary block" id="suBtn">Simpan &amp; masuk</button>
     </div>
-
-    <!-- LOGIN -->
     <div id="authLogin" style="display:none">
-
-      <!-- Role selector -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-        <button id="roleAdminBtn" class="role-btn role-btn-active" data-role="admin">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>Admin</span>
-          <small>Akses penuh</small>
-        </button>
-        <button id="roleMemberBtn" class="role-btn" data-role="member">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Member</span>
-          <small>Akses terbatas</small>
-        </button>
-      </div>
-
-      <div class="fg full"><label>Username</label><input id="liUser" type="text" autocomplete="username" placeholder="Username Anda"></div>
-      <div class="fg full" style="margin-top:10px"><label>Password</label><input id="liPass" type="password" autocomplete="current-password" placeholder="Password Anda"></div>
+      <h2>Masuk</h2>
+      <p class="sub">Dashboard ini terkunci. Masukkan kredensial Anda.</p>
+      <div class="fg full"><label>Username</label><input id="liUser" type="text" autocomplete="username" placeholder="username"></div>
+      <div class="fg full" style="margin-top:12px"><label>Password</label><input id="liPass" type="password" autocomplete="current-password" placeholder="password"></div>
       <div class="auth-err" id="liErr"></div>
       <button class="btn primary block" id="liBtn">Masuk</button>
-      <div style="display:flex;justify-content:space-between;margin-top:10px">
-        <button class="linkbtn" id="showRegister">Daftar akun baru</button>
-        <button class="linkbtn" id="liReset">Reset (Admin Key)</button>
-      </div>
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
-        <button class="btn" id="btnFirstTimeSetup" style="width:100%;justify-content:center;font-size:10px;padding:8px">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          Belum punya akun / Setup ulang Admin Key
-        </button>
-        <p style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);text-align:center;margin-top:6px;letter-spacing:.04em;line-height:1.5">Hanya hapus data auth. Semua link & data tidak berubah.</p>
-      </div>
+      <button class="linkbtn" id="liReset" style="display:block;margin:12px auto 0">Lupa / reset kredensial</button>
     </div>
-
-    <!-- REGISTER (requires Admin Key) -->
-    <div id="authRegister" style="display:none">
-      <div class="fg full"><label>Username Baru</label><input id="regUser" type="text" autocomplete="username" placeholder="Pilih username"></div>
-      <div class="fg full" style="margin-top:10px"><label>Password <span style="color:var(--muted-2)">(min 8 karakter)</span></label><input id="regPass" type="password" autocomplete="new-password" placeholder="Password kuat"></div>
-      <div class="fg full" style="margin-top:10px"><label>Ulangi Password</label><input id="regPass2" type="password" autocomplete="new-password" placeholder="Ketik ulang"></div>
-      <div class="fg full" style="margin-top:10px">
-        <label>Admin Key <span style="color:var(--muted-2)">(minta ke administrator)</span></label>
-        <input id="regAdminKey" type="password" autocomplete="off" placeholder="Masukkan Admin Key dari administrator">
-      </div>
-      <div class="auth-err" id="regErr"></div>
-      <button class="btn primary block" id="regBtn">Daftar</button>
-      <button class="linkbtn" id="showLogin" style="display:block;margin:10px auto 0">Sudah punya akun? Masuk</button>
-    </div>
-
-    <!-- ADMIN RESET -->
-    <div id="authReset" style="display:none">
-      <p class="sub" style="text-align:left;margin-bottom:14px">Masukkan Admin Key untuk mereset kredensial akun. Data tidak terhapus.</p>
-      <div class="fg full"><label>Admin Key</label><input id="rstAdminKey" type="password" autocomplete="off" placeholder="Admin Key rahasia"></div>
-      <div class="fg full" style="margin-top:10px"><label>Username yang akan direset</label><input id="rstUser" type="text" autocomplete="username" placeholder="Username target"></div>
-      <div class="fg full" style="margin-top:10px"><label>Password Baru</label><input id="rstPass" type="password" placeholder="Password baru min 8 karakter"></div>
-      <div class="auth-err" id="rstErr"></div>
-      <button class="btn primary block" id="rstBtn">Reset Password</button>
-      <button class="linkbtn" id="showLoginFromReset" style="display:block;margin:10px auto 0">Kembali ke login</button>
-    </div>
-
-    <div id="authNote" style="display:none" class="note-box" style="margin-top:14px;font-size:10px">
-      Keamanan sisi-browser: data dienkripsi dengan SHA-256+salt. Admin Key disimpan sebagai hash — tidak ada yang bisa membacanya, termasuk admin. Jangan hilangkan Admin Key.
-    </div>
+    <div class="note-box" style="margin-top:18px;font-size:11px">Kunci ini bekerja di sisi browser sebagai <b>penghalang akses kasual</b>, bukan keamanan tingkat server. lindungi juga di lapisan hosting/Sheet (lihat catatan).</div>
   </div>
 </div>
-
 <div class="wrap">
-  <!-- TAB NAVIGATION -->
-  <div class="app-tabs">
-    <button class="app-tab active" data-tab="link-monitor">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>
-      Link Monitor
-    </button>
-    <button class="app-tab" data-tab="hdd-monitor">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="17" cy="12" r="2"/><path d="M5 8h6M5 12h4M5 16h6"/></svg>
-      HDD Monitor
-    </button>
-  </div>
-
-  <!-- ══════════════ TAB: LINK MONITOR ══════════════ -->
-  <div class="tab-panel active" id="tab-link-monitor">
-<div class="top">
+  <div class="top">
     <div class="brand">
       <div class="logo">
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>
@@ -618,35 +321,19 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
       </div>
     </div>
     <div class="head-actions">
-      <button class="btn ghost" id="adminPanelBtn" style="display:none" onclick="openAdminPanel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Admin</button>
       <button class="btn ghost" id="logoutBtn" title="Kunci dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>
       <button class="btn ghost" id="undoBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>Urungkan</button>
       <button class="btn ghost" id="driveBtn"><span class="ddot" id="driveDot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.71 3.5 1.15 15l3.43 6 6.56-11.5z"/><path d="M22.85 15 16.29 3.5H9.43l6.56 11.5z"/><path d="M4.58 21h13.27l3.43-6H8.01z"/></svg>Google</button>
-      <button class="btn ghost" id="settingsBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</button>
-      <button class="btn ghost" id="backupBtn" title="Backup & Restore semua data">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Backup</button>
       <button class="btn ghost" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export</button>
-      <button class="btn danger" id="clearAllBtn" title="Hapus semua data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>Hapus Semua</button>
       <button class="btn primary" id="importBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Update Link</button>
     </div>
   </div>
 
   <div class="kpis" id="kpis"></div>
 
-  <div class="charts-grid">
-    <div class="chartpanel">
-      <div class="chart-head">Status <span id="chartTotal"></span></div>
-      <div class="chartbars" id="chartBars"></div>
-    </div>
-    <div class="chartpanel">
-      <div class="chart-head">Region <span id="chartRegionTotal"></span></div>
-      <div class="chartbars" id="chartRegionBars"></div>
-    </div>
-    <div class="chartpanel">
-      <div class="chart-head">Link Part <span id="chartPartTotal"></span></div>
-      <div class="chartbars" id="chartPartBars"></div>
-    </div>
+  <div class="chartpanel">
+    <div class="chart-head">Distribusi per kategori <span id="chartTotal"></span></div>
+    <div class="chartbars" id="chartBars"></div>
   </div>
 
   <div class="controls">
@@ -685,7 +372,7 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
         <option value="lost">Lost File</option>
         <option value="skip">Skip</option>
         <option value="broken">Broken Link</option>
-        <option value="blank">Kosong / Baru</option>
+        <option value="blank">Blank</option>
       </select>
       <button class="btn" id="bulkStatusApply">Terapkan</button>
       <button class="linkbtn" id="selClear">Bersihkan pilihan</button>
@@ -707,75 +394,26 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
     <div class="pager" id="pager"></div>
   </div>
 
-  <div class="section-title">Riwayat Pembaruan <span class="tag">— log import sesi ini & tersimpan</span></div>
-  <div class="table-wrap" style="padding:6px 16px"><div id="logList"><div class="logrow"><span class="ld" style="color:var(--muted)">Belum ada pembaruan.</span></div></div>
-  </div>
-
-  </div><!-- /tab-link-monitor -->
-  <!-- ══════════════ TAB: HDD MONITOR ══════════════ -->
-  <div class="tab-panel" id="tab-hdd-monitor">
-
-    <!-- HDD Header Actions -->
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:18px">
-      <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase">
-        <span id="hddDiskCount">—</span>
+  <div class="section-title">HDD Monitor <span class="tag">— status penyimpanan disk</span></div>
+  <div class="hdd-section">
+    <div class="hdd-head">
+      <div class="hdd-head-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+        Disk Storage
+        <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2);font-weight:400;text-transform:none;letter-spacing:.04em" id="hddSummary"></span>
       </div>
-      <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
-        <div class="unit-group" id="unitGroup">
-          <button class="utab sel" data-u="GB">GB</button>
-          <button class="utab" data-u="TB">TB</button>
-          <button class="utab" data-u="MB">MB</button>
-        </div>
-        <button class="btn primary" id="addDiskBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-          Tambah HDD
-        </button>
-      </div>
-    </div>
-
-    <!-- Summary -->
-    <div class="hdd-summary" id="hddSummary"></div>
-
-    <!-- Transfer Calculator -->
-    <div class="transfer-panel" id="transferPanel">
-      <div class="tp-head">
-        <div class="tp-title">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="vertical-align:-2px;margin-right:5px;filter:drop-shadow(0 0 4px rgba(57,255,20,.5))"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          Transfer Kalkulator
-        </div>
-        <div class="tp-hint">Drag folder ke SOURCE, drag disk card ke TARGET — kalkulasi ruang otomatis</div>
-      </div>
-      <div class="tp-body">
-        <div class="tp-zone" id="tpSource">
-          <div class="tp-zone-label">Source (Folder dipindah)</div>
-          <div class="tp-placeholder" id="tpSrcPlaceholder">— drag folder ke sini —</div>
-          <div id="tpSrcItems"></div>
-        </div>
-        <div class="tp-arrow">→</div>
-        <div class="tp-zone" id="tpTarget">
-          <div class="tp-zone-label">Target Disk Tujuan</div>
-          <div id="tpTargetInner"><div class="tp-placeholder">— drag disk card ke sini —</div></div>
-        </div>
-      </div>
-      <div class="tp-result" id="tpResult" style="display:none"></div>
-    </div>
-
-    <!-- Disk list -->
-    <div class="hdd-sec">Daftar Storage <span class="hdd-sec-sub" id="diskCount"></span></div>
-    <div class="hdd-empty" id="hddEmptyState" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="17" cy="12" r="2"/><path d="M5 8h6M5 12h4M5 16h6"/></svg>
-      <h3>Belum Ada Storage</h3>
-      <p>Tambahkan harddisk pertama untuk mulai memantau penggunaan storage.</p>
-      <button class="btn primary" id="addDiskBtnE">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-        Tambah HDD
+      <button class="btn primary" id="addHDDBtn" style="padding:7px 12px;font-size:11px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah HDD
       </button>
     </div>
-    <div class="disk-grid" id="diskGrid"></div>
+    <div id="hddList"><div class="hdd-empty">Belum ada data disk. Klik <b>Tambah HDD</b> untuk memulai.</div></div>
+  </div>
 
-  </div><!-- /tab-hdd-monitor -->
+  <div class="section-title">Riwayat Pembaruan <span class="tag">— log import sesi ini & tersimpan</span></div>
+  <div class="table-wrap" style="padding:6px 16px"><div id="logList"><div class="logrow"><span class="ld" style="color:var(--muted)">Belum ada pembaruan.</span></div></div></div>
+</div>
 
-</div><!-- /wrap -->
+<!-- import modal -->
 <div class="overlay" id="overlay">
   <div class="modal">
     <div class="modal-head">
@@ -820,10 +458,10 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
         <div class="fg full"><label>Link</label><input id="eLink" type="text" placeholder="dl.surf/file/...">
           <span class="hint">Jika berisi teks + link, URL-nya otomatis diekstrak saat disimpan.</span></div>
         <div class="fg"><label>Status</label><select id="eStatus"></select></div>
-        <div class="fg"><label>Region</label><select id="eRegion"></select></div>
-        <div class="fg"><label>Link Part</label><select id="ePart"></select></div>
-        <div class="fg"><label>Test</label><select id="eTest"></select></div>
-        <div class="fg"><label>Update</label><select id="eUpdate"></select></div>
+        <div class="fg"><label>Region</label><input id="eRegion" type="text"></div>
+        <div class="fg"><label>Link Part</label><input id="ePart" type="text"></div>
+        <div class="fg"><label>Test</label><input id="eTest" type="text"></div>
+        <div class="fg"><label>Update</label><input id="eUpdate" type="text"></div>
         <div class="fg"><label>Last Page</label><input id="eLastpage" type="text"></div>
       </div>
       <div class="modal-foot" style="justify-content:space-between">
@@ -845,25 +483,6 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
       <div class="modal-foot" style="margin-top:20px">
         <button class="btn ghost" id="cancelDelete">Batal</button>
         <button class="btn primary" id="confirmDeleteBtn" style="background:linear-gradient(135deg,#d6473f,#a8283a);border-color:#d6473f">Hapus</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="clearAllOverlay">
-  <div class="modal" style="width:min(420px,100%)">
-    <div class="modal-body" style="padding:26px 24px;text-align:center">
-      <div style="width:52px;height:52px;border-radius:2px;border:1px solid var(--red);background:var(--red-bg);display:grid;place-items:center;margin:0 auto 16px;box-shadow:0 0 20px rgba(255,34,68,.35)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2" width="26" height="26" style="filter:drop-shadow(0 0 6px rgba(255,34,68,.6))"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      </div>
-      <h2 style="font-family:'Orbitron',monospace;font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--red);text-shadow:0 0 10px rgba(255,34,68,.5);margin-bottom:10px">Hapus Semua Data?</h2>
-      <p style="color:var(--muted);font-size:12px;line-height:1.7;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;margin-bottom:6px">Seluruh <b id="clearAllCount" style="color:var(--text)">0</b> link akan dihapus permanen dari dashboard.<br>Tindakan ini <b style="color:var(--red)">tidak bisa diurungkan</b>.</p>
-      <p style="font-size:11px;color:var(--muted-2);font-family:'Share Tech Mono',monospace;margin-bottom:18px">Ketik <b style="color:var(--cyan);letter-spacing:.1em">HAPUS</b> untuk konfirmasi:</p>
-      <input id="clearAllConfirmInput" type="text" placeholder="HAPUS" autocomplete="off"
-        style="width:100%;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:10px;font-family:'Share Tech Mono',monospace;font-size:13px;letter-spacing:.1em;outline:none;text-align:center;text-transform:uppercase;transition:.18s;margin-bottom:16px">
-      <div style="display:flex;gap:9px;justify-content:flex-end">
-        <button class="btn ghost" id="cancelClearAll">Batal</button>
-        <button class="btn danger" id="confirmClearAllBtn" disabled>Hapus Semua</button>
       </div>
     </div>
   </div>
@@ -949,220 +568,41 @@ textarea:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(0,245,255,.
   </div>
 </div>
 
-<div class="overlay" id="settingsOverlay">
-  <div class="modal" style="width:min(620px,100%)">
+<!-- HDD add/edit modal -->
+<div class="overlay" id="hddOverlay">
+  <div class="modal" style="width:min(480px,100%)">
     <div class="modal-head">
-      <div><h2>Settings — Pilihan Dropdown</h2><p>Kelola opsi untuk setiap field. Opsi bawaan tidak dapat dihapus agar data lama tetap aman.</p></div>
-      <button class="x" id="closeSettings">&times;</button>
+      <div><h2 id="hddModalTitle">Tambah HDD</h2><p>Isi detail disk/storage lalu simpan.</p></div>
+      <button class="x" id="closeHDD">&times;</button>
     </div>
-    <div class="modal-body" style="padding-bottom:8px">
-      <div class="note-box" style="margin-bottom:14px">Opsi yang ditambahkan di sini muncul sebagai pilihan di form edit setiap baris. Opsi bawaan (label abu-abu) terkunci — tidak bisa dihapus. Urutan drag tidak tersedia, tapi opsi baru selalu muncul di bawah opsi bawaan.</div>
-
-      <!-- STATUS -->
-      <div class="settings-section" id="sectionStatus">
-        <div class="settings-sec-head">
-          <div class="settings-sec-title">Status</div>
-          <span class="settings-sec-note">Opsi bawaan terkunci — tidak bisa diubah</span>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fg full"><label>Nama / Label</label><input id="hddName" type="text" placeholder="HDD Utama, SSD D:, NAS, dll"></div>
+        <div class="fg"><label>Total (GB)</label><input id="hddTotal" type="number" min="0" step="0.1" placeholder="0"></div>
+        <div class="fg"><label>Digunakan (GB)</label><input id="hddUsed" type="number" min="0" step="0.1" placeholder="0"></div>
+        <div class="fg"><label>Status</label>
+          <select id="hddStatus">
+            <option value="healthy">Healthy</option>
+            <option value="warning">Warning</option>
+            <option value="critical">Critical</option>
+            <option value="offline">Offline</option>
+          </select>
         </div>
-        <div class="settings-list" id="listStatus"></div>
-        <div class="settings-add-row">
-          <input id="addStatusInput" type="text" placeholder="Nama status baru…" maxlength="40">
-          <input id="addStatusColor" type="text" placeholder="Warna hex (cth: #ff00aa)" maxlength="20">
-          <button class="btn primary" id="addStatusBtn" style="padding:7px 13px;font-size:10px">+ Tambah</button>
+        <div class="fg"><label>Catatan</label><input id="hddNote" type="text" placeholder="opsional"></div>
+      </div>
+      <div class="modal-foot" style="justify-content:space-between;margin-top:16px">
+        <button class="btn" id="deleteHDDBtn" style="border-color:var(--red);color:var(--red);display:none">Hapus</button>
+        <div style="display:flex;gap:8px;margin-left:auto">
+          <button class="btn ghost" id="cancelHDD">Batal</button>
+          <button class="btn primary" id="saveHDDBtn">Simpan</button>
         </div>
       </div>
-
-      <!-- REGION -->
-      <div class="settings-section" id="sectionRegion">
-        <div class="settings-sec-head">
-          <div class="settings-sec-title">Region</div>
-          <span class="settings-sec-note">Nilai dari data lama tetap tampil meski tidak ada di daftar ini</span>
-        </div>
-        <div class="settings-list" id="listRegion"></div>
-        <div class="settings-add-row">
-          <input id="addRegionInput" type="text" placeholder="cth: PH, ID, SG, US…" maxlength="40">
-          <button class="btn primary" id="addRegionBtn" style="padding:7px 13px;font-size:10px">+ Tambah</button>
-        </div>
-      </div>
-
-      <!-- LINK PART -->
-      <div class="settings-section" id="sectionPart">
-        <div class="settings-sec-head">
-          <div class="settings-sec-title">Link Part</div>
-          <span class="settings-sec-note">Nilai dari data lama tetap tampil meski tidak ada di daftar ini</span>
-        </div>
-        <div class="settings-list" id="listPart"></div>
-        <div class="settings-add-row">
-          <input id="addPartInput" type="text" placeholder="cth: Part 1, Part 2, Ep.01…" maxlength="60">
-          <button class="btn primary" id="addPartBtn" style="padding:7px 13px;font-size:10px">+ Tambah</button>
-        </div>
-      </div>
-
-      <!-- UPDATE -->
-      <div class="settings-section" id="sectionUpdate">
-        <div class="settings-sec-head">
-          <div class="settings-sec-title">Update</div>
-          <span class="settings-sec-note">Nilai dari data lama tetap tampil meski tidak ada di daftar ini</span>
-        </div>
-        <div class="settings-list" id="listUpdate"></div>
-        <div class="settings-add-row">
-          <input id="addUpdateInput" type="text" placeholder="cth: v2.1, Jan 2025, Patch 3…" maxlength="60">
-          <button class="btn primary" id="addUpdateBtn" style="padding:7px 13px;font-size:10px">+ Tambah</button>
-        </div>
-      </div>
-
-      <!-- TEST -->
-      <div class="settings-section" id="sectionTest">
-        <div class="settings-sec-head">
-          <div class="settings-sec-title">Test</div>
-          <span class="settings-sec-note">Nilai dari data lama tetap tampil meski tidak ada di daftar ini</span>
-        </div>
-        <div class="settings-list" id="listTest"></div>
-        <div class="settings-add-row">
-          <input id="addTestInput" type="text" placeholder="cth: Tested, Untested, Pending…" maxlength="60">
-          <button class="btn primary" id="addTestBtn" style="padding:7px 13px;font-size:10px">+ Tambah</button>
-        </div>
-      </div>
-
-    </div>
-    <div class="modal-foot">
-      <button class="btn ghost" id="cancelSettings">Tutup</button>
-      <button class="btn primary" id="saveSettings">Simpan Settings</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
-<!-- HDD MODALS -->
-<!-- MODAL: Disk -->
-<div class="overlay" id="diskOverlay">
-  <div class="modal" style="width:min(600px,100%)">
-    <div class="modal-head">
-      <div><h2 id="dmt">Tambah HDD</h2><p>Isi detail hardisk — skor kesehatan dihitung otomatis</p></div>
-      <button class="x" id="xDisk">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="hdd-note">Kapasitas terpakai dihitung dari total file dalam folder, atau isi override manual. Skor kesehatan diupdate real-time saat Anda mengisi data di bawah.</div>
-      <div class="hdd-fg"><label>Nama HDD / Label</label><input id="dName" type="text" placeholder="cth: WD Blue 2TB, SSD System"></div>
-      <div class="hdd-fg"><label>Tipe / Model</label><input id="dModel" type="text" placeholder="cth: HDD SATA 7200RPM, NVMe SSD, External USB"></div>
-      <div class="hg2">
-        <div class="hdd-fg"><label>Kapasitas Total (<span class="ulab"></span>)</label><input id="hddTotal" type="number" min="0" step="any" placeholder="0"></div>
-        <div class="hdd-fg"><label>Override Terpakai (<span class="ulab"></span>) <span style="color:var(--muted-2)">[opsional]</span></label><input id="hddUsedOverride" type="number" min="0" step="any" placeholder="auto dari folder"></div>
-      </div>
-      <div class="hdd-fg"><label>Keterangan Disk</label><textarea id="dDesc" placeholder="Fungsi / isi disk..."></textarea></div>
 
-      <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft)">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--cyan);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 4px rgba(0,245,255,.3)">
-          Status Kesehatan — <span style="color:var(--muted-2)">input untuk kalkulasi health score otomatis</span>
-        </div>
-        <div class="hg2" style="margin-bottom:8px">
-          <div class="hdd-fg">
-            <label>S.M.A.R.T. Status <span style="color:var(--muted-2)">(CrystalDiskInfo)</span></label>
-            <div class="smart-sel" id="smartSel">
-              <button class="smart-opt sel-good" data-s="ok">OK / Good</button>
-              <button class="smart-opt" data-s="warn">Caution</button>
-              <button class="smart-opt" data-s="fail">Bad / Fail</button>
-            </div>
-          </div>
-          <div class="hdd-fg"><label>Suhu Operasional <span style="color:var(--muted-2)">°C</span></label><input id="hddTemp" type="number" min="0" max="100" step="1" placeholder="ideal: 30–45°C"><span class="hint">Seagate/WD: max 60°C, ideal 30–45°C</span></div>
-        </div>
-        <div class="health-detail-grid">
-          <div class="hdg-item">
-            <label>Usia Disk <span style="color:var(--muted-2)">tahun</span></label>
-            <input id="hddAge" type="number" min="0" step="0.5" placeholder="cth: 3.5">
-            <span class="hint">Backblaze: AFR naik signifikan >5 tahun</span>
-          </div>
-          <div class="hdg-item">
-            <label>Reallocated Sectors <span style="color:var(--muted-2)">(SMART ID 5)</span></label>
-            <input id="hddRealloc" type="number" min="0" step="1" placeholder="0 = sempurna">
-            <span class="hint">ATA spec: sektors fisik rusak yang dipindah</span>
-          </div>
-          <div class="hdg-item">
-            <label>Pending Sectors <span style="color:var(--muted-2)">(SMART ID 197)</span></label>
-            <input id="hddPending" type="number" min="0" step="1" placeholder="0 = aman">
-            <span class="hint">Sektors menunggu realokasi — risiko tinggi</span>
-          </div>
-          <div class="hdg-item">
-            <label>Uncorrectable Errors <span style="color:var(--muted-2)">(SMART ID 198)</span></label>
-            <input id="hddUncorr" type="number" min="0" step="1" placeholder="0 = aman">
-            <span class="hint">Error yang tidak bisa diperbaiki — kritis</span>
-          </div>
-        </div>
-        <div class="hdd-fg" style="margin-top:8px"><label>Catatan Tambahan</label><input id="dHealthNotes" type="text" placeholder="cth: Dibeli Jan 2022, SN: WD-XXXXX, Power-On: 8760 jam"></div>
-
-        <!-- Live Health Score Preview -->
-        <div class="health-score-preview" id="hspPreview">
-          <div style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2)">Isi data di atas untuk melihat health score</div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn" id="cancelDisk">Batal</button>
-      <button class="btn primary" id="saveDisk">Simpan</button>
-    </div>
-  </div>
-</div>
-
-</div>
-</div>
-
-<!-- MODAL: Folder -->
-<div class="overlay" id="folderOverlay">
-  <div class="modal">
-    <div class="modal-head">
-      <div><h2 id="fmt2">Tambah Folder</h2><p id="fmtsub">Di disk …</p></div>
-      <button class="x" id="xFolder">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="fg"><label>Nama Folder</label><input id="fName" type="text" placeholder="cth: /Backup, /Media, /Projects"></div>
-      <div class="fg"><label>Keterangan Isi Folder</label><textarea id="fDesc" placeholder="Jelaskan isi atau fungsi folder ini..."></textarea></div>
-      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--ls)">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--c);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;text-shadow:0 0 4px rgba(0,245,255,.3)">File / Subfolder dalam folder ini</div>
-        <div class="note">Tambahkan file atau subfolder beserta ukurannya. Total otomatis dihitung dari daftar ini.</div>
-        <div id="fFileList" style="display:flex;flex-direction:column;gap:3px;margin-bottom:8px"></div>
-        <div class="g3">
-          <input id="fnName" type="text" placeholder="Nama file/subfolder" style="background:var(--bg2);border:1px solid var(--ls);border-radius:2px;color:var(--tx);padding:7px 9px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;width:100%">
-          <input id="fnSize" type="number" min="0" step="any" placeholder="Ukuran" style="background:var(--bg2);border:1px solid var(--ls);border-radius:2px;color:var(--tx);padding:7px 9px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;width:100%">
-          <select id="fnUnit" style="background:var(--bg2);border:1px solid var(--ls);border-radius:2px;color:var(--tx);padding:7px 9px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;width:100%">
-            <option value="GB">GB</option>
-            <option value="TB">TB</option>
-            <option value="MB">MB</option>
-          </select>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:7px;align-items:center">
-          <button class="btn primary" id="addFileBtn" style="padding:6px 12px;font-size:10px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><path d="M12 5v14M5 12h14"/></svg>
-            Tambah
-          </button>
-          <span id="fTotalPreview" style="font-family:'Orbitron',monospace;font-size:11px;color:var(--a);letter-spacing:.04em;margin-left:8px"></span>
-        </div>
-      </div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn" id="cancelFolder">Batal</button>
-      <button class="btn primary" id="saveFolder">Simpan Folder</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Confirm Delete -->
-<div class="overlay" id="hddConfirmOverlay">
-  <div class="modal" style="width:min(400px,100%)">
-    <div class="modal-body" style="padding:22px 20px">
-      <div class="confirm-box">
-        <div class="confirm-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-        </div>
-        <h2>Hapus?</h2>
-        <p id="hddConfirmMsg"></p>
-      </div>
-      <div style="display:flex;justify-content:flex-end;gap:7px;margin-top:16px">
-        <button class="btn" id="cancelConfirm">Batal</button>
-        <button class="btn danger" id="doConfirm">Hapus</button>
-      </div>
-    </div>
-  </div>
-</div>
 <script>
 const $ = s => document.querySelector(s);
 const fmt = n => n.toLocaleString('id-ID');
@@ -1176,7 +616,7 @@ const STATUS = {
   lost:{label:'Lost File',color:'orange'},
   skip:{label:'Skip',color:'gray'},
   broken:{label:'Broken Link',color:'red'},
-  blank:{label:'—',color:'blank'}
+  blank:{label:'Blank',color:'blank'}
 };
 function canonStatus(raw){
   const s = String(raw||'').toLowerCase().trim();
@@ -1185,7 +625,7 @@ function canonStatus(raw){
   if(s.includes('lost')||s.includes('hilang')) return 'lost';
   if(s.includes('broken')||s.includes('rusak')||s.includes('mati')) return 'broken';
   if(s.includes('skip')||s.includes('lewat')) return 'skip';
-  if(s.includes('blank')||s.includes('kosong')||s.includes('baru')) return 'blank';
+  if(s.includes('blank')||s.includes('kosong')) return 'blank';
   if(s.includes('complete')||s.includes('selesai')||s==='ok'||s==='done') return 'complete';
   return 'blank';
 }
@@ -1262,158 +702,6 @@ function buildRecord(o){
   };
 }
 
-// ══════════════════════════════════════════════════════════════
-// SETTINGS — dropdown options untuk Status, Region, Part, Update, Test
-// Opsi STATUS bawaan SELALU dimasukkan duluan dan tidak bisa dihapus.
-// Opsi custom disimpan di storage key 'settings:v1'.
-// ══════════════════════════════════════════════════════════════
-const DEFAULT_STATUS_OPTS = Object.keys(STATUS).map(k => ({
-  key: k, label: STATUS[k].label, color: STATUS[k].color, locked: true
-}));
-
-// Opsi bawaan untuk field lain — terkunci agar nilai lama tidak rusak
-const DEFAULT_REGION_OPTS  = ['PH','ID','SG','MY','US','UK','AU','JP','TH','VN','IN','OTHER'];
-const DEFAULT_PART_OPTS    = ['Part 1','Part 2','Part 3','Part 4','Part 5','Single'];
-const DEFAULT_UPDATE_OPTS  = ['v1.0','v1.1','v2.0','Latest','Old','N/A'];
-const DEFAULT_TEST_OPTS    = ['Tested','Untested','Pending','Failed'];
-
-// SETTINGS state — custom opts (non-locked) diisi setelah load
-let SETTINGS = {
-  statusCustom: [],   // [{label, color}] — custom status tambahan
-  region:  [],        // [{label, locked?}]
-  part:    [],
-  update:  [],
-  test:    []
-};
-
-async function loadSettings(){
-  try{
-    const raw = await store.get('settings:v1');
-    if(raw){
-      const d = JSON.parse(raw.value);
-      SETTINGS.statusCustom = d.statusCustom || [];
-      SETTINGS.region  = d.region  || [];
-      SETTINGS.part    = d.part    || [];
-      SETTINGS.update  = d.update  || [];
-      SETTINGS.test    = d.test    || [];
-    }
-  }catch(_){}
-}
-
-async function saveSettings(){
-  try{
-    await store.set('settings:v1', JSON.stringify({
-      statusCustom: SETTINGS.statusCustom,
-      region:  SETTINGS.region,
-      part:    SETTINGS.part,
-      update:  SETTINGS.update,
-      test:    SETTINGS.test
-    }));
-  }catch(_){}
-}
-
-// Kembalikan seluruh opsi suatu field (locked dulu, custom setelah)
-// Field: 'region'|'part'|'update'|'test'
-function getFieldOpts(field){
-  const defaults = {
-    region: DEFAULT_REGION_OPTS,
-    part:   DEFAULT_PART_OPTS,
-    update: DEFAULT_UPDATE_OPTS,
-    test:   DEFAULT_TEST_OPTS
-  }[field] || [];
-  const locked = defaults.map(v => ({ label: v, locked: true }));
-  const custom = (SETTINGS[field] || []).map(v =>
-    typeof v === 'string' ? { label: v, locked: false } : { ...v, locked: false }
-  );
-  return [...locked, ...custom];
-}
-
-// Kembalikan semua opsi status (locked bawaan + custom)
-function getAllStatusOpts(){
-  const custom = SETTINGS.statusCustom.map(c => ({
-    key: 'c_'+c.label.toLowerCase().replace(/\s+/g,'_'),
-    label: c.label, color: c.color || 'gray', locked: false
-  }));
-  return [...DEFAULT_STATUS_OPTS, ...custom];
-}
-
-// Untuk <select> di edit modal — munculkan semua opsi + nilai ekisting jika tidak ada di list
-function buildSelectOpts(field, currentVal){
-  const opts = getFieldOpts(field);
-  // selalu sertakan nilai eksisting agar tidak hilang dari dropdown
-  const existingInList = opts.some(o => o.label === currentVal);
-  const extra = (currentVal && !existingInList) ? [{ label: currentVal, locked: false, existing: true }] : [];
-  return [...opts, ...extra];
-}
-
-// ──────────────────────────────────────────────────────────────
-// Render Settings Modal
-// ──────────────────────────────────────────────────────────────
-function renderSettingsModal(){
-  // STATUS
-  renderSettingsList('listStatus', getAllStatusOpts(), true);
-  // Others
-  ['region','part','update','test'].forEach(f =>
-    renderSettingsList('list'+f.charAt(0).toUpperCase()+f.slice(1), getFieldOpts(f), false, f)
-  );
-}
-
-function renderSettingsList(listId, opts, isStatus, field){
-  const el = document.getElementById(listId);
-  el.innerHTML = opts.map((opt, i) => {
-    const colorVar = isStatus
-      ? `var(${(COLOR[opt.color] || COLOR.blank) || '--blank'})`
-      : 'var(--cyan-dim)';
-    const bgVar = isStatus
-      ? `var(${(COLORBG[opt.color] || COLORBG.blank) || '--blank-bg'})`
-      : 'rgba(0,245,255,.05)';
-    const delBtn = opt.locked
-      ? ''
-      : `<button class="chip-del" data-field="${field||'status'}" data-i="${i}" title="Hapus">×</button>`;
-    const dot = isStatus ? `<span class="chip-dot" style="background:${colorVar};box-shadow:0 0 4px ${colorVar}"></span>` : '';
-    return `<span class="settings-chip ${opt.locked?'locked':'custom'}"
-      style="color:${colorVar};background:${bgVar};border-color:${colorVar}30">
-      ${dot}${opt.label}${delBtn}
-    </span>`;
-  }).join('') || '<span style="font-family:\'Share Tech Mono\',monospace;font-size:10px;color:var(--muted-2)">— belum ada opsi —</span>';
-
-  // bind delete buttons
-  el.querySelectorAll('.chip-del').forEach(b => {
-    b.onclick = () => {
-      const f = b.dataset.field, idx = parseInt(b.dataset.i);
-      if(f === 'status'){
-        // only custom (non-locked) — index relative to DEFAULT
-        const allOpts = getAllStatusOpts();
-        const target = allOpts[idx];
-        if(!target || target.locked) return;
-        SETTINGS.statusCustom = SETTINGS.statusCustom.filter(c => c.label !== target.label);
-      } else {
-        const allOpts = getFieldOpts(f);
-        const target = allOpts[idx];
-        if(!target || target.locked) return;
-        SETTINGS[f] = SETTINGS[f].filter(v => (typeof v==='string'?v:v.label) !== target.label);
-      }
-      renderSettingsModal();
-    };
-  });
-}
-
-function addSettingsOpt(field, value, colorHex){
-  const val = value.trim();
-  if(!val) return false;
-  if(field === 'status'){
-    const exists = getAllStatusOpts().some(o => o.label.toLowerCase() === val.toLowerCase());
-    if(exists){ toast('⚠ Status sudah ada'); return false; }
-    SETTINGS.statusCustom.push({ label: val, color: colorHex||'gray' });
-  } else {
-    const exists = getFieldOpts(field).some(o => o.label.toLowerCase() === val.toLowerCase());
-    if(exists){ toast('⚠ Opsi sudah ada'); return false; }
-    SETTINGS[field].push(val);
-  }
-  return true;
-}
-
-// ══════════════════════════════════════════════════════════════
 // ---------- state ----------
 let DATA=[];
 let view=[];
@@ -1749,7 +1037,7 @@ function renderKPI(){
     {key:'lost',lab:'Lost File',num:k.lost,color:'orange',pctTxt:pct(k.lost)+'%'},
     {key:'skip',lab:'Skip',num:k.skip,color:'gray',pctTxt:pct(k.skip)+'%'},
     {key:'broken',lab:'Broken Link',num:k.broken,color:'red',pctTxt:pct(k.broken)+'%'},
-    {key:'blank',lab:'Kosong / Baru',num:k.blank,color:'blank',pctTxt:pct(k.blank)+'%'}
+    {key:'blank',lab:'Blank',num:k.blank,color:'blank',pctTxt:pct(k.blank)+'%'}
   ];
   $('#kpis').innerHTML=cards.map(c=>{
     const cv = c.color==='maroon' ? '--cyan' : COLOR[c.color];
@@ -1764,8 +1052,6 @@ function renderKPI(){
     </div>`;
   }).join('');
   renderChart(k);
-  renderChartRegion();
-  renderChartPart();
 }
 function renderChart(k){
   const cats=[['complete','green'],['uncomplete','amber'],['lost','orange'],['skip','gray'],['broken','red'],['blank','blank']];
@@ -1777,45 +1063,6 @@ function renderChart(k){
       <div class="cl">${STATUS[key].label}</div>
       <div class="ct"><div class="cf" style="width:${(v/max*100).toFixed(1)}%;background:var(${COLOR[col]});box-shadow:0 0 6px var(${COLOR[col]})"></div></div>
       <div class="cv"><b style="color:var(${COLOR[col]})">${fmt(v)}</b> <span>${pct.toFixed(1)}%</span></div>
-    </div>`;
-  }).join('');
-}
-
-function renderChartRegion(){
-  const counts={};
-  DATA.forEach(r=>{ if(r.region) counts[r.region]=(counts[r.region]||0)+1; });
-  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  const total=entries.reduce((s,[,v])=>s+v,0);
-  const max=Math.max(1,...entries.map(([,v])=>v));
-  const REGION_COLORS=['--cyan','--green','--amber','--orange','--red','--magenta','--cyan-dim','--green-dim','--amber-dim','--orange'];
-  $('#chartRegionTotal').textContent = total ? '· '+fmt(total)+' link' : '';
-  if(!entries.length){ $('#chartRegionBars').innerHTML='<div class="mono" style="padding:10px 0;color:var(--muted-2)">Belum ada data region</div>'; return; }
-  $('#chartRegionBars').innerHTML=entries.map(([key,v],i)=>{
-    const col=REGION_COLORS[i%REGION_COLORS.length];
-    const pct=total?(v/total*100):0;
-    return `<div class="cbar">
-      <div class="cl">${esc(key)}</div>
-      <div class="ct"><div class="cf" style="width:${(v/max*100).toFixed(1)}%;background:var(${col});box-shadow:0 0 5px var(${col})"></div></div>
-      <div class="cv"><b style="color:var(${col})">${fmt(v)}</b> <span>${pct.toFixed(1)}%</span></div>
-    </div>`;
-  }).join('');
-}
-function renderChartPart(){
-  const counts={};
-  DATA.forEach(r=>{ if(r.part) counts[r.part]=(counts[r.part]||0)+1; });
-  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  const total=entries.reduce((s,[,v])=>s+v,0);
-  const max=Math.max(1,...entries.map(([,v])=>v));
-  const PART_COLORS=['--magenta','--cyan','--amber','--green','--orange','--red','--cyan-dim','--amber-dim'];
-  $('#chartPartTotal').textContent = total ? '· '+fmt(total)+' link' : '';
-  if(!entries.length){ $('#chartPartBars').innerHTML='<div class="mono" style="padding:10px 0;color:var(--muted-2)">Belum ada data link part</div>'; return; }
-  $('#chartPartBars').innerHTML=entries.map(([key,v],i)=>{
-    const col=PART_COLORS[i%PART_COLORS.length];
-    const pct=total?(v/total*100):0;
-    return `<div class="cbar">
-      <div class="cl" style="font-size:9px">${esc(key)}</div>
-      <div class="ct"><div class="cf" style="width:${(v/max*100).toFixed(1)}%;background:var(${col});box-shadow:0 0 5px var(${col})"></div></div>
-      <div class="cv"><b style="color:var(${col})">${fmt(v)}</b> <span>${pct.toFixed(1)}%</span></div>
     </div>`;
   }).join('');
 }
@@ -1888,11 +1135,11 @@ function renderTable(){
       <td>${regPill}</td>
       <td class="mono">${fmtDate(r.inputAt)}</td>
       <td>${flag}</td>
+      <td><input class="lpedit" data-id="${r._id}" value="${esc(r.lastpage)}" placeholder="ketik…"></td>
       <td class="c-act">
         <button class="iconbtn edit" data-id="${r._id}" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
         <button class="iconbtn del" data-id="${r._id}" title="Hapus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
       </td>
-      <td><input class="lpedit" data-id="${r._id}" value="${esc(r.lastpage)}" placeholder="ketik…"></td>
     </tr>`;
   }).join('');
   $('#countInfo').textContent=`${fmt(total)} hasil`;
@@ -1906,7 +1153,7 @@ function linkCell(l){
   return linkify(l);
 }
 // regex untuk URL: protokol, www, atau domain.tld/path (mis. dl.surf/file/abc)
-const URL_RE=/((?:https?:\/\/|www\.)[^\s<>"']+|[a-z0-9][a-z0-9-]*(?:\.[a-z0-9-]+)+\/[^\s<>"']+)/gi;
+const URL_RE=/((?:https?:\/\/|www\.)[^\s<>"']+|[a-z0-9][a-z0-9-]*(?:\.[a-z]{2,})+(?:\/[^\s<>"']*)?)/gi;
 function toHref(u){return /^https?:\/\//i.test(u)?u:'https://'+u.replace(/^\/+/,'');}
 function extractUrl(text){
   const s=String(text||'');
@@ -2030,43 +1277,24 @@ function selectDuplicates(){
 function openEdit(id){
   const r=DATA.find(x=>x._id===id); if(!r) return;
   editId=id;
-
-  // Status — semua opsi (locked + custom)
-  const statusOpts = getAllStatusOpts();
-  $('#eStatus').innerHTML = statusOpts.map(o =>
-    `<option value="${o.key}" ${o.key===r.status?'selected':''}>${o.label}</option>`
-  ).join('');
-
-  // Region — locked defaults + custom + nilai eksisting jika tidak ada
-  const buildSel = (elId, field, curVal) => {
-    const opts = buildSelectOpts(field, curVal||'');
-    const el = document.getElementById(elId);
-    el.innerHTML = `<option value="">— pilih ${field} —</option>` +
-      opts.map(o => `<option value="${o.label}" ${o.label===curVal?'selected':''}>${o.existing?'['+o.label+'] (eksisting)':o.label}</option>`).join('');
-  };
-
-  buildSel('eRegion', 'region', r.region);
-  buildSel('ePart',   'part',   r.part);
-  buildSel('eTest',   'test',   r.test);
-  buildSel('eUpdate', 'update', r.update);
-
-  $('#eLink').value=r.link;
-  $('#eLastpage').value=r.lastpage;
+  $('#eStatus').innerHTML=Object.keys(STATUS).map(k=>`<option value="${k}" ${k===r.status?'selected':''}>${STATUS[k].label}</option>`).join('');
+  $('#eLink').value=r.link; $('#eRegion').value=r.region; $('#ePart').value=r.part;
+  $('#eTest').value=r.test; $('#eUpdate').value=r.update; $('#eLastpage').value=r.lastpage;
   $('#editOverlay').classList.add('show');
 }
 function saveEdit(){
   const r=DATA.find(x=>x._id===editId); if(!r) return;
   pushUndo({kind:'edit',id:r._id,prev:{link:r.link,status:r.status,region:r.region,part:r.part,test:r.test,update:r.update,lastpage:r.lastpage,_flag:r._flag,updatedAt:r.updatedAt,_statusLocked:r._statusLocked}});
   const raw=$('#eLink').value.trim();
-  const url=extractUrl(raw);
+  const url=extractUrl(raw);            // embedded link -> di-generate jadi link bersih
   r.link = url||raw;
   const newStatus=$('#eStatus').value;
-  if(newStatus!==r.status) r._statusLocked=true;
+  if(newStatus!==r.status) r._statusLocked=true;   // status diubah manual → kunci dari penimpaan sync
   r.status=newStatus;
-  r.region=($('#eRegion').value||'').trim().toUpperCase();
-  r.part=($('#ePart').value||'').trim();
-  r.test=($('#eTest').value||'').trim();
-  r.update=($('#eUpdate').value||'').trim();
+  r.region=$('#eRegion').value.trim().toUpperCase();
+  r.part=$('#ePart').value.trim();
+  r.test=$('#eTest').value.trim();
+  r.update=$('#eUpdate').value.trim();
   r.lastpage=$('#eLastpage').value.trim();
   r.updatedAt=Date.now(); r._flag='upd';
   $('#editOverlay').classList.remove('show');
@@ -2099,21 +1327,6 @@ function doDelete(){
   $('#confirmOverlay').classList.remove('show');
   markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); scheduleSave();
   toast('✓ Link dihapus — bisa diurungkan');
-}
-function askClearAll(){
-  if(!DATA.length){ toast('⚠ Tidak ada data untuk dihapus'); return; }
-  $('#clearAllCount').textContent = fmt(DATA.length);
-  $('#clearAllConfirmInput').value = '';
-  $('#confirmClearAllBtn').disabled = true;
-  $('#clearAllOverlay').classList.add('show');
-  setTimeout(()=>$('#clearAllConfirmInput').focus(), 80);
-}
-function doDeleteAll(){
-  pushUndo({kind:'snapshot', prev:DATA.slice()});
-  DATA=[]; LOG=[]; selected.clear();
-  $('#clearAllOverlay').classList.remove('show');
-  markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog(); scheduleSave();
-  toast('✓ Semua data dihapus');
 }
 
 // ---------- import ----------
@@ -2151,25 +1364,7 @@ function renderLog(){
 }
 
 // ---------- parse files / text ----------
-// Ekstrak URL dari semua format hyperlink yang mungkin ada di sel Excel
-function extractCellUrl(cell){
-  if(!cell) return null;
-  // 1. cell.l.Target — hyperlink yang di-attach lewat Insert Link di Excel/Sheets
-  if(cell.l && cell.l.Target){
-    const t = String(cell.l.Target).trim();
-    if(/^https?:\/\//i.test(t) || /^\//.test(t)) return t;
-  }
-  // 2. Formula =HYPERLINK("url","label") — formula string di cell.f
-  if(cell.f){
-    const mf = String(cell.f).match(/=?HYPERLINK\(\s*["']([^"']+)["']/i);
-    if(mf) return mf[1].trim();
-  }
-  // 3. Nilai sel yang berisi formula-string =HYPERLINK(...) sebagai teks biasa
-  const raw = cell.w !== undefined ? String(cell.w) : (cell.v !== undefined ? String(cell.v) : '');
-  const mt = raw.match(/=?HYPERLINK\(\s*["']([^"']+)["']/i);
-  if(mt) return mt[1].trim();
-  return null;
-}
+// baca sel sekaligus ambil hyperlink yang tertanam (cell.l.Target) bila ada
 function sheetToMatrix(ws){
   if(!ws['!ref']) return [];
   const range=XLSX.utils.decode_range(ws['!ref']);
@@ -2179,11 +1374,8 @@ function sheetToMatrix(ws){
     for(let C=range.s.c;C<=range.e.c;C++){
       const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
       if(!cell){row.push('');continue;}
-      // Coba ambil URL dari hyperlink dulu
-      const url = extractCellUrl(cell);
-      if(url){ row.push(url); continue; }
-      // Fallback ke nilai/teks sel
-      let v = cell.w!==undefined ? cell.w : (cell.v!==undefined ? cell.v : '');
+      let v = cell.w!==undefined?cell.w:(cell.v!==undefined?cell.v:'');
+      if(cell.l && cell.l.Target && /^https?:|\//i.test(cell.l.Target)) v=cell.l.Target; // embedded link
       row.push(v);
     }
     mat.push(row);
@@ -2249,6 +1441,105 @@ function exportXlsx(){
   XLSX.writeFile(wb,'link-monitor-'+new Date().toISOString().slice(0,10)+'.xlsx');
 }
 
+// ---------- HDD monitoring ----------
+let HDD_DATA=[];
+let hddEditId=null;
+const HDD_STATUS={
+  healthy:{label:'Healthy',color:'green'},
+  warning:{label:'Warning',color:'amber'},
+  critical:{label:'Critical',color:'red'},
+  offline:{label:'Offline',color:'gray'}
+};
+async function loadHDD(){
+  try{ const d=await store.get('hdd:data'); if(d) HDD_DATA=JSON.parse(d.value); }catch(_){}
+}
+async function saveHDD(){
+  try{ await store.set('hdd:data',JSON.stringify(HDD_DATA)); }catch(e){ toast('⚠ Gagal simpan HDD: '+e.message); }
+}
+function renderHDD(){
+  const el=$('#hddList'); if(!el) return;
+  const sum=$('#hddSummary');
+  if(!HDD_DATA.length){
+    el.innerHTML='<div class="hdd-empty">Belum ada data disk. Klik <b>Tambah HDD</b> untuk memulai.</div>';
+    if(sum) sum.textContent=''; return;
+  }
+  const totalAll=HDD_DATA.reduce((a,h)=>a+(+h.totalGB||0),0);
+  const usedAll=HDD_DATA.reduce((a,h)=>a+(+h.usedGB||0),0);
+  if(sum) sum.textContent=`· ${HDD_DATA.length} disk · ${usedAll.toFixed(1)} / ${totalAll.toFixed(1)} GB`;
+  el.innerHTML=HDD_DATA.map(h=>{
+    const total=+h.totalGB||0; const used=+h.usedGB||0;
+    const free=(total-used).toFixed(1);
+    const pct=total>0?(used/total*100):0;
+    const barColor=pct>90?'var(--red)':pct>75?'var(--amber)':'var(--green)';
+    const st=HDD_STATUS[h.status]||HDD_STATUS.healthy;
+    const cv=COLOR[st.color]; const cbg=COLORBG[st.color];
+    return `<div class="hdd-row">
+      <div class="hdd-name">${esc(h.name||'—')}</div>
+      <div class="hdd-sizes">
+        <span class="mono">${total.toFixed(1)} GB</span>
+        <span class="mono" style="color:var(--amber)">${used.toFixed(1)} used</span>
+        <span class="mono" style="color:var(--green)">${free} free</span>
+      </div>
+      <div class="hdd-bar-wrap"><div class="hdd-bar" style="width:${pct.toFixed(1)}%;background:${barColor}"></div></div>
+      <div class="hdd-pct" style="color:${barColor}">${pct.toFixed(1)}%</div>
+      <span class="pill" style="background:var(${cbg});color:var(${cv})"><span class="dot" style="background:var(${cv})"></span>${st.label}</span>
+      <div class="hdd-note" title="${esc(h.note||'')}">${esc(h.note||'—')}</div>
+      <div style="display:flex;gap:4px;flex:none">
+        <button class="iconbtn edit" data-hid="${h._id}" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+        <button class="iconbtn del" data-hid="${h._id}" title="Hapus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
+      </div>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.iconbtn.edit[data-hid]').forEach(b=>b.onclick=()=>openHDDEdit(b.dataset.hid));
+  el.querySelectorAll('.iconbtn.del[data-hid]').forEach(b=>b.onclick=()=>deleteHDD(b.dataset.hid));
+}
+function openHDDAdd(){
+  hddEditId=null;
+  $('#hddModalTitle').textContent='Tambah HDD';
+  $('#hddName').value=''; $('#hddTotal').value=''; $('#hddUsed').value='';
+  $('#hddStatus').value='healthy'; $('#hddNote').value='';
+  $('#deleteHDDBtn').style.display='none';
+  $('#hddOverlay').classList.add('show');
+  setTimeout(()=>$('#hddName').focus(),50);
+}
+function openHDDEdit(id){
+  const h=HDD_DATA.find(x=>x._id===id); if(!h) return;
+  hddEditId=id;
+  $('#hddModalTitle').textContent='Edit HDD';
+  $('#hddName').value=h.name||''; $('#hddTotal').value=h.totalGB||''; $('#hddUsed').value=h.usedGB||'';
+  $('#hddStatus').value=h.status||'healthy'; $('#hddNote').value=h.note||'';
+  $('#deleteHDDBtn').style.display='';
+  $('#hddOverlay').classList.add('show');
+  setTimeout(()=>$('#hddName').focus(),50);
+}
+async function saveHDDEntry(){
+  const name=$('#hddName').value.trim();
+  if(!name){ toast('⚠ Nama HDD wajib diisi'); return; }
+  const total=parseFloat($('#hddTotal').value)||0;
+  const used=parseFloat($('#hddUsed').value)||0;
+  if(used>total && total>0){ toast('⚠ Digunakan tidak boleh melebihi total'); return; }
+  if(hddEditId){
+    const h=HDD_DATA.find(x=>x._id===hddEditId); if(!h) return;
+    h.name=name; h.totalGB=total; h.usedGB=used;
+    h.status=$('#hddStatus').value; h.note=$('#hddNote').value.trim();
+    h.updatedAt=Date.now();
+  }else{
+    HDD_DATA.push({_id:'h'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+      name,totalGB:total,usedGB:used,status:$('#hddStatus').value,
+      note:$('#hddNote').value.trim(),updatedAt:Date.now()});
+  }
+  await saveHDD(); renderHDD();
+  $('#hddOverlay').classList.remove('show');
+  toast('✓ HDD '+(hddEditId?'diperbarui':'ditambahkan'));
+}
+async function deleteHDD(id){
+  if(!confirm('Hapus entri HDD ini?')) return;
+  HDD_DATA=HDD_DATA.filter(x=>x._id!==id);
+  await saveHDD(); renderHDD();
+  $('#hddOverlay').classList.remove('show');
+  toast('✓ HDD dihapus');
+}
+
 // ---------- events ----------
 $('#importBtn').onclick=()=>{$('#overlay').classList.add('show');};
 $('#closeModal').onclick=$('#cancelImport').onclick=()=>{$('#overlay').classList.remove('show');pendingRows=null;$('#doImport').disabled=true;$('#pasteArea').value='';$('#fileInput').value='';};
@@ -2269,43 +1560,6 @@ $('#doImport').onclick=()=>{
   $('#cancelImport').click();
 };
 $('#exportBtn').onclick=exportXlsx;
-$('#clearAllBtn').onclick=askClearAll;
-
-// ── Settings modal wiring ────────────────────────────────────
-$('#settingsBtn').onclick=()=>{renderSettingsModal();$('#settingsOverlay').classList.add('show');};
-$('#closeSettings').onclick=$('#cancelSettings').onclick=()=>$('#settingsOverlay').classList.remove('show');
-$('#settingsOverlay').onclick=e=>{if(e.target===$('#settingsOverlay'))$('#settingsOverlay').classList.remove('show');};
-$('#saveSettings').onclick=async()=>{await saveSettings();$('#settingsOverlay').classList.remove('show');toast('✓ Settings disimpan');};
-
-// helper: wire add button untuk tiap field
-function wireAddBtn(btnId, inputId, field, colorInputId){
-  document.getElementById(btnId).onclick=()=>{
-    const val = document.getElementById(inputId).value;
-    const col = colorInputId ? (document.getElementById(colorInputId)||{}).value : '';
-    if(addSettingsOpt(field, val, col)){
-      document.getElementById(inputId).value='';
-      if(colorInputId){ const ci=document.getElementById(colorInputId); if(ci) ci.value=''; }
-      renderSettingsModal();
-    }
-  };
-  document.getElementById(inputId).addEventListener('keydown', e=>{
-    if(e.key==='Enter') document.getElementById(btnId).click();
-  });
-}
-wireAddBtn('addStatusBtn','addStatusInput','status','addStatusColor');
-wireAddBtn('addRegionBtn','addRegionInput','region');
-wireAddBtn('addPartBtn','addPartInput','part');
-wireAddBtn('addUpdateBtn','addUpdateInput','update');
-wireAddBtn('addTestBtn','addTestInput','test');
-
-// clear-all modal wiring
-$('#cancelClearAll').onclick=()=>$('#clearAllOverlay').classList.remove('show');
-$('#clearAllOverlay').onclick=e=>{if(e.target===$('#clearAllOverlay'))$('#clearAllOverlay').classList.remove('show');};
-$('#clearAllConfirmInput').oninput=e=>{
-  $('#confirmClearAllBtn').disabled = e.target.value.trim().toUpperCase() !== 'HAPUS';
-};
-$('#clearAllConfirmInput').onkeydown=e=>{if(e.key==='Enter' && !$('#confirmClearAllBtn').disabled) doDeleteAll();};
-$('#confirmClearAllBtn').onclick=doDeleteAll;
 
 // edit + delete modal wiring
 $('#closeEdit').onclick=$('#cancelEdit').onclick=()=>$('#editOverlay').classList.remove('show');
@@ -2367,1729 +1621,73 @@ $('#autoSyncToggle').onchange=async e=>{
   else{ asStop(); asStatus('Sinkron otomatis dimatikan.'); toast('Sinkron otomatis nonaktif'); }
 };
 
+// HDD modal wiring
+$('#addHDDBtn').onclick=openHDDAdd;
+$('#closeHDD').onclick=$('#cancelHDD').onclick=()=>$('#hddOverlay').classList.remove('show');
+$('#hddOverlay').onclick=e=>{if(e.target===$('#hddOverlay'))$('#hddOverlay').classList.remove('show');};
+$('#saveHDDBtn').onclick=saveHDDEntry;
+$('#deleteHDDBtn').onclick=()=>deleteHDD(hddEditId);
 
-// ══════════════════════════════════════════════════════════════
-// SISTEM KEAMANAN — Multi-user + Admin Key + Brute-force protection
-// ══════════════════════════════════════════════════════════════
-const SEC = {
-  // Brute-force: max 5 attempts per 15 min window
-  MAX_ATTEMPTS: 5,
-  LOCKOUT_MS:   15 * 60 * 1000,
-  // Session timeout: 8 hours of inactivity
-  SESSION_TIMEOUT_MS: 8 * 60 * 60 * 1000,
-  // Minimum password length
-  MIN_PASS: 8,
-  // Minimum admin key length
-  MIN_KEY: 12
-};
-
-// Runtime auth state
-const AUTH = {
-  currentUser: null,   // {username, role:'admin'|'user'}
-  sessionStart: 0,
-  loginAttempts: 0,
-  lockUntil: 0,
-  ok: false
-};
-
-// ── Crypto helpers ────────────────────────────────────────────
-function weakHash(s){let h=0x811c9dc5>>>0;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0;}return('0000000'+h.toString(16)).slice(-8);}
+// ---------- kunci akses (username/password, sisi-browser) ----------
+const AUTH={user:'',salt:'',hash:'',ok:false};
+function weakHash(s){ let h=0x811c9dc5>>>0; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193)>>>0; } return ('0000000'+h.toString(16)).slice(-8); }
 async function sha256(s){
-  try{if(window.crypto&&crypto.subtle){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');}}catch(_){}
-  return 'w:'+weakHash(s);
+  try{ if(window.crypto&&crypto.subtle){ const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); } }catch(_){}
+  return 'w:'+weakHash(s);   // cadangan bila bukan https/localhost (lebih lemah)
 }
-function randSalt(){const a=new Uint8Array(16);try{crypto.getRandomValues(a);}catch(_){for(let i=0;i<16;i++)a[i]=Math.floor(Math.random()*256);}return[...a].map(x=>x.toString(16).padStart(2,'0')).join('');}
-async function hashPass(salt, pass){ return sha256(salt + '|' + pass + '|lnkmon2025'); }
-async function hashAdminKey(key){ return sha256('adminkey:' + key + '|lnkmon2025'); }
-
-// ── Storage helpers ───────────────────────────────────────────
-async function secGet(k){ try{const r=await store.get(k);return r?r.value:null;}catch(_){return null;} }
-async function secSet(k,v){ try{await store.set(k,v);}catch(_){} }
-async function secDel(k){ try{await store.del(k);}catch(_){} }
-
-// ── User DB ───────────────────────────────────────────────────
-// users:list = JSON array of {username, role}
-// users:pw:{username} = JSON {salt, hash}
-async function getUsers(){
-  const r = await secGet('users:list');
-  return r ? JSON.parse(r) : [];
-}
-async function saveUsers(list){ await secSet('users:list', JSON.stringify(list)); }
-async function userExists(username){
-  const list = await getUsers();
-  return list.some(u => u.username.toLowerCase() === username.toLowerCase());
-}
-async function getAdminKeyHash(){ return secGet('auth:adminkeyhash'); }
-async function isAdminKeySet(){ return !!(await getAdminKeyHash()); }
-
-// ── Brute-force state (sessionStorage so it resets on tab close) ──
-function bfGet(){ try{return JSON.parse(sessionStorage.getItem('_lm_bf')||'{}');}catch(_){return{};} }
-function bfSet(o){ try{sessionStorage.setItem('_lm_bf',JSON.stringify(o));}catch(_){} }
-function bfCheck(){
-  const s=bfGet();
-  const now=Date.now();
-  if(s.lockUntil && now < s.lockUntil) return { locked:true, secsLeft: Math.ceil((s.lockUntil-now)/1000) };
-  if(s.lockUntil && now >= s.lockUntil){ bfSet({}); }
-  return { locked:false, attempts: s.attempts||0 };
-}
-function bfFail(){
-  const s=bfGet(); const now=Date.now();
-  const attempts = (s.attempts||0) + 1;
-  if(attempts >= SEC.MAX_ATTEMPTS){
-    bfSet({ attempts, lockUntil: now + SEC.LOCKOUT_MS });
-  } else {
-    bfSet({ attempts, lockUntil: s.lockUntil||0 });
-  }
-  return attempts;
-}
-function bfReset(){ bfSet({}); }
-
-// ── Session management ────────────────────────────────────────
-function sessionStart(username, role){
-  AUTH.ok = true;
-  AUTH.currentUser = { username, role };
-  AUTH.sessionStart = Date.now();
-  try{ sessionStorage.setItem('_lm_sess', JSON.stringify({ username, role, t: Date.now() })); }catch(_){}
-  bfReset();
-  updateHeaderForRole();
-}
-function sessionRestore(){
-  try{
-    const s = JSON.parse(sessionStorage.getItem('_lm_sess')||'null');
-    if(!s) return false;
-    if(Date.now() - s.t > SEC.SESSION_TIMEOUT_MS){ sessionStorage.removeItem('_lm_sess'); return false; }
-    AUTH.ok = true; AUTH.currentUser = { username:s.username, role:s.role }; AUTH.sessionStart = s.t;
-    updateHeaderForRole();
-    return true;
-  }catch(_){ return false; }
-}
-function sessionEnd(){
-  AUTH.ok = false; AUTH.currentUser = null;
-  try{ sessionStorage.removeItem('_lm_sess'); }catch(_){}
-}
-// Auto-expire: check every 60s
-setInterval(()=>{
-  if(!AUTH.ok) return;
-  if(Date.now() - AUTH.sessionStart > SEC.SESSION_TIMEOUT_MS){
-    sessionEnd(); showAuth('login');
-    toast('⚠ Sesi berakhir karena tidak aktif — silakan login kembali');
-  }
-}, 60000);
-// Renew on user interaction
-document.addEventListener('click', ()=>{ if(AUTH.ok) AUTH.sessionStart = Date.now(); });
-document.addEventListener('keydown', ()=>{ if(AUTH.ok) AUTH.sessionStart = Date.now(); });
-
-// ── Role-based UI ─────────────────────────────────────────────
-function updateHeaderForRole(){
-  if(!AUTH.currentUser) return;
-  const isAdmin = AUTH.currentUser.role === 'admin';
-  // Show admin panel button only for admin
-  const adminBtn = document.getElementById('adminPanelBtn');
-  if(adminBtn) adminBtn.style.display = isAdmin ? '' : 'none';
-  // Show username in logout button
-  const logoutBtn = document.getElementById('logoutBtn');
-  if(logoutBtn) logoutBtn.title = 'Logout: ' + AUTH.currentUser.username + ' (' + AUTH.currentUser.role + ')';
-}
-
-// ── Auth load (check if system configured) ────────────────────
+function randSalt(){ const a=new Uint8Array(16); try{ crypto.getRandomValues(a); }catch(_){ for(let i=0;i<16;i++)a[i]=Math.floor(Math.random()*256); } return [...a].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 async function authLoad(){
-  // Check if admin account exists (migrating from old system too)
-  const users = await getUsers();
-  // Legacy migration: if old auth:user exists but users:list is empty
-  if(!users.length){
-    const oldUser = await secGet('auth:user');
-    const oldHash = await secGet('auth:hash');
-    const oldSalt = await secGet('auth:salt');
-    if(oldUser && oldHash){
-      // Migrate old single-user to new system as admin
-      const migrated = [{ username: oldUser, role: 'admin' }];
-      await saveUsers(migrated);
-      await secSet('users:pw:'+oldUser, JSON.stringify({ salt: oldSalt||'', hash: oldHash }));
-      // Generate a random admin key if not present (admin must set it manually)
-      const existingKey = await getAdminKeyHash();
-      if(!existingKey){
-        // Flag: needs admin key setup after login
-        await secSet('auth:needsKeySetup', '1');
-      }
-    }
-  }
+  try{ const u=await store.get('auth:user'); if(u) AUTH.user=u.value; }catch(_){}
+  try{ const s=await store.get('auth:salt'); if(s) AUTH.salt=s.value; }catch(_){}
+  try{ const h=await store.get('auth:hash'); if(h) AUTH.hash=h.value; }catch(_){}
 }
-
-function authConfigured(){ return true; } // always show login, not setup check
-
-// ── Show/hide auth screens ────────────────────────────────────
-async function showAuth(screen){
-  const panels = ['authSetup','authLogin','authRegister','authReset'];
-  panels.forEach(p => document.getElementById(p).style.display='none');
-  document.getElementById('authNote').style.display = 'none';
-  document.getElementById('authLockBanner').style.display = 'none';
-  document.getElementById('suErr').textContent='';
-  document.getElementById('liErr').textContent='';
-  document.getElementById('regErr').textContent='';
-  document.getElementById('rstErr').textContent='';
-  document.getElementById('authOverlay').classList.add('show');
-
-  const users = await getUsers();
-  const hasAdmin = users.some(u => u.role==='admin');
-
-  if(!hasAdmin || screen==='setup'){
-    // First time: setup admin account
-    document.getElementById('authTitle').textContent='Setup Administrator';
-    document.getElementById('authSubtitle').textContent='Buat akun admin pertama untuk mengaktifkan sistem';
-    document.getElementById('authSetup').style.display='';
-    document.getElementById('authNote').style.display='';
-    setTimeout(()=>document.getElementById('suUser').focus(),50);
-  } else if(screen==='register'){
-    document.getElementById('authTitle').textContent='Daftar Akun Baru';
-    document.getElementById('authSubtitle').textContent='Diperlukan Admin Key dari administrator';
-    document.getElementById('authRegister').style.display='';
-    setTimeout(()=>document.getElementById('regUser').focus(),50);
-  } else if(screen==='reset'){
-    document.getElementById('authTitle').textContent='Reset Password';
-    document.getElementById('authSubtitle').textContent='Verifikasi dengan Admin Key';
-    document.getElementById('authReset').style.display='';
-    setTimeout(()=>document.getElementById('rstAdminKey').focus(),50);
-  } else {
-    document.getElementById('authTitle').textContent='Akses Dashboard';
-    document.getElementById('authSubtitle').textContent='Masuk dengan akun Anda';
-    document.getElementById('authLogin').style.display='';
-    // Brute-force banner
-    const bf = bfCheck();
-    if(bf.locked){
-      document.getElementById('authLockBanner').style.display='';
-      document.getElementById('authLockBanner').textContent=
-        '⛔ Terlalu banyak percobaan gagal. Coba lagi dalam ' + bf.secsLeft + ' detik.';
-    }
-    setTimeout(()=>document.getElementById('liUser').focus(),50);
-  }
-
-  // After login: check if admin needs to set up admin key
-  if(AUTH.ok && AUTH.currentUser?.role==='admin'){
-    const needsKey = await secGet('auth:needsKeySetup');
-    if(needsKey==='1'){
-      toast('⚠ Admin: Anda perlu mengatur Admin Key di panel Admin → Security untuk memungkinkan registrasi user baru.');
-    }
-  }
+function authConfigured(){ return !!(AUTH.user && AUTH.hash); }
+async function authSetup(user,pass){
+  AUTH.user=user; AUTH.salt=randSalt(); AUTH.hash=await sha256(AUTH.salt+'|'+pass);
+  await store.set('auth:user',AUTH.user); await store.set('auth:salt',AUTH.salt); await store.set('auth:hash',AUTH.hash);
 }
-
-function authReveal(){
-  document.getElementById('authOverlay').classList.remove('show');
+async function authVerify(user,pass){ if(user!==AUTH.user) return false; return (await sha256(AUTH.salt+'|'+pass))===AUTH.hash; }
+function authReveal(){ AUTH.ok=true; const o=$('#authOverlay'); if(o) o.classList.remove('show'); }
+function showAuth(){
+  const setup=!authConfigured();
+  $('#authSetup').style.display=setup?'':'none';
+  $('#authLogin').style.display=setup?'none':'';
+  $('#suErr').textContent=''; $('#liErr').textContent='';
+  $('#authOverlay').classList.add('show');
+  setTimeout(()=>{ (setup?$('#suUser'):$('#liUser')).focus(); },50);
 }
-
-// ── Setup admin (first time) ──────────────────────────────────
-$('#suBtn').onclick = async () => {
-  const u = $('#suUser').value.trim();
-  const p = $('#suPass').value;
-  const p2= $('#suPass2').value;
-  const k = $('#suAdminKey').value.trim();
-  const err = (m) => { $('#suErr').textContent=m; };
-  if(u.length < 3){ err('Username minimal 3 karakter'); return; }
-  if(/[^a-zA-Z0-9_-]/.test(u)){ err('Username: hanya huruf, angka, _, -'); return; }
-  if(p.length < SEC.MIN_PASS){ err('Password minimal '+SEC.MIN_PASS+' karakter'); return; }
-  if(p!==p2){ err('Password tidak sama'); return; }
-  if(k.length < SEC.MIN_KEY){ err('Admin Key minimal '+SEC.MIN_KEY+' karakter'); return; }
-  // Save admin account
-  const salt = randSalt();
-  const hash = await hashPass(salt, p);
-  const keyHash = await hashAdminKey(k);
-  await saveUsers([{ username:u, role:'admin' }]);
-  await secSet('users:pw:'+u, JSON.stringify({ salt, hash }));
-  await secSet('auth:adminkeyhash', keyHash);
-  await secDel('auth:needsKeySetup');
-  sessionStart(u, 'admin');
-  authReveal();
-  toast('✓ Akun admin dibuat — simpan Admin Key Anda dengan aman');
-  renderAdminAuditLog('setup', u, 'Admin account created');
+// wiring auth
+$('#suBtn').onclick=async()=>{
+  const u=$('#suUser').value.trim(), p=$('#suPass').value, p2=$('#suPass2').value;
+  if(u.length<3){ $('#suErr').textContent='Username minimal 3 karakter.'; return; }
+  if(p.length<6){ $('#suErr').textContent='Password minimal 6 karakter.'; return; }
+  if(p!==p2){ $('#suErr').textContent='Password tidak sama.'; return; }
+  await authSetup(u,p); authReveal(); toast('✓ Akun dibuat — dashboard terkunci untuk perangkat ini');
 };
-
-// ── Role selector state ──────────────────────────────────────
-let selectedLoginRole = 'admin';
-document.getElementById('roleAdminBtn').addEventListener('click', function() {
-  selectedLoginRole = 'admin';
-  document.getElementById('roleAdminBtn').className = 'role-btn role-btn-active';
-  document.getElementById('roleMemberBtn').className = 'role-btn';
-  document.getElementById('liErr').textContent = '';
-});
-document.getElementById('roleMemberBtn').addEventListener('click', function() {
-  selectedLoginRole = 'member';
-  document.getElementById('roleMemberBtn').className = 'role-btn role-btn-member-active';
-  document.getElementById('roleAdminBtn').className = 'role-btn';
-  document.getElementById('liErr').textContent = '';
-});
-
-// ── Login ─────────────────────────────────────────────────────
-$('#liBtn').onclick = async () => {
-  const bf = bfCheck();
-  if(bf.locked){
-    $('#liErr').textContent = '⛔ Terlalu banyak percobaan. Coba lagi dalam ' + bf.secsLeft + ' detik.';
-    return;
-  }
-  const u = $('#liUser').value.trim();
-  const p = $('#liPass').value;
-  if(!u || !p){ $('#liErr').textContent = 'Username dan password wajib diisi'; return; }
-  const users = await getUsers();
-  const userRec = users.find(x => x.username.toLowerCase() === u.toLowerCase());
-  if(!userRec){ bfFail(); $('#liErr').textContent = 'Username atau password salah'; return; }
-  // Role check sesuai pilihan di selector
-  const expectedRole = selectedLoginRole === 'admin' ? 'admin' : 'user';
-  if(userRec.role !== expectedRole){
-    bfFail();
-    $('#liErr').textContent = selectedLoginRole === 'admin'
-      ? 'Akun ini bukan admin — pilih login sebagai Member'
-      : 'Akun ini adalah admin — pilih login sebagai Admin';
-    return;
-  }
-  const pwData = await secGet('users:pw:' + userRec.username);
-  if(!pwData){ bfFail(); $('#liErr').textContent = 'Data akun rusak — hubungi admin'; return; }
-  const pw = JSON.parse(pwData);
-  const computed = await hashPass(pw.salt, p);
-  if(computed !== pw.hash){
-    const att = bfFail();
-    const rem = SEC.MAX_ATTEMPTS - att;
-    $('#liErr').textContent = rem > 0
-      ? 'Password salah. Sisa percobaan: ' + rem
-      : '⛔ Akun terkunci 15 menit.';
-    return;
-  }
-  $('#liPass').value = '';
-  sessionStart(userRec.username, userRec.role);
-  authReveal();
-  renderAdminAuditLog('login', userRec.username, 'Login sebagai ' + userRec.role);
-  toast('✓ Selamat datang, ' + userRec.username + ' [' + userRec.role + ']');
+$('#liBtn').onclick=async()=>{
+  const u=$('#liUser').value.trim(), p=$('#liPass').value;
+  if(await authVerify(u,p)){ $('#liPass').value=''; authReveal(); toast('✓ Berhasil masuk'); }
+  else{ $('#liErr').textContent='Username atau password salah.'; }
 };
-$('#liPass').addEventListener('keydown', e => { if(e.key === 'Enter') $('#liBtn').click(); });
-$('#liUser').addEventListener('keydown', e => { if(e.key === 'Enter') $('#liPass').focus(); });
-
-// ── Register ──────────────────────────────────────────────────
-$('#regBtn').onclick = async () => {
-  const u = $('#regUser').value.trim();
-  const p = $('#regPass').value;
-  const p2 = $('#regPass2').value;
-  const k = $('#regAdminKey').value.trim();
-  const err = m => { $('#regErr').textContent = m; };
-  if(u.length < 3){ err('Username minimal 3 karakter'); return; }
-  if(/[^a-zA-Z0-9_\-]/.test(u)){ err('Username: hanya huruf, angka, _, -'); return; }
-  if(p.length < SEC.MIN_PASS){ err('Password minimal ' + SEC.MIN_PASS + ' karakter'); return; }
-  if(p !== p2){ err('Password tidak sama'); return; }
-  if(!k){ err('Admin Key wajib diisi'); return; }
-  const storedKeyHash = await getAdminKeyHash();
-  if(!storedKeyHash){ err('Admin Key belum diatur'); return; }
-  if(await hashAdminKey(k) !== storedKeyHash){ err('Admin Key salah'); return; }
-  if(await userExists(u)){ err('Username sudah digunakan'); return; }
-  const salt = randSalt();
-  const hash = await hashPass(salt, p);
-  const users = await getUsers();
-  users.push({ username: u, role: 'user' });
-  await saveUsers(users);
-  await secSet('users:pw:' + u, JSON.stringify({ salt, hash }));
-  $('#regPass').value = ''; $('#regPass2').value = ''; $('#regAdminKey').value = '';
-  renderAdminAuditLog('register', u, 'Akun baru didaftarkan');
-  await showAuth('login');
-  toast('✓ Akun berhasil dibuat — silakan login');
+$('#liReset').onclick=async()=>{
+  if(!confirm('Reset kredensial? Anda akan diminta membuat username/password baru. Data link tidak terhapus.')) return;
+  try{ await store.del('auth:user'); await store.del('auth:salt'); await store.del('auth:hash'); }catch(_){}
+  AUTH.user=''; AUTH.salt=''; AUTH.hash=''; showAuth();
 };
-$('#regPass2').addEventListener('keydown', e => { if(e.key === 'Enter') $('#regBtn').click(); });
-
-// ── Reset password ────────────────────────────────────────────
-$('#rstBtn').onclick = async () => {
-  const k = $('#rstAdminKey').value.trim();
-  const u = $('#rstUser').value.trim();
-  const p = $('#rstPass').value;
-  const err = m => { $('#rstErr').textContent = m; };
-  if(!k){ err('Admin Key wajib'); return; }
-  if(!u){ err('Username wajib'); return; }
-  if(p.length < SEC.MIN_PASS){ err('Password baru minimal ' + SEC.MIN_PASS + ' karakter'); return; }
-  const storedKeyHash = await getAdminKeyHash();
-  if(!storedKeyHash){ err('Admin Key belum diatur'); return; }
-  if(await hashAdminKey(k) !== storedKeyHash){ err('Admin Key salah'); return; }
-  if(!(await userExists(u))){ err('Username tidak ditemukan'); return; }
-  const salt = randSalt();
-  const hash = await hashPass(salt, p);
-  await secSet('users:pw:' + u, JSON.stringify({ salt, hash }));
-  $('#rstPass').value = ''; $('#rstAdminKey').value = '';
-  renderAdminAuditLog('reset', u, 'Password direset');
-  await showAuth('login');
-  toast('✓ Password berhasil direset');
-};
-
-// ── Nav ───────────────────────────────────────────────────────
-$('#showRegister').onclick       = () => showAuth('register');
-$('#showLogin').onclick          = () => showAuth('login');
-$('#showLoginFromReset').onclick = () => showAuth('login');
-$('#liReset').onclick            = () => showAuth('reset');
-
-// ── Logout — async + await ────────────────────────────────────
-$('#logoutBtn').onclick = async () => {
-  renderAdminAuditLog('logout', AUTH.currentUser ? AUTH.currentUser.username : '?', 'Logout');
-  sessionEnd();
-  await showAuth('login');
-};
-
-// ── Audit log ─────────────────────────────────────────────────
-let AUDIT_LOG = [];
-function renderAdminAuditLog(action, user, note){
-  AUDIT_LOG.unshift({ ts: Date.now(), action, user, note });
-  if(AUDIT_LOG.length > 50) AUDIT_LOG = AUDIT_LOG.slice(0,50);
-  const adBody = document.getElementById('adminAuditBody');
-  if(adBody && document.getElementById('adminOverlay') && document.getElementById('adminOverlay').classList.contains('show'))
-    renderAdminPanelFn();
-}
-
-// ── Reset Auth button ─────────────────────────────────────────
-$('#btnFirstTimeSetup').onclick = function() {
-  const el = document.getElementById('newAdminKeyInput');
-  const er = document.getElementById('resetAuthErr');
-  if(el) el.value = '';
-  if(er) er.textContent = '';
-  const ov = document.getElementById('resetAuthOverlay');
-  if(ov) ov.classList.add('show');
-  if(el) setTimeout(function(){ el.focus(); }, 60);
-};
-(function(){
-  const cancelBtn  = document.getElementById('cancelResetAuth');
-  const confirmBtn = document.getElementById('confirmResetAuth');
-  const overlay    = document.getElementById('resetAuthOverlay');
-  const keyInput   = document.getElementById('newAdminKeyInput');
-  const errEl      = document.getElementById('resetAuthErr');
-  if(!cancelBtn || !confirmBtn || !overlay || !keyInput || !errEl) return;
-  cancelBtn.onclick = function(){ overlay.classList.remove('show'); };
-  overlay.addEventListener('click', function(e){ if(e.target === overlay) overlay.classList.remove('show'); });
-  confirmBtn.onclick = async function(){
-    const newKey = keyInput.value.trim();
-    errEl.textContent = '';
-    if(newKey.length < 12){ errEl.textContent = 'Admin Key minimal 12 karakter'; return; }
-    try{
-      const db3 = await new Promise(function(res,rej){
-        const r = indexedDB.open('linkmon',1);
-        r.onsuccess = function(e){ res(e.target.result); };
-        r.onerror   = function(e){ rej(e.target.error); };
-      });
-      const allK2 = await new Promise(function(res,rej){
-        const tx  = db3.transaction('kv','readonly');
-        const req = tx.objectStore('kv').getAllKeys();
-        req.onsuccess = function(){ res(req.result); };
-        req.onerror   = function(){ rej(req.error); };
-      });
-      const toDel = ['auth:user','auth:salt','auth:hash','auth:adminkeyhash',
-                     'auth:needsKeySetup','users:list','auth:bootstrapped_v2'];
-      for(const k of allK2){
-        if(toDel.indexOf(k) !== -1 || k.indexOf('users:pw:') === 0){
-          try{ await secDel(k); }catch(_){}
-        }
-      }
-      const kh2 = await hashAdminKey(newKey);
-      await secSet('auth:adminkeyhash', kh2);
-      await secSet('auth:bootstrapped_v2','1');
-      overlay.classList.remove('show');
-      sessionEnd();
-      await showAuth('setup');
-      toast('Auth direset — buat akun admin baru');
-    }catch(e2){ errEl.textContent = 'Error: ' + e2.message; }
-  };
-  keyInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') confirmBtn.click(); });
-})();
-
-// ── Admin Panel wiring ─────────────────────────────────────────
-(function(){
-  const apBtn = document.getElementById('adminChangePassBtn');
-  const akBtn = document.getElementById('adminChangeKeyBtn');
-  const clBtn = document.getElementById('closeAdminPanel');
-  const caBtn = document.getElementById('cancelAdminPanel');
-  const adOv  = document.getElementById('adminOverlay');
-  if(!apBtn || !akBtn || !clBtn || !caBtn || !adOv) return;
-  apBtn.onclick = async function(){
-    const old = document.getElementById('adminOldPass').value;
-    const nw  = document.getElementById('adminNewPass').value;
-    const er  = document.getElementById('adminPassErr');
-    er.textContent = '';
-    if(!old || !nw){ er.textContent = 'Isi kedua field'; return; }
-    if(nw.length < SEC.MIN_PASS){ er.textContent = 'Min ' + SEC.MIN_PASS + ' karakter'; return; }
-    const me = AUTH.currentUser && AUTH.currentUser.username;
-    const pd = await secGet('users:pw:' + me);
-    if(!pd){ er.textContent = 'Data tidak ditemukan'; return; }
-    const pw = JSON.parse(pd);
-    if(await hashPass(pw.salt, old) !== pw.hash){ er.textContent = 'Password lama salah'; return; }
-    const ns = randSalt(); const nh = await hashPass(ns, nw);
-    await secSet('users:pw:' + me, JSON.stringify({ salt: ns, hash: nh }));
-    document.getElementById('adminOldPass').value = '';
-    document.getElementById('adminNewPass').value = '';
-    er.textContent = '';
-    renderAdminAuditLog('change-pass', me, 'Password diubah');
-    toast('Password berhasil diubah');
-  };
-  akBtn.onclick = async function(){
-    const k  = document.getElementById('adminNewKey').value.trim();
-    const er = document.getElementById('adminKeyErr');
-    er.textContent = '';
-    if(k.length < SEC.MIN_KEY){ er.textContent = 'Min ' + SEC.MIN_KEY + ' karakter'; return; }
-    await secSet('auth:adminkeyhash', await hashAdminKey(k));
-    await secDel('auth:needsKeySetup');
-    document.getElementById('adminNewKey').value = '';
-    renderAdminAuditLog('change-adminkey', AUTH.currentUser && AUTH.currentUser.username, 'Admin Key diperbarui');
-    toast('Admin Key diperbarui — simpan dengan aman!');
-  };
-  clBtn.onclick = caBtn.onclick = function(){ adOv.classList.remove('show'); };
-  adOv.addEventListener('click', function(e){ if(e.target === adOv) adOv.classList.remove('show'); });
-  window.openAdminPanel = async function(){
-    if(!AUTH.ok || !AUTH.currentUser || AUTH.currentUser.role !== 'admin'){
-      toast('Hanya administrator'); return;
-    }
-    document.getElementById('adminCurrentUser').textContent = 'Masuk sebagai: ' + AUTH.currentUser.username + ' (admin)';
-    document.getElementById('adminKeySection').style.display = '';
-    await renderAdminUserListFn();
-    renderAdminPanelFn();
-    adOv.classList.add('show');
-  };
-})();
-
-async function renderAdminUserListFn(){
-  const users = await getUsers();
-  const me = AUTH.currentUser && AUTH.currentUser.username;
-  const container = document.getElementById('adminUserList');
-  if(!container) return;
-  if(!users.length){ container.innerHTML = '<div style="color:var(--muted-2);font-size:10px;padding:6px">Tidak ada user.</div>'; return; }
-  container.innerHTML = users.map(u => {
-    const isSelf = u.username === me;
-    const pl = u.role !== 'admin' ? 'Jadikan Admin' : 'Turunkan ke User';
-    return '<div class="user-row"><div class="ur-name">' + u.username +
-      (isSelf ? ' <span style="font-size:9px;color:var(--muted-2)">(saya)</span>' : '') + '</div>' +
-      '<span class="ur-role ' + u.role + '">' + u.role + '</span>' +
-      (!isSelf ? '<button class="ur-promote" data-u="' + u.username + '">' + pl + '</button>' +
-      '<button class="ur-del" data-u="' + u.username + '">Hapus</button>' : '') + '</div>';
-  }).join('');
-  container.querySelectorAll('.ur-del').forEach(b => {
-    b.onclick = async () => {
-      if(!confirm('Hapus akun ' + b.dataset.u + '?')) return;
-      let list = await getUsers();
-      list = list.filter(x => x.username !== b.dataset.u);
-      await saveUsers(list); await secDel('users:pw:' + b.dataset.u);
-      renderAdminAuditLog('delete-user', b.dataset.u, 'Dihapus');
-      await renderAdminUserListFn();
-      toast('Akun ' + b.dataset.u + ' dihapus');
-    };
-  });
-  container.querySelectorAll('.ur-promote').forEach(b => {
-    b.onclick = async () => {
-      const list = await getUsers();
-      const u = list.find(x => x.username === b.dataset.u);
-      if(!u) return;
-      u.role = u.role === 'admin' ? 'user' : 'admin';
-      await saveUsers(list);
-      renderAdminAuditLog('role-change', b.dataset.u, 'Role: ' + u.role);
-      await renderAdminUserListFn();
-      toast('Role diubah: ' + u.role);
-    };
-  });
-}
-function renderAdminPanelFn(){
-  const body = document.getElementById('adminAuditBody');
-  if(!body) return;
-  if(!AUDIT_LOG.length){ body.innerHTML = '<div style="color:var(--muted-2)">Belum ada aktivitas.</div>'; return; }
-  body.innerHTML = AUDIT_LOG.map(l => {
-    const d = new Date(l.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-    const col = l.action==='login'||l.action==='setup' ? 'var(--green)' : l.action==='logout' ? 'var(--muted)' : 'var(--amber)';
-    return '<div style="display:grid;grid-template-columns:70px 80px 100px 1fr;gap:6px;border-bottom:1px solid var(--line-soft);padding:2px 0">' +
-      '<span style="color:var(--muted-2)">' + d + '</span>' +
-      '<span style="color:' + col + ';font-size:9px;text-transform:uppercase">' + l.action + '</span>' +
-      '<span style="color:var(--cyan)">' + l.user + '</span>' +
-      '<span>' + l.note + '</span></div>';
-  }).join('');
-}
-
-// ══ TAB NAVIGATION ══════════════════════════════════════════
-// ══ TAB NAVIGATION ══════════════════════════════════════════
-document.querySelectorAll('.app-tab').forEach(tab => {
-  tab.onclick = () => {
-    document.querySelectorAll('.app-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    tab.classList.add('active');
-    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
-  };
-});
+$('#suPass2').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#suBtn').click(); });
+$('#liPass').addEventListener('keydown',e=>{ if(e.key==='Enter') $('#liBtn').click(); });
+$('#logoutBtn').onclick=()=>{ AUTH.ok=false; showAuth(); };
 
 // ---------- init ----------
 (async function(){
-
-  // ── BOOTSTRAP v3: Buat akun admin Loopy_21 langsung ──────────
-  // Runs once — dideteksi dengan key 'auth:bootstrapped_v3'
-  try {
-    const bootstrapped = await secGet('auth:bootstrapped_v3');
-    if (!bootstrapped) {
-      // 1. Hapus semua data auth lama (bersih total)
-      const AUTH_WIPE = ['auth:user','auth:salt','auth:hash',
-        'auth:adminkeyhash','auth:needsKeySetup','users:list',
-        'auth:bootstrapped_v2'];
-      for (const k of AUTH_WIPE) { try { await secDel(k); } catch(_){} }
-      // Hapus users:pw:* lama
-      try {
-        const db2 = await new Promise(function(res,rej){
-          const r=indexedDB.open('linkmon',1);
-          r.onsuccess=function(e){res(e.target.result);};
-          r.onerror=function(e){rej(e.target.error);};
-        });
-        const allK = await new Promise(function(res,rej){
-          const tx=db2.transaction('kv','readonly');
-          const req=tx.objectStore('kv').getAllKeys();
-          req.onsuccess=function(){res(req.result);};
-          req.onerror=function(){rej(req.error);};
-        });
-        for (const k of allK) {
-          if (k.indexOf('users:pw:') === 0) { try { await secDel(k); } catch(_){} }
-        }
-      } catch(_){}
-
-      // 2. Buat akun admin: Loopy_21 / @Ndryzum2101
-      const adminSalt = randSalt();
-      const adminHash = await hashPass(adminSalt, '@Ndryzum2101');
-      await saveUsers([{ username: 'Loopy_21', role: 'admin' }]);
-      await secSet('users:pw:Loopy_21', JSON.stringify({ salt: adminSalt, hash: adminHash }));
-
-      // 3. Set Admin Key = 2011110959317094
-      const keyHash = await hashAdminKey('2011110959317094');
-      await secSet('auth:adminkeyhash', keyHash);
-
-      // 4. Tandai selesai
-      await secSet('auth:bootstrapped_v3', '1');
-      console.log('[Bootstrap v3] Akun Loopy_21 (admin) berhasil dibuat');
-    }
-  } catch(e) { console.warn('[Bootstrap v3]', e); }
-  // ──────────────────────────────────────────────────────────────
-
-  await authLoad();
-  // Try to restore session from sessionStorage first (page refresh)
-  if(!sessionRestore()){
-    await showAuth('login');
-  } else {
-    document.getElementById('authOverlay').classList.remove('show');
-  }          // tampilkan kunci lebih dulu (dashboard tersembunyi di belakang)
+  await authLoad(); showAuth();          // tampilkan kunci lebih dulu (dashboard tersembunyi di belakang)
   await loadData();
-  await loadSettings();
   markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog();
   updateUndoBtn(); updateSaveState();
   await gdConfigLoad(); gdUpdateStatus();
   await asConfigLoad();
+  await loadHDD(); renderHDD();
 })();
-// ══════════════════════════════════════════════════════════════
-// HDD MONITOR — Professional Health Score System
-
-// ══════════════════════════════════════════════════════════════
-// PROFESSIONAL HEALTH SCORE ENGINE
-// Sources:
-//  • Backblaze Drive Stats 2024 — AFR by fill%, age cohort
-//  • CrystalDiskInfo 9.x — SMART threshold mapping
-//  • ATA/ATAPI-8 SMART spec — critical attributes: 5,197,198
-//  • Seagate/WD datasheets — operational temp 0–60°C, ideal 30–45°C
-//  • IBM Storage Tiering Guide — capacity thresholds
-// ══════════════════════════════════════════════════════════════
-
-function calcHealthScore(d) {
-  // d = { usagePct, smart, tempC, ageYears, realloc, pending, uncorr }
-  let score = 100;
-  const penalties = [];
-
-  // Factor 1 — Capacity (Backblaze: >90% fill = 2× AFR)
-  const u = d.usagePct || 0;
-  if      (u >= 95) { score -= 40; penalties.push({n:'Kapasitas',  pts:-40, note:`${u}% — Kritis: Backblaze AFR 2× pada ≥95%`}); }
-  else if (u >= 90) { score -= 25; penalties.push({n:'Kapasitas',  pts:-25, note:`${u}% — Risiko tinggi gagal tulis`}); }
-  else if (u >= 80) { score -= 15; penalties.push({n:'Kapasitas',  pts:-15, note:`${u}% — Backblaze: failure rate naik di ≥80%`}); }
-  else if (u >= 70) { score -=  5; penalties.push({n:'Kapasitas',  pts:-5,  note:`${u}% — Pertimbangkan tambah storage`}); }
-
-  // Factor 2 — S.M.A.R.T. (CrystalDiskInfo: yellow=-30, red=-60)
-  const s = d.smart || 'ok';
-  if      (s === 'fail') { score -= 60; penalties.push({n:'S.M.A.R.T.', pts:-60, note:'CDI Merah — backup & ganti segera'}); }
-  else if (s === 'warn') { score -= 30; penalties.push({n:'S.M.A.R.T.', pts:-30, note:'CDI Kuning — waspadai & pantau rutin'}); }
-
-  // Factor 3 — Temperature (Seagate/WD: ideal 30–45°C, max 60°C)
-  if (d.tempC !== undefined && d.tempC !== '' && d.tempC !== null) {
-    const t = parseFloat(d.tempC);
-    if      (t > 60) { score -= 35; penalties.push({n:'Suhu', pts:-35, note:`${t}°C — Kritis: melebihi max 60°C`}); }
-    else if (t > 55) { score -= 20; penalties.push({n:'Suhu', pts:-20, note:`${t}°C — Sangat panas, dekati batas`}); }
-    else if (t > 45) { score -= 10; penalties.push({n:'Suhu', pts:-10, note:`${t}°C — Di atas ideal 30–45°C`}); }
-    else if (t < 25) { score -=  3; penalties.push({n:'Suhu', pts:-3,  note:`${t}°C — Terlalu dingin, risiko kondensasi`}); }
-  }
-
-  // Factor 4 — Age (Backblaze AFR cohort 2013–2024)
-  if (d.ageYears !== undefined && d.ageYears !== '' && d.ageYears !== null) {
-    const a = parseFloat(d.ageYears);
-    if      (a > 10) { score -= 28; penalties.push({n:'Usia', pts:-28, note:`${a} tahun — End-of-life, AFR >10%`}); }
-    else if (a >  7) { score -= 18; penalties.push({n:'Usia', pts:-18, note:`${a} tahun — Backblaze AFR 6–10%`}); }
-    else if (a >  5) { score -= 10; penalties.push({n:'Usia', pts:-10, note:`${a} tahun — Backblaze AFR 4–6%`}); }
-    else if (a >  3) { score -=  5; penalties.push({n:'Usia', pts:-5,  note:`${a} tahun — AFR 2–4%, normal`}); }
-  }
-
-  // Factor 5 — Reallocated Sectors (SMART ID 5 — ATA spec: critical)
-  if (d.realloc !== undefined && d.realloc !== '' && d.realloc !== null) {
-    const r = parseInt(d.realloc) || 0;
-    if      (r >= 20) { score -= 40; penalties.push({n:'Reallocated Sektors', pts:-40, note:`${r} sektors — Degradasi fisik parah`}); }
-    else if (r >=  5) { score -= 25; penalties.push({n:'Reallocated Sektors', pts:-25, note:`${r} sektors — SMART ID5: risiko tinggi`}); }
-    else if (r >=  1) { score -= 15; penalties.push({n:'Reallocated Sektors', pts:-15, note:`${r} sektors — SMART ID5: tanda kerusakan`}); }
-  }
-
-  // Factor 6 — Pending Sectors (SMART ID 197)
-  if (d.pending !== undefined && d.pending !== '' && d.pending !== null) {
-    const p = parseInt(d.pending) || 0;
-    if (p >= 1) { score -= 20; penalties.push({n:'Pending Sektors', pts:-20, note:`${p} sektors — SMART ID197: reallokasi tertunda`}); }
-  }
-
-  // Factor 7 — Uncorrectable Errors (SMART ID 198)
-  if (d.uncorr !== undefined && d.uncorr !== '' && d.uncorr !== null) {
-    const e = parseInt(d.uncorr) || 0;
-    if (e >= 1) { score -= 25; penalties.push({n:'Uncorrectable Errors', pts:-25, note:`${e} errors — SMART ID198: data tidak terbaca`}); }
-  }
-
-  return { score: Math.max(0, Math.min(100, score)), penalties };
-}
-
-function healthGrade(score) {
-  if (score >= 90) return { grade:'A', label:'EXCELLENT', cls:'hb-excellent', color:'var(--green)',     barColor:'#39ff14', note:'Kondisi prima — tidak ada masalah terdeteksi' };
-  if (score >= 75) return { grade:'B', label:'GOOD',      cls:'hb-good',      color:'var(--cyan)',      barColor:'#00f5ff', note:'Kondisi baik — pantau secara berkala' };
-  if (score >= 60) return { grade:'C', label:'CAUTION',   cls:'hb-caution',   color:'var(--amber)',     barColor:'#ffcc00', note:'Perlu perhatian — backup data penting segera' };
-  if (score >= 40) return { grade:'D', label:'WARNING',   cls:'hb-warning',   color:'var(--orange)',    barColor:'#ff6600', note:'Kondisi buruk — rencanakan penggantian disk' };
-  return              { grade:'F', label:'CRITICAL',  cls:'hb-critical',  color:'var(--red)',       barColor:'#ff2244', note:'KRITIS — backup segera & ganti disk sekarang' };
-}
-
-function renderHealthGauge(disk) {
-  const usedGB  = diskUsedGB(disk);
-  const totalGB = diskTotalGB(disk);
-  const usagePct = totalGB > 0 ? Math.min(100, Math.round(usedGB/totalGB*100)) : 0;
-  const { score, penalties } = calcHealthScore({
-    usagePct,
-    smart:    disk.health?.smart || 'ok',
-    tempC:    disk.health?.temp,
-    ageYears: disk.health?.ageYears,
-    realloc:  disk.health?.realloc,
-    pending:  disk.health?.pending,
-    uncorr:   disk.health?.uncorr
-  });
-  const g = healthGrade(score);
-  const factorsHtml = penalties.length
-    ? penalties.map(p => `<div class="hg-factor">
-        <span class="hf-name">${p.n}</span>
-        <span class="hf-note">${p.note}</span>
-        <span class="hf-pts">${p.pts}</span>
-      </div>`).join('')
-    : '<div class="hg-factor"><span style="color:var(--green);font-size:9px;font-family:Share Tech Mono,monospace">✓ Tidak ada faktor pengurang</span></div>';
-
-  return `<div class="health-gauge">
-    <div class="hg-top">
-      <div class="hg-left">
-        <span class="hg-grade" style="color:${g.color};text-shadow:0 0 12px ${g.barColor}40">${g.grade}</span>
-        <span class="hg-score" style="color:${g.color}">${score}/100</span>
-        <span class="hg-label" style="color:${g.color}">${g.label}</span>
-      </div>
-      <div class="health-badge ${g.cls}"><span class="hd"></span>Health Score</div>
-    </div>
-    <div class="hg-bar"><div class="hg-bar-fill" style="width:${score}%;background:${g.barColor};box-shadow:0 0 6px ${g.barColor}80"></div></div>
-    <div class="hg-factors">${factorsHtml}</div>
-    <div class="hg-ref">Ref: Backblaze Drive Stats 2024 · CrystalDiskInfo 9.x · ATA/ATAPI-8 SMART spec · Seagate/WD Datasheets</div>
-  </div>`;
-}
-
-function updateDiskModalHealthPreview() {
-  const usageOverride = parseFloat(document.getElementById('hddUsedOverride')?.value) || 0;
-  const totalVal      = parseFloat(document.getElementById('hddTotal')?.value) || 0;
-  const usagePct = totalVal > 0 ? Math.min(100, Math.round(usageOverride/totalVal*100)) : 0;
-
-  const { score, penalties } = calcHealthScore({
-    usagePct,
-    smart:    hddSmartVal,
-    tempC:    document.getElementById('hddTemp')?.value,
-    ageYears: document.getElementById('hddAge')?.value,
-    realloc:  document.getElementById('hddRealloc')?.value,
-    pending:  document.getElementById('hddPending')?.value,
-    uncorr:   document.getElementById('hddUncorr')?.value
-  });
-  const g = healthGrade(score);
-  const prev = document.getElementById('hspPreview');
-  if(!prev) return;
-  prev.innerHTML = `<div class="hsp-top">
-    <span class="hsp-grade" style="color:${g.color};text-shadow:0 0 14px ${g.barColor}50">${g.grade}</span>
-    <div class="hsp-right">
-      <span class="hsp-score" style="color:${g.color}">${score} / 100</span>
-      <span class="hsp-label" style="color:${g.color}">${g.label}</span>
-    </div>
-  </div>
-  <div class="hsp-bar"><div class="hsp-bar-fill" style="width:${score}%;background:${g.barColor}"></div></div>
-  <div class="hsp-note">${g.note}</div>
-  ${penalties.length ? '<div class="hsp-penalties">'+penalties.map(p=>`<div class="hsp-pen"><span>${p.n}: ${p.note}</span><span class="pp">${p.pts}</span></div>`).join('')+'</div>' : ''}`;
-}
-
-// ══════════════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════════════════════
-// CONSTANTS & STATE
-// ═══════════════════════════════════════════════════════════════════════
-const STORE_KEY = 'hdd_monitor_v1'; // same key — preserves existing data
-const UNIT_TO_GB = { MB: 1/1024, GB: 1, TB: 1024 };
-
-let unit = 'GB';
-let disks = [];
-let editDiskId = null;
-let editFolderCtx = null;
-let confirmCb = null;
-let tmpFiles = []; // files being edited in folder modal
-let hddSmartVal = 'ok';
-
-// Transfer panel state
-let tpFolders = []; // [{diskId, folderId, name, sizeGB}]
-let tpTargetDiskId = null;
-let dragSrc = null; // {type:'folder'|'disk', diskId, folderId}
-
-// ═══════════════════════════════════════════════════════════════════════
-// STORAGE & MIGRATION
-// ═══════════════════════════════════════════════════════════════════════
-function hddLoad() {
-  try {
-    const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) { disks = []; unit = 'GB'; return; }
-    const data = JSON.parse(raw);
-    unit = data.unit || 'GB';
-    disks = (data.disks || []).map(d => hddMigrate(d));
-  } catch(e) { disks = []; }
-}
-
-function hddMigrate(d) {
-  // ensure folders array
-  if (!Array.isArray(d.folders)) d.folders = [];
-  d.folders = d.folders.map(f => {
-    if (!Array.isArray(f.files)) f.files = [];
-    // old format: f.size was a flat number, no files[] — convert to legacy file
-    if (f.files.length === 0 && f.size > 0) {
-      f.files = [{ id: 'leg_'+f.id, name: f.name, size: f.size, unit: d.unit || unit || 'GB', desc: '' }];
-    }
-    if (!f.id) f.id = hddUid();
-    return f;
-  });
-  // ensure health object
-  if (!d.health) d.health = { smart: 'ok', temp: '', notes: '', ageYears: '', realloc: '', pending: '', uncorr: '' };
-  else { d.health.ageYears = d.health.ageYears||''; d.health.realloc = d.health.realloc||''; d.health.pending = d.health.pending||''; d.health.uncorr = d.health.uncorr||''; }
-  // keep existing used override if present, else undefined
-  return d;
-}
-
-function hddSave() {
-  localStorage.setItem(STORE_KEY, JSON.stringify({ disks, unit }));
-}
-
-function hddUid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
-
-// ═══════════════════════════════════════════════════════════════════════
-// SIZE MATH — all internal values stored in GB
-// ═══════════════════════════════════════════════════════════════════════
-function toGB(v, u) { return parseFloat(v||0) * (UNIT_TO_GB[u||unit]||1); }
-function fromGB(v, u) { return v / (UNIT_TO_GB[u||unit]||1); }
-
-function fmtGB(gb) {
-  if (gb <= 0) return '0 '+unit;
-  if (unit === 'TB') {
-    if (gb >= 1024) return (gb/1024).toFixed(3).replace(/\.?0+$/,'')+' TB';
-    if (gb >= 1)    return gb.toFixed(2).replace(/\.?0+$/,'')+' GB';
-    return (gb*1024).toFixed(1)+' MB';
-  }
-  if (unit === 'MB') {
-    if (gb >= 1)     return (gb*1024).toFixed(0)+' MB';
-    return (gb*1024*1024).toFixed(0)+' KB';
-  }
-  // GB
-  if (gb >= 1024) return (gb/1024).toFixed(3).replace(/\.?0+$/,'')+' TB';
-  if (gb >= 1)    return gb.toFixed(2).replace(/\.?0+$/,'')+' GB';
-  return (gb*1024).toFixed(1)+' MB';
-}
-
-function folderSizeGB(folder) {
-  return (folder.files||[]).reduce((s,f) => s + toGB(f.size, f.unit||'GB'), 0);
-}
-
-function diskUsedGB(disk) {
-  if (disk.usedOverride !== undefined && disk.usedOverride !== '' && disk.usedOverride !== null) {
-    return toGB(disk.usedOverride, 'GB'); // stored in GB internally
-  }
-  return disk.folders.reduce((s,f) => s + folderSizeGB(f), 0);
-}
-
-function diskTotalGB(disk) { return toGB(disk.total, 'GB'); }
-
-function pct(usedGB, totalGB) {
-  if (!totalGB || totalGB <= 0) return 0;
-  return Math.min(100, Math.round(usedGB / totalGB * 100));
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// HEALTH
-// ═══════════════════════════════════════════════════════════════════════
-function healthClass(disk) {
-  const {score} = calcHealthScore({
-    usagePct: pct(diskUsedGB(disk),diskTotalGB(disk)),
-    smart: disk.health?.smart||'ok', tempC:disk.health?.temp,
-    ageYears:disk.health?.ageYears, realloc:disk.health?.realloc,
-    pending:disk.health?.pending, uncorr:disk.health?.uncorr
-  });
-  return healthGrade(score).cls;
-}
-function healthLabel(disk) {
-  const {score} = calcHealthScore({
-    usagePct: pct(diskUsedGB(disk),diskTotalGB(disk)),
-    smart: disk.health?.smart||'ok', tempC:disk.health?.temp,
-    ageYears:disk.health?.ageYears, realloc:disk.health?.realloc,
-    pending:disk.health?.pending, uncorr:disk.health?.uncorr
-  });
-  const g = healthGrade(score);
-  const t = disk.health?.temp ? ' · '+disk.health.temp+'°C' : '';
-  return g.label+' '+score+'%'+t;
-}
-function donutColor(p, smart) {
-  if (smart === 'fail') return { s:'#ff2244', g:'rgba(255,34,68,.7)' };
-  if (smart === 'warn' || p >= 95) return { s:'#ff6600', g:'rgba(255,102,0,.6)' };
-  if (p >= 80) return { s:'#ffcc00', g:'rgba(255,204,0,.6)' };
-  return { s:'#00f5ff', g:'rgba(0,245,255,.6)' };
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// RENDER
-// ═══════════════════════════════════════════════════════════════════════
-function render() {
-  renderSummary();
-  renderDisks();
-  renderTransfer();
-}
-
-function renderSummary() {
-  const totalGB = disks.reduce((s,d) => s+diskTotalGB(d), 0);
-  const usedGB  = disks.reduce((s,d) => s+diskUsedGB(d), 0);
-  const freeGB  = Math.max(0, totalGB - usedGB);
-  const fCount  = disks.reduce((s,d) => s+d.folders.length, 0);
-  document.getElementById('summary').innerHTML =
-    `<div class="scard tot"><div class="sl">Total Kapasitas</div><div class="sv">${fmtGB(totalGB)}</div></div>
-     <div class="scard used"><div class="sl">Terpakai</div><div class="sv">${fmtGB(usedGB)}</div></div>
-     <div class="scard free"><div class="sl">Tersisa</div><div class="sv">${fmtGB(freeGB)}</div></div>
-     <div class="scard cnt"><div class="sl">Jumlah HDD</div><div class="sv">${disks.length}</div></div>
-     <div class="scard fol"><div class="sl">Total Folder</div><div class="sv">${fCount}</div></div>`;
-}
-
-function renderDisks() {
-  const grid = document.getElementById('diskGrid');
-  const empty = document.getElementById('emptyState');
-  document.getElementById('diskCount').textContent = disks.length ? `— ${disks.length} storage` : '';
-  if (!disks.length) { grid.innerHTML = ''; empty.style.display = ''; return; }
-  empty.style.display = 'none';
-  grid.innerHTML = disks.map(d => diskCard(d)).join('');
-  bindDiskEvents();
-}
-
-function diskCard(d) {
-  const usedGB  = diskUsedGB(d);
-  const totalGB = diskTotalGB(d);
-  const freeGB  = Math.max(0, totalGB - usedGB);
-  const p       = pct(usedGB, totalGB);
-  const smart   = d.health?.smart || 'ok';
-  const col     = donutColor(p, smart);
-  const hc      = healthClass(d);
-  const hl      = healthLabel(d);
-  const R=29, circ = 2*Math.PI*R;
-  const dash = (p/100*circ).toFixed(2);
-
-  const folderRows = d.folders.map(f => {
-    const fGB = folderSizeGB(f);
-    const filesHtml = (f.files||[]).map(fi =>
-      `<div class="file-row">
-        <div class="file-name">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          ${fi.name||'—'}
-        </div>
-        <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--mu2)">${fi.desc||''}</span>
-        <div class="file-size">${fi.size?fmtGB(toGB(fi.size,fi.unit||'GB')):'—'}</div>
-        <div class="file-acts"></div>
-      </div>`
-    ).join('');
-    const foldPct = totalGB>0 ? Math.round(fGB/totalGB*100) : 0;
-    return `<div class="folder-row" draggable="true" data-disk="${d.id}" data-folder="${f.id}">
-      <div class="fr-main">
-        <div class="fr-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        </div>
-        <div class="fr-name" title="${f.name}">${f.name}</div>
-        <div class="fr-size">${fmtGB(fGB)} <span style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--mu2)">(${foldPct}%)</span></div>
-        <div class="fr-acts">
-          <button class="fib edit" data-disk="${d.id}" data-folder="${f.id}" title="Edit folder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-          <button class="fib del" data-disk="${d.id}" data-folder="${f.id}" title="Hapus folder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
-          <button class="fib" style="font-size:10px;color:var(--mu2);border:1px solid var(--ls);font-family:'Share Tech Mono',monospace;padding:0 4px;width:auto" data-disk="${d.id}" data-folder="${f.id}" data-action="tp" title="Tambah ke Transfer">→TP</button>
-        </div>
-      </div>
-      ${f.desc ? `<div class="fr-desc">${f.desc}</div>` : ''}
-      ${(f.files||[]).length > 0 ? `<div class="file-list">${filesHtml}</div>` : ''}
-    </div>`;
-  }).join('');
-
-  return `<div class="disk-card" id="dc_${d.id}" draggable="true" data-disk="${d.id}">
-    <div class="disk-head">
-      <div class="disk-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="17" cy="12" r="2"/><path d="M5 8h6M5 12h4M5 16h6"/></svg></div>
-      <div style="min-width:0;flex:1">
-        <div class="disk-name" title="${d.name}">${d.name}</div>
-        <div class="disk-label">${d.model||'Storage Device'}</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;flex:none">
-        <div class="health-badge ${hc}"><span class="hd"></span>${hl}</div>
-        <button class="ib edit" data-disk="${d.id}" title="Edit disk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
-        <button class="ib del" data-disk="${d.id}" title="Hapus disk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
-      </div>
-    </div>
-    <div class="disk-body">
-      <div class="disk-stats">
-        <div class="donut-wrap">
-          <svg viewBox="0 0 76 76">
-            <circle class="donut-bg" cx="38" cy="38" r="${R}"/>
-            <circle class="donut-fg" cx="38" cy="38" r="${R}"
-              stroke="${col.s}"
-              style="filter:drop-shadow(0 0 4px ${col.g})"
-              stroke-dasharray="${dash} ${circ}"
-              transform="rotate(-90 38 38)"/>
-          </svg>
-          <div class="donut-pct" style="color:${col.s};text-shadow:0 0 8px ${col.g}">${p}%</div>
-        </div>
-        <div class="disk-nums">
-          <div class="dnum"><div class="dnum-lab"><span class="dot" style="background:var(--r)"></span>Terpakai</div><div class="dnum-val" style="color:var(--r)">${fmtGB(usedGB)}</div></div>
-          <div class="dnum"><div class="dnum-lab"><span class="dot" style="background:var(--g)"></span>Tersisa</div><div class="dnum-val" style="color:var(--g)">${fmtGB(freeGB)}</div></div>
-          <div class="dnum"><div class="dnum-lab"><span class="dot" style="background:var(--c)"></span>Total</div><div class="dnum-val" style="color:var(--c)">${fmtGB(totalGB)}</div></div>
-          <div class="dbar"><div class="dbar-f" style="width:${p}%;background:${col.s};box-shadow:0 0 5px ${col.g}"></div></div>
-          ${d.health?.notes ? `<div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--mu2);margin-top:3px;letter-spacing:.04em">${d.health.notes}</div>` : ''}
-        </div>
-      </div>
-      ${d.desc ? `<div class="disk-desc">${d.desc}</div>` : ''}
-      ${renderHealthGauge(d)}
-      <div class="folder-section">
-        <div class="folder-head">
-          <div class="folder-title">Folder (${d.folders.length}) — ${fmtGB(usedGB)} terpakai dari ${fmtGB(totalGB)}</div>
-          <button class="folder-add" data-disk="${d.id}" data-action="addfolder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
-            Folder
-          </button>
-        </div>
-        <div class="folder-list">${folderRows || '<div class="empty-folders">— belum ada folder —</div>'}</div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function bindDiskEvents() {
-  // disk edit/delete
-  document.querySelectorAll('.ib.edit[data-disk]').forEach(b =>
-    b.onclick = () => openDiskModal(b.dataset.disk));
-  document.querySelectorAll('.ib.del[data-disk]').forEach(b =>
-    b.onclick = () => hddAskDelete(`Hapus hardisk <b>${disks.find(d=>d.id===b.dataset.disk)?.name}</b> beserta semua foldernya?`, ()=>deleteDisk(b.dataset.disk)));
-  // folder add/edit/delete
-  document.querySelectorAll('[data-action="addfolder"]').forEach(b =>
-    b.onclick = () => openFolderModal(b.dataset.disk, null));
-  document.querySelectorAll('.fib.edit[data-folder]').forEach(b =>
-    b.onclick = () => openFolderModal(b.dataset.disk, b.dataset.folder));
-  document.querySelectorAll('.fib.del[data-folder]').forEach(b => {
-    const d = disks.find(x=>x.id===b.dataset.disk);
-    const f = d?.folders.find(x=>x.id===b.dataset.folder);
-    b.onclick = () => hddAskDelete(`Hapus folder <b>${f?.name}</b>?`, ()=>deleteFolder(b.dataset.disk, b.dataset.folder));
-  });
-  // Transfer add button
-  document.querySelectorAll('[data-action="tp"]').forEach(b =>
-    b.onclick = () => addToTransfer(b.dataset.disk, b.dataset.folder));
-
-  // Drag & drop — folders
-  document.querySelectorAll('.folder-row[data-folder]').forEach(row => {
-    row.addEventListener('dragstart', e => {
-      dragSrc = { type:'folder', diskId:row.dataset.disk, folderId:row.dataset.folder };
-      row.classList.add('dragging');
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    row.addEventListener('dragend', () => row.classList.remove('dragging'));
-  });
-
-  // Drag & drop — disk cards as transfer targets
-  document.querySelectorAll('.disk-card[data-disk]').forEach(card => {
-    card.addEventListener('dragstart', e => {
-      dragSrc = { type:'disk', diskId:card.dataset.disk };
-      e.dataTransfer.effectAllowed = 'move';
-    });
-    card.addEventListener('dragover', e => { e.preventDefault(); card.classList.add('drag-over'); });
-    card.addEventListener('dragleave', () => card.classList.remove('drag-over'));
-    card.addEventListener('drop', e => {
-      e.preventDefault(); card.classList.remove('drag-over');
-      if (dragSrc?.type === 'folder') addToTransfer(dragSrc.diskId, dragSrc.folderId);
-      else if (dragSrc?.type === 'disk' && dragSrc.diskId !== card.dataset.disk) setTransferTarget(card.dataset.disk);
-      dragSrc = null;
-    });
-  });
-
-  // Transfer panel source drop
-  const src = document.getElementById('tpSource');
-  src.addEventListener('dragover', e => { e.preventDefault(); src.style.borderColor='var(--c)'; });
-  src.addEventListener('dragleave', () => src.style.borderColor='');
-  src.addEventListener('drop', e => {
-    e.preventDefault(); src.style.borderColor='';
-    if (dragSrc?.type === 'folder') { addToTransfer(dragSrc.diskId, dragSrc.folderId); dragSrc=null; }
-  });
-
-  // Transfer panel target drop
-  const tgt = document.getElementById('tpTarget');
-  tgt.addEventListener('dragover', e => { e.preventDefault(); tgt.style.borderColor='var(--g)'; });
-  tgt.addEventListener('dragleave', () => tgt.style.borderColor='');
-  tgt.addEventListener('drop', e => {
-    e.preventDefault(); tgt.style.borderColor='';
-    if (dragSrc?.type === 'disk') { setTransferTarget(dragSrc.diskId); dragSrc=null; }
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// TRANSFER PANEL
-// ═══════════════════════════════════════════════════════════════════════
-function addToTransfer(diskId, folderId) {
-  const d = disks.find(x=>x.id===diskId);
-  const f = d?.folders.find(x=>x.id===folderId);
-  if (!f) return;
-  if (tpFolders.some(x=>x.folderId===folderId)) { toast('⚠ Folder sudah ada di transfer list'); return; }
-  tpFolders.push({ diskId, folderId, name: f.name, diskName: d.name, sizeGB: folderSizeGB(f) });
-  renderTransfer();
-  toast('✓ Folder ditambah ke transfer panel');
-}
-
-function setTransferTarget(diskId) {
-  tpTargetDiskId = diskId;
-  renderTransfer();
-}
-
-function renderTransfer() {
-  const srcItems = document.getElementById('tpSrcItems');
-  const srcPh    = document.getElementById('tpSrcPlaceholder');
-  const tgtInner = document.getElementById('tpTargetInner');
-  const result   = document.getElementById('tpResult');
-
-  // Source
-  if (tpFolders.length) {
-    srcPh.style.display = 'none';
-    srcItems.innerHTML = tpFolders.map((tf,i) =>
-      `<div class="tp-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:var(--a);flex:none"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-        <div class="tp-item-name" title="${tf.diskName} › ${tf.name}">${tf.name} <span style="color:var(--mu2)">[${tf.diskName}]</span></div>
-        <div class="tp-item-size">${fmtGB(tf.sizeGB)}</div>
-        <button class="tp-remove" data-i="${i}" title="Hapus dari list">×</button>
-      </div>`
-    ).join('');
-    document.querySelectorAll('.tp-remove').forEach(b =>
-      b.onclick = () => { tpFolders.splice(parseInt(b.dataset.i),1); renderTransfer(); });
-    document.getElementById('tpSource').classList.add('has-item');
-  } else {
-    srcPh.style.display = '';
-    srcItems.innerHTML = '';
-    document.getElementById('tpSource').classList.remove('has-item');
-  }
-
-  // Target
-  if (tpTargetDiskId) {
-    const td = disks.find(d=>d.id===tpTargetDiskId);
-    if (td) {
-      const freeGB = Math.max(0, diskTotalGB(td) - diskUsedGB(td));
-      tgtInner.innerHTML =
-        `<div class="tp-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12" style="color:var(--c);flex:none"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="17" cy="12" r="2"/></svg>
-          <div class="tp-item-name">${td.name}</div>
-          <div class="tp-item-size" style="color:var(--g)">${fmtGB(freeGB)} free</div>
-          <button class="tp-remove" id="clearTarget" title="Hapus target">×</button>
-        </div>`;
-      document.getElementById('clearTarget').onclick = () => { tpTargetDiskId = null; renderTransfer(); };
-      document.getElementById('tpTarget').classList.add('has-item');
-    }
-  } else {
-    tgtInner.innerHTML = '<div class="tp-placeholder">— drag disk card ke sini —</div>';
-    document.getElementById('tpTarget').classList.remove('has-item');
-  }
-
-  // Result
-  if (tpFolders.length && tpTargetDiskId) {
-    const td = disks.find(d=>d.id===tpTargetDiskId);
-    const movingGB = tpFolders.reduce((s,f)=>s+f.sizeGB, 0);
-    const freeGB   = Math.max(0, diskTotalGB(td) - diskUsedGB(td));
-    const fits     = movingGB <= freeGB;
-    const afterGB  = freeGB - movingGB;
-    result.style.display = '';
-    if (fits) {
-      result.innerHTML =
-        `<div class="tp-result-ok">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          CUKUP — Transfer bisa dilakukan
-        </div>
-        <div class="tp-result-detail">
-          Memindahkan: <b style="color:var(--a)">${fmtGB(movingGB)}</b> dari ${tpFolders.length} folder<br>
-          Sisa free di <b style="color:var(--c)">${td.name}</b> setelah transfer: <b style="color:var(--g)">${fmtGB(afterGB)}</b>
-          (sekarang ${fmtGB(freeGB)})
-        </div>`;
-    } else {
-      const deficit = movingGB - freeGB;
-      result.innerHTML =
-        `<div class="tp-result-fail">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="16" height="16"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-          TIDAK CUKUP — Ruang tidak memadai
-        </div>
-        <div class="tp-result-detail">
-          Memindahkan: <b style="color:var(--a)">${fmtGB(movingGB)}</b> | Free di target: <b style="color:var(--r)">${fmtGB(freeGB)}</b><br>
-          Kekurangan: <b style="color:var(--r)">${fmtGB(deficit)}</b> — butuh kosongkan dulu atau pilih disk lain
-        </div>`;
-    }
-  } else {
-    result.style.display = 'none';
-  }
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// DISK MODAL
-// ═══════════════════════════════════════════════════════════════════════
-function openDiskModal(id) {
-  editDiskId = id || null;
-  const d = id ? disks.find(x=>x.id===id) : null;
-  document.getElementById('dmt').textContent = id ? 'Edit HDD' : 'Tambah HDD';
-  document.getElementById('dName').value  = d?.name  || '';
-  document.getElementById('dModel').value = d?.model || '';
-  document.getElementById('hddTotal').value = d ? fromGB(diskTotalGB(d), unit).toFixed(4).replace(/\.?0+$/,'') : '';
-  document.getElementById('hddUsedOverride').value = (d?.usedOverride !== undefined && d?.usedOverride !== null && d?.usedOverride !== '') ? fromGB(toGB(d.usedOverride,'GB'), unit).toFixed(4).replace(/\.?0+$/,'') : '';
-  document.getElementById('dDesc').value  = d?.desc  || '';
-  document.getElementById('hddTemp').value  = d?.health?.temp  || '';
-  document.getElementById('dHealthNotes').value = d?.health?.notes || '';
-  document.getElementById('hddAge').value     = d?.health?.ageYears || '';
-  document.getElementById('hddRealloc').value = d?.health?.realloc  || '';
-  document.getElementById('hddPending').value = d?.health?.pending  || '';
-  document.getElementById('hddUncorr').value  = d?.health?.uncorr   || '';
-  hddSmartVal = d?.health?.smart || 'ok';
-  updateSmartSel();
-  document.querySelectorAll('.ulab').forEach(el => el.textContent = unit);
-  updateDiskModalHealthPreview();
-  document.getElementById('diskOverlay').classList.add('show');
-  setTimeout(()=>document.getElementById('dName').focus(), 60);
-}
-
-function updateSmartSel() {
-  document.querySelectorAll('.smart-opt').forEach(b => {
-    b.className = 'smart-opt' + (b.dataset.s === hddSmartVal ? ' sel-'+(hddSmartVal==='ok'?'good':hddSmartVal==='warn'?'warn':'fail') : '');
-  });
-}
-
-function saveDisk() {
-  const name  = document.getElementById('dName').value.trim();
-  const model = document.getElementById('dModel').value.trim();
-  const totalRaw = parseFloat(document.getElementById('hddTotal').value)||0;
-  const overrideRaw = document.getElementById('hddUsedOverride').value;
-  const desc  = document.getElementById('dDesc').value.trim();
-  const temp  = document.getElementById('hddTemp').value.trim();
-  const notes = document.getElementById('dHealthNotes').value.trim();
-  const ageYears = document.getElementById('hddAge').value.trim();
-  const realloc  = document.getElementById('hddRealloc').value.trim();
-  const pending  = document.getElementById('hddPending').value.trim();
-  const uncorr   = document.getElementById('hddUncorr').value.trim();
-  if (!name) { toast('⚠ Nama hardisk wajib diisi'); return; }
-  if (totalRaw <= 0) { toast('⚠ Kapasitas total harus > 0'); return; }
-  const totalGB = toGB(totalRaw, unit);
-  let usedOverride = null;
-  if (overrideRaw !== '' && overrideRaw !== null && !isNaN(parseFloat(overrideRaw))) {
-    usedOverride = toGB(parseFloat(overrideRaw), unit);
-  }
-  const payload = { name, model, total: totalGB, usedOverride, desc,
-    health: { smart: hddSmartVal, temp, notes, ageYears, realloc, pending, uncorr } };
-  if (editDiskId) {
-    const d = disks.find(x=>x.id===editDiskId);
-    Object.assign(d, payload);
-    toast('✓ Hardisk diperbarui');
-  } else {
-    disks.push({ id:hddUid(), ...payload, folders:[] });
-    toast('✓ Hardisk ditambahkan');
-  }
-  hddSave(); render();
-  document.getElementById('diskOverlay').classList.remove('show');
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// FOLDER MODAL
-// ═══════════════════════════════════════════════════════════════════════
-function openFolderModal(diskId, folderId) {
-  editFolderCtx = { diskId, folderId };
-  const d = disks.find(x=>x.id===diskId);
-  const f = folderId ? d.folders.find(x=>x.id===folderId) : null;
-  document.getElementById('fmt2').textContent = folderId ? 'Edit Folder' : 'Tambah Folder';
-  document.getElementById('fmtsub').textContent = 'Di disk: ' + d.name;
-  document.getElementById('fName').value = f?.name || '';
-  document.getElementById('fDesc').value = f?.desc || '';
-  // clone files into tmp
-  tmpFiles = (f?.files || []).map(fi => ({...fi}));
-  document.getElementById('fnName').value = '';
-  document.getElementById('fnSize').value = '';
-  document.getElementById('fnUnit').value = unit;
-  renderTmpFiles();
-  document.getElementById('folderOverlay').classList.add('show');
-  setTimeout(()=>document.getElementById('fName').focus(), 60);
-}
-
-function renderTmpFiles() {
-  const totalGB = tmpFiles.reduce((s,f)=>s+toGB(f.size,f.unit||'GB'),0);
-  document.getElementById('fTotalPreview').textContent = tmpFiles.length
-    ? `Total: ${fmtGB(totalGB)}` : '';
-  document.getElementById('fFileList').innerHTML = tmpFiles.map((fi,i) =>
-    `<div style="display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:6px;padding:4px 6px;background:rgba(0,245,255,.03);border:1px solid rgba(0,245,255,.06);border-radius:2px">
-      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--tx);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${fi.name||'—'}</span>
-      <input type="text" value="${fi.desc||''}" placeholder="keterangan" data-fi="${i}" data-field="desc"
-        style="background:var(--bg2);border:1px solid var(--ls);border-radius:2px;color:var(--tx);padding:3px 7px;font-family:'Share Tech Mono',monospace;font-size:10px;outline:none;width:100px">
-      <span style="font-family:'Orbitron',monospace;font-size:10px;color:var(--a);white-space:nowrap">${fi.size?fmtGB(toGB(fi.size,fi.unit||'GB')):'—'}</span>
-      <button class="xib fi-del" data-i="${i}" title="Hapus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>`
-  ).join('');
-  document.querySelectorAll('.fi-del').forEach(b =>
-    b.onclick = () => { tmpFiles.splice(parseInt(b.dataset.i),1); renderTmpFiles(); });
-  document.querySelectorAll('[data-field="desc"]').forEach(inp =>
-    inp.oninput = e => { tmpFiles[parseInt(inp.dataset.fi)].desc = e.target.value; });
-}
-
-function addFileLine() {
-  const name = document.getElementById('fnName').value.trim();
-  const size = parseFloat(document.getElementById('fnSize').value)||0;
-  const u    = document.getElementById('fnUnit').value;
-  if (!name) { toast('⚠ Nama file/subfolder wajib diisi'); return; }
-  if (size <= 0) { toast('⚠ Ukuran harus > 0'); return; }
-  tmpFiles.push({ id:hddUid(), name, size, unit:u, desc:'' });
-  document.getElementById('fnName').value = '';
-  document.getElementById('fnSize').value = '';
-  renderTmpFiles();
-  document.getElementById('fnName').focus();
-}
-
-function saveFolder() {
-  const name = document.getElementById('fName').value.trim();
-  const desc = document.getElementById('fDesc').value.trim();
-  if (!name) { toast('⚠ Nama folder wajib diisi'); return; }
-  const { diskId, folderId } = editFolderCtx;
-  const d = disks.find(x=>x.id===diskId);
-  if (folderId) {
-    const f = d.folders.find(x=>x.id===folderId);
-    f.name = name; f.desc = desc; f.files = tmpFiles;
-    toast('✓ Folder diperbarui');
-  } else {
-    d.folders.push({ id:hddUid(), name, desc, files:tmpFiles });
-    toast('✓ Folder ditambahkan');
-  }
-  hddSave(); render();
-  document.getElementById('folderOverlay').classList.remove('show');
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// DELETE
-// ═══════════════════════════════════════════════════════════════════════
-function deleteDisk(id) {
-  disks = disks.filter(d=>d.id!==id);
-  tpFolders = tpFolders.filter(f=>f.diskId!==id);
-  if (tpTargetDiskId===id) tpTargetDiskId=null;
-  hddSave(); render(); toast('✓ Hardisk dihapus');
-}
-
-function deleteFolder(diskId, folderId) {
-  const d = disks.find(x=>x.id===diskId);
-  d.folders = d.folders.filter(f=>f.id!==folderId);
-  tpFolders = tpFolders.filter(f=>f.folderId!==folderId);
-  hddSave(); render(); toast('✓ Folder dihapus');
-}
-
-function hddAskDelete(msg, cb) {
-  document.getElementById('hddConfirmMsg').innerHTML = msg;
-  confirmCb = cb;
-  document.getElementById('hddConfirmOverlay').classList.add('show');
-}
-
-// ═══════════════════════════════════════════════════════════════════════
-// EVENTS
-// ═══════════════════════════════════════════════════════════════════════
-document.getElementById('unitGroup').addEventListener('click', e => {
-  const b = e.target.closest('.utab'); if (!b) return;
-  unit = b.dataset.u;
-  document.querySelectorAll('.utab').forEach(x => x.classList.toggle('sel', x===b));
-  hddSave(); render();
-});
-
-document.getElementById('addDiskBtn').onclick = () => openDiskModal(null);
-document.getElementById('addDiskBtnE').onclick = () => openDiskModal(null);
-
-// Disk modal
-document.getElementById('xDisk').onclick = document.getElementById('cancelDisk').onclick = () => document.getElementById('diskOverlay').classList.remove('show');
-document.getElementById('diskOverlay').onclick = e => { if(e.target===document.getElementById('diskOverlay')) document.getElementById('diskOverlay').classList.remove('show'); };
-document.getElementById('saveDisk').onclick = saveDisk;
-document.getElementById('smartSel').addEventListener('click', e => {
-  const b = e.target.closest('.smart-opt'); if(!b) return;
-  hddSmartVal = b.dataset.s; updateSmartSel(); updateDiskModalHealthPreview();
-});
-// Live preview on input
-['hddTotal','hddUsedOverride','hddTemp','hddAge','hddRealloc','hddPending','hddUncorr'].forEach(id => {
-  const el = document.getElementById(id);
-  if(el) el.addEventListener('input', updateDiskModalHealthPreview);
-});
-
-// Folder modal
-document.getElementById('xFolder').onclick = document.getElementById('cancelFolder').onclick = () => document.getElementById('folderOverlay').classList.remove('show');
-document.getElementById('folderOverlay').onclick = e => { if(e.target===document.getElementById('folderOverlay')) document.getElementById('folderOverlay').classList.remove('show'); };
-document.getElementById('saveFolder').onclick = saveFolder;
-document.getElementById('addFileBtn').onclick = addFileLine;
-document.getElementById('fnName').addEventListener('keydown', e => { if(e.key==='Enter') addFileLine(); });
-document.getElementById('fnSize').addEventListener('keydown', e => { if(e.key==='Enter') addFileLine(); });
-
-// Confirm
-document.getElementById('cancelConfirm').onclick = () => document.getElementById('hddConfirmOverlay').classList.remove('show');
-document.getElementById('hddConfirmOverlay').onclick = e => { if(e.target===document.getElementById('hddConfirmOverlay')) document.getElementById('hddConfirmOverlay').classList.remove('show'); };
-document.getElementById('doConfirm').onclick = () => {
-  document.getElementById('hddConfirmOverlay').classList.remove('show');
-  if(confirmCb){ confirmCb(); confirmCb=null; }
-};
-
-document.addEventListener('keydown', e => {
-  if(e.key==='Escape') ['diskOverlay','folderOverlay','confirmOverlay'].forEach(id=>document.getElementById(id).classList.remove('show'));
-});
-
-// Toast
-
-
-
-
-
-
-
 </script>
-
-<!-- ADMIN PANEL MODAL -->
-<div class="overlay" id="adminOverlay">
-  <div class="modal" style="width:min(680px,100%)">
-    <div class="modal-head">
-      <div>
-        <h2>Admin Panel</h2>
-        <p id="adminCurrentUser">Anda masuk sebagai: —</p>
-      </div>
-      <button class="x" id="closeAdminPanel">&times;</button>
-    </div>
-    <div class="modal-body">
-
-      <!-- USERS -->
-      <div class="field-lab" style="color:var(--cyan)">Manajemen User</div>
-      <div id="adminUserList" style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px"></div>
-
-      <!-- CHANGE OWN PASSWORD -->
-      <div class="field-lab" style="color:var(--cyan);margin-top:14px">Ubah Password Saya</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-bottom:14px">
-        <div class="fg" style="margin:0"><label>Password Lama</label><input id="adminOldPass" type="password" placeholder="Password saat ini"></div>
-        <div class="fg" style="margin:0"><label>Password Baru <span style="color:var(--muted-2)">(min 8)</span></label><input id="adminNewPass" type="password" placeholder="Password baru"></div>
-        <button class="btn primary" id="adminChangePassBtn" style="padding:8px 13px;font-size:10px">Ubah</button>
-      </div>
-      <div class="auth-err" id="adminPassErr" style="margin-bottom:8px"></div>
-
-      <!-- CHANGE ADMIN KEY (admin only) -->
-      <div id="adminKeySection">
-        <div class="field-lab" style="color:var(--cyan);margin-top:6px">Admin Key <span style="font-size:9px;color:var(--muted-2);font-family:'Share Tech Mono',monospace;text-transform:none;letter-spacing:.04em;font-weight:400">— dibutuhkan untuk registrasi &amp; reset password</span></div>
-        <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-bottom:6px">
-          <div class="fg" style="margin:0">
-            <label>Admin Key Baru <span style="color:var(--muted-2)">(min 12 karakter)</span></label>
-            <input id="adminNewKey" type="text" autocomplete="off" placeholder="Masukkan Admin Key baru">
-          </div>
-          <button class="btn primary" id="adminChangeKeyBtn" style="padding:8px 13px;font-size:10px">Simpan Key</button>
-        </div>
-        <div class="auth-err" id="adminKeyErr" style="margin-bottom:8px"></div>
-        <div class="note-box" style="margin-top:0;margin-bottom:14px">Admin Key tersimpan sebagai hash — tidak ada yang bisa membacanya. Jika hilang, tidak bisa dipulihkan. Tulis di tempat aman.</div>
-      </div>
-
-      <!-- AUDIT LOG -->
-      <div class="field-lab" style="color:var(--cyan);margin-top:6px">Log Aktivitas Sesi Ini</div>
-      <div id="adminAuditBody" style="background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;max-height:180px;overflow-y:auto;padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7;letter-spacing:.04em">
-        <div style="color:var(--muted-2)">Belum ada aktivitas di sesi ini.</div>
-      </div>
-
-    </div>
-    <div class="modal-foot">
-      <button class="btn ghost" id="cancelAdminPanel">Tutup</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- MODAL: Reset Auth (First Time Setup) -->
-<div class="overlay" id="resetAuthOverlay">
-  <div class="modal" style="width:min(420px,100%)">
-    <div class="modal-body" style="padding:24px 22px">
-      <div style="text-align:center;margin-bottom:16px">
-        <div style="width:48px;height:48px;border:1px solid var(--amber);background:var(--amber-bg);border-radius:2px;display:grid;place-items:center;margin:0 auto 12px;box-shadow:0 0 16px rgba(255,204,0,.3)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" width="24" height="24" style="filter:drop-shadow(0 0 5px rgba(255,204,0,.5))"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 8px rgba(255,204,0,.4);margin-bottom:8px">Setup Ulang Auth</div>
-        <p style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);line-height:1.7;letter-spacing:.04em">
-          Ini akan menghapus semua data login (akun, password, Admin Key).<br>
-          <b style="color:var(--text)">Data link, HDD, dan settings tidak tersentuh.</b><br><br>
-          Setelah ini Anda akan diminta membuat akun admin baru dengan Admin Key baru.
-        </p>
-      </div>
-      <div class="fg" style="margin-bottom:12px">
-        <label style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--amber);letter-spacing:.12em;text-transform:uppercase">Admin Key Baru <span style="color:var(--muted-2)">(min 12 karakter)</span></label>
-        <input id="newAdminKeyInput" type="text" autocomplete="off" placeholder="Buat Admin Key baru — simpan baik-baik"
-          style="background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:9px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;width:100%;margin-top:5px;transition:.18s">
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);margin-top:4px;line-height:1.5">
-          Contoh: <span style="color:var(--cyan)">RahasiaAdmin2025!</span> atau <span style="color:var(--cyan)">kunci-monitor-saya</span><br>
-          Tulis di tempat aman — tidak bisa dipulihkan jika lupa.
-        </div>
-      </div>
-      <div class="auth-err" id="resetAuthErr" style="margin-bottom:10px"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn ghost" id="cancelResetAuth">Batal</button>
-        <button class="btn warn" id="confirmResetAuth">Reset &amp; Setup Ulang</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- MODAL: Backup & Restore -->
-<div class="overlay" id="backupOverlay">
-  <div class="modal" style="width:min(520px,100%)">
-    <div class="modal-head">
-      <div>
-        <h2>Backup &amp; Restore</h2>
-        <p>Pindahkan semua data ke browser / perangkat lain</p>
-      </div>
-      <button class="x" id="closeBackup">&times;</button>
-    </div>
-    <div class="modal-body">
-
-      <div class="note-box" style="margin-bottom:14px">
-        <b style="color:var(--cyan)">Kenapa data kosong di browser lain?</b><br>
-        Semua data tersimpan di storage <b>browser ini</b> saja (IndexedDB/localStorage). 
-        Untuk pindah ke browser/perangkat lain, gunakan fitur Backup di bawah.
-      </div>
-
-      <!-- BACKUP -->
-      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);text-shadow:0 0 6px rgba(0,245,255,.4);margin-bottom:8px">
-        Export Backup
-      </div>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
-        Download file <b style="color:var(--text)">.json</b> berisi semua link, HDD, dan settings. 
-        Lalu import di browser tujuan.
-      </p>
-      <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
-        <button class="btn primary" id="doBackupAll" style="flex:1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download Backup (semua data)
-        </button>
-        <button class="btn" id="doBackupLinks" style="flex:1">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Link saja (.xlsx)
-        </button>
-      </div>
-
-      <!-- RESTORE -->
-      <div style="font-family:'Orbitron',monospace;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);text-shadow:0 0 6px rgba(255,204,0,.4);margin-bottom:8px;padding-top:14px;border-top:1px solid var(--line-soft)">
-        Import Restore
-      </div>
-      <p style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.6;letter-spacing:.04em">
-        Pilih file <b style="color:var(--text)">.json</b> backup untuk restore data ke browser ini.
-        <span style="color:var(--red)">Data yang ada akan ditimpa.</span>
-      </p>
-      <div style="border:1px dashed var(--line-soft);border-radius:2px;padding:16px;text-align:center;background:var(--bg-2);cursor:pointer;transition:.18s" id="restoreDrop">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" width="28" height="28" style="color:var(--amber);margin-bottom:8px;filter:drop-shadow(0 0 6px rgba(255,204,0,.4))"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);margin-bottom:4px">Klik atau seret file backup .json</div>
-        <div style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2)">File dari tombol "Download Backup" di atas</div>
-        <input type="file" id="restoreFileInput" accept=".json" hidden>
-      </div>
-      <div id="restorePreview" style="display:none;margin-top:10px;padding:10px 12px;background:rgba(0,245,255,.04);border:1px solid var(--cyan-deep);border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.7"></div>
-      <div id="restoreErr" style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--red);margin-top:6px;min-height:16px"></div>
-      <button class="btn danger" id="doRestore" disabled style="width:100%;justify-content:center;margin-top:10px">
-        Restore Data (timpa data saat ini)
-      </button>
-    </div>
-    <div class="modal-foot">
-      <button class="btn ghost" id="cancelBackup">Tutup</button>
-    </div>
-  </div>
-</div>
-
-<script>
-// ════════════════════════════════════════════════════════════════
-// BACKUP & RESTORE — pindah data antar browser/perangkat
-// ════════════════════════════════════════════════════════════════
-$('#backupBtn').onclick = () => {
-  document.getElementById('restorePreview').style.display = 'none';
-  document.getElementById('restoreErr').textContent = '';
-  document.getElementById('doRestore').disabled = true;
-  document.getElementById('backupOverlay').classList.add('show');
-};
-document.getElementById('closeBackup').onclick =
-document.getElementById('cancelBackup').onclick = () =>
-  document.getElementById('backupOverlay').classList.remove('show');
-document.getElementById('backupOverlay').addEventListener('click', e => {
-  if(e.target === document.getElementById('backupOverlay'))
-    document.getElementById('backupOverlay').classList.remove('show');
-});
-
-// ── Backup: download semua data sebagai JSON ──────────────────
-document.getElementById('doBackupAll').onclick = async () => {
-  try {
-    // Kumpulkan semua data dari IndexedDB
-    const db = await new Promise((res,rej) => {
-      const r = indexedDB.open('linkmon',1);
-      r.onsuccess = e => res(e.target.result);
-      r.onerror   = e => rej(e.target.error);
-    });
-    const allKeys = await new Promise((res,rej) => {
-      const tx  = db.transaction('kv','readonly');
-      const req = tx.objectStore('kv').getAllKeys();
-      req.onsuccess = () => res(req.result);
-      req.onerror   = () => rej(req.error);
-    });
-    const data = {};
-    for(const k of allKeys) {
-      // Skip auth data — keamanan
-      if(k.startsWith('auth:') || k.startsWith('users:')) continue;
-      const r = await store.get(k);
-      if(r) data[k] = r.value;
-    }
-    // Juga backup localStorage (HDD data)
-    const lsData = {};
-    try {
-      const hddRaw = localStorage.getItem('hdd_monitor_v1');
-      if(hddRaw) lsData['hdd_monitor_v1'] = hddRaw;
-    } catch(_){}
-
-    const backup = {
-      version: 2,
-      exportedAt: new Date().toISOString(),
-      exportedBy: AUTH.currentUser?.username || 'unknown',
-      idbData: data,
-      lsData: lsData,
-      stats: {
-        linkCount: DATA.length,
-        hddCount: (() => { try { return JSON.parse(lsData['hdd_monitor_v1']||'{}').disks?.length || 0; } catch(_){ return 0; } })()
-      }
-    };
-
-    const blob = new Blob([JSON.stringify(backup, null, 2)], {type:'application/json'});
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a');
-    a.href     = url;
-    a.download = 'lnkmon-backup-' + new Date().toISOString().slice(0,10) + '.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    toast('✓ Backup didownload — ' + DATA.length + ' link, ' + backup.stats.hddCount + ' HDD');
-  } catch(e) {
-    toast('⚠ Gagal backup: ' + e.message);
-  }
-};
-
-document.getElementById('doBackupLinks').onclick = exportXlsx;
-
-// ── Restore: load dari file JSON ──────────────────────────────
-let restoreData = null;
-
-function handleRestoreFile(file) {
-  if(!file || !file.name.endsWith('.json')) {
-    document.getElementById('restoreErr').textContent = 'Pilih file .json hasil backup';
-    return;
-  }
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const d = JSON.parse(e.target.result);
-      if(!d.version || !d.idbData) throw new Error('Format file tidak valid');
-      restoreData = d;
-      const hddCount = (() => { try { return JSON.parse(d.lsData?.['hdd_monitor_v1']||'{}').disks?.length || 0; } catch(_){ return 0; } })();
-      const linkKeys = Object.keys(d.idbData).filter(k => k.startsWith('links:'));
-      // Estimate link count from chunks
-      let linkCount = 0;
-      try {
-        const metaKey = Object.keys(d.idbData).find(k => k === 'meta');
-        if(d.idbData[metaKey]) {
-          const meta = JSON.parse(d.idbData[metaKey]);
-          linkCount = meta.count || 0;
-        }
-      } catch(_){}
-      document.getElementById('restorePreview').style.display = '';
-      document.getElementById('restorePreview').innerHTML =
-        '<b style="color:var(--cyan)">File valid</b> — diekspor ' + new Date(d.exportedAt).toLocaleString('id-ID') +
-        ' oleh <b style="color:var(--text)">' + (d.exportedBy||'?') + '</b><br>' +
-        'Berisi: ~' + d.stats.linkCount + ' link, ' + d.stats.hddCount + ' HDD, ' +
-        Object.keys(d.idbData).length + ' storage keys<br>' +
-        '<span style="color:var(--red)">Data saat ini akan ditimpa setelah restore.</span>';
-      document.getElementById('restoreErr').textContent = '';
-      document.getElementById('doRestore').disabled = false;
-    } catch(err) {
-      document.getElementById('restoreErr').textContent = 'File tidak valid: ' + err.message;
-      document.getElementById('doRestore').disabled = true;
-      restoreData = null;
-    }
-  };
-  reader.readAsText(file);
-}
-
-document.getElementById('restoreDrop').onclick = () =>
-  document.getElementById('restoreFileInput').click();
-document.getElementById('restoreFileInput').onchange = e => {
-  if(e.target.files[0]) handleRestoreFile(e.target.files[0]);
-};
-document.getElementById('restoreDrop').addEventListener('dragover', e => {
-  e.preventDefault();
-  document.getElementById('restoreDrop').style.borderColor = 'var(--amber)';
-});
-document.getElementById('restoreDrop').addEventListener('dragleave', () => {
-  document.getElementById('restoreDrop').style.borderColor = '';
-});
-document.getElementById('restoreDrop').addEventListener('drop', e => {
-  e.preventDefault();
-  document.getElementById('restoreDrop').style.borderColor = '';
-  if(e.dataTransfer.files[0]) handleRestoreFile(e.dataTransfer.files[0]);
-});
-
-document.getElementById('doRestore').onclick = async () => {
-  if(!restoreData) return;
-  if(!confirm('Restore akan menimpa semua data link dan HDD saat ini. Lanjutkan?')) return;
-  try {
-    const btn = document.getElementById('doRestore');
-    btn.disabled = true;
-    btn.textContent = 'Sedang restore...';
-
-    // Restore ke IndexedDB
-    const db = await new Promise((res,rej) => {
-      const r = indexedDB.open('linkmon',1);
-      r.onsuccess = e => res(e.target.result);
-      r.onerror   = e => rej(e.target.error);
-    });
-    // Hapus data lama (kecuali auth)
-    const allKeys = await new Promise((res,rej) => {
-      const tx  = db.transaction('kv','readonly');
-      const req = tx.objectStore('kv').getAllKeys();
-      req.onsuccess = () => res(req.result);
-      req.onerror   = () => rej(req.error);
-    });
-    for(const k of allKeys) {
-      if(!k.startsWith('auth:') && !k.startsWith('users:')) {
-        await new Promise((res,rej) => {
-          const tx  = db.transaction('kv','readwrite');
-          const req = tx.objectStore('kv').delete(k);
-          req.onsuccess = res; req.onerror = () => rej(req.error);
-        });
-      }
-    }
-    // Tulis data baru
-    for(const [k,v] of Object.entries(restoreData.idbData)) {
-      await store.set(k, v);
-    }
-    // Restore localStorage (HDD)
-    if(restoreData.lsData) {
-      for(const [k,v] of Object.entries(restoreData.lsData)) {
-        try { localStorage.setItem(k, v); } catch(_){}
-      }
-    }
-    document.getElementById('backupOverlay').classList.remove('show');
-    // Reload data
-    await loadData();
-    await loadSettings();
-    markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog();
-    hddLoad(); render();
-    toast('✓ Restore selesai — ' + restoreData.stats.linkCount + ' link, ' + restoreData.stats.hddCount + ' HDD');
-    restoreData = null;
-  } catch(e) {
-    document.getElementById('restoreErr').textContent = 'Gagal restore: ' + e.message;
-    document.getElementById('doRestore').disabled = false;
-    document.getElementById('doRestore').textContent = 'Restore Data (timpa data saat ini)';
-  }
-};
-</script>
-
-
 </body>
 </html>
