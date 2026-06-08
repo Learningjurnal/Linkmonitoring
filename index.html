@@ -386,6 +386,124 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .etl-img-preview img{width:100%;height:100%;object-fit:cover}
 .etl-img-preview .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.06em}
 .etl-img-preview .placeholder svg{width:28px;height:28px;color:var(--muted-2)}
+/* ===== ADMIN TAB HIGHLIGHT ===== */
+.adm-tab{border-left:1px solid var(--line-soft) !important;margin-left:auto}
+.adm-tab.active{color:var(--amber) !important;border-bottom-color:var(--amber) !important;background:rgba(255,204,0,.06) !important;text-shadow:0 0 10px rgba(255,204,0,.5) !important}
+.adm-tab svg{color:var(--amber)}
+
+/* ===== ADMIN DASHBOARD ===== */
+.adm-header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;padding:14px 18px;margin-bottom:16px;position:relative;overflow:hidden}
+.adm-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.adm-header-left{display:flex;align-items:baseline;gap:16px}
+.adm-clock{font-family:'Orbitron',monospace;font-weight:900;font-size:clamp(22px,3vw,32px);color:var(--cyan);text-shadow:0 0 14px rgba(0,245,255,.6),0 0 30px rgba(0,245,255,.25);letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.adm-date{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.adm-header-right{display:flex;align-items:center;gap:12px}
+.adm-refresh-info{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted-2);letter-spacing:.06em;display:flex;align-items:center;gap:6px}
+.adm-refresh-info span{color:var(--cyan);font-weight:700}
+
+/* KPI grid admin */
+.adm-kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:1100px){.adm-kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:620px){.adm-kpi-grid{grid-template-columns:repeat(2,1fr)}}
+.adm-kpi{background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;padding:14px 16px;position:relative;overflow:hidden;transition:.2s;cursor:default}
+.adm-kpi:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.4)}
+.adm-kpi .ak-bar{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0}
+.adm-kpi .ak-icon{width:32px;height:32px;border-radius:2px;display:grid;place-items:center;margin-bottom:10px;flex:none}
+.adm-kpi .ak-icon svg{width:16px;height:16px}
+.adm-kpi .ak-val{font-family:'Orbitron',monospace;font-weight:900;font-size:26px;line-height:1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.adm-kpi .ak-lab{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:6px}
+.adm-kpi .ak-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2);margin-top:4px}
+.adm-kpi .ak-trend{position:absolute;top:12px;right:12px;font-size:10px;font-family:'Share Tech Mono',monospace;padding:2px 6px;border-radius:1px}
+.adm-kpi .ak-trend.up{color:var(--green);background:var(--green-bg);border:1px solid rgba(57,255,20,.2)}
+.adm-kpi .ak-trend.down{color:var(--red);background:var(--red-bg);border:1px solid rgba(255,34,68,.2)}
+
+/* Panel */
+.adm-panel{background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;padding:16px 18px;position:relative;overflow:hidden}
+.adm-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent);opacity:.5}
+.adm-panel-head{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;display:flex;align-items:center;gap:8px;text-shadow:0 0 8px rgba(0,245,255,.3)}
+
+/* Layout rows */
+.adm-row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.adm-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:14px}
+@media(max-width:900px){.adm-row2{grid-template-columns:1fr}.adm-row3{grid-template-columns:1fr}}
+
+/* Donut chart */
+.adm-donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.adm-donut-svg{flex:none;filter:drop-shadow(0 0 10px rgba(0,245,255,.15))}
+.adm-donut-legend{display:flex;flex-direction:column;gap:7px;flex:1;min-width:120px}
+.adm-legend-row{display:flex;align-items:center;gap:8px;font-family:'Share Tech Mono',monospace;font-size:11px}
+.adm-legend-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.adm-legend-lab{color:var(--muted);flex:1;letter-spacing:.04em}
+.adm-legend-val{color:var(--text);font-weight:600}
+.adm-legend-pct{color:var(--muted-2);font-size:10px}
+
+/* Bar chart */
+.adm-bar-chart{display:flex;flex-direction:column;gap:9px}
+.adm-bc-row{display:grid;grid-template-columns:80px 1fr 48px;align-items:center;gap:10px}
+.adm-bc-lab{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);text-align:right;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.adm-bc-track{height:12px;background:var(--bg-2);border-radius:1px;overflow:hidden;border:1px solid var(--line-soft);position:relative}
+.adm-bc-fill{height:100%;border-radius:1px;transition:width .6s cubic-bezier(.4,0,.2,1);min-width:2px;position:relative}
+.adm-bc-fill::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15))}
+.adm-bc-val{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--text);text-align:right}
+
+/* Summary list */
+.adm-summary-list{display:flex;flex-direction:column;gap:8px}
+.adm-sl-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;font-family:'Share Tech Mono',monospace;font-size:11px;transition:.15s}
+.adm-sl-row:hover{border-color:var(--cyan-dim)}
+.adm-sl-label{color:var(--muted);letter-spacing:.04em}
+.adm-sl-val{font-weight:700;color:var(--text)}
+
+/* Link health */
+.adm-link-health{display:flex;flex-direction:column;gap:6px}
+.adm-lh-row{display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;transition:.15s}
+.adm-lh-row:hover{border-color:var(--cyan-dim)}
+.adm-lh-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.adm-lh-lab{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);flex:1;letter-spacing:.04em}
+.adm-lh-bar-wrap{width:80px;height:6px;background:var(--line-soft);border-radius:1px;overflow:hidden;flex:none}
+.adm-lh-bar{height:100%;border-radius:1px;transition:width .6s ease}
+.adm-lh-num{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;min-width:30px;text-align:right}
+
+/* Log list */
+.adm-log-list{display:flex;flex-direction:column;gap:0;max-height:220px;overflow-y:auto}
+.adm-log-list::-webkit-scrollbar{width:3px}
+.adm-log-list::-webkit-scrollbar-track{background:var(--bg-2)}
+.adm-log-list::-webkit-scrollbar-thumb{background:var(--cyan-deep)}
+.adm-ll-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:11px}
+.adm-ll-row:last-child{border:none}
+.adm-ll-time{font-family:'Share Tech Mono',monospace;color:var(--muted-2);font-size:10px;white-space:nowrap;letter-spacing:.04em;flex:none;padding-top:1px}
+.adm-ll-dot{width:6px;height:6px;border-radius:50%;flex:none;margin-top:4px}
+.adm-ll-text{font-family:'Share Tech Mono',monospace;color:var(--text);line-height:1.5;letter-spacing:.03em}
+.adm-ll-text b{color:var(--cyan)}
+
+/* Milestones */
+.adm-milestones{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.adm-ms-card{background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;padding:14px 16px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;transition:.2s}
+.adm-ms-card:hover{transform:translateY(-2px)}
+.adm-ms-card.achieved{border-color:rgba(255,204,0,.3);background:rgba(255,204,0,.04)}
+.adm-ms-card.achieved::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent)}
+.adm-ms-icon{width:40px;height:40px;border-radius:2px;display:grid;place-items:center;flex:none;border:1px solid}
+.adm-ms-icon svg{width:20px;height:20px}
+.adm-ms-body{flex:1;min-width:0}
+.adm-ms-title{font-family:'Orbitron',monospace;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--text);margin-bottom:3px}
+.adm-ms-desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.03em;line-height:1.4}
+.adm-ms-badge{position:absolute;top:8px;right:8px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:1px;border:1px solid}
+.adm-ms-badge.done{background:var(--amber-bg);border-color:rgba(255,204,0,.3);color:var(--amber)}
+.adm-ms-badge.pending{background:var(--gray-bg);border-color:var(--blank);color:var(--gray)}
+.adm-ms-prog{margin-top:8px}
+.adm-ms-prog-track{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden}
+.adm-ms-prog-fill{height:100%;border-radius:2px;transition:width .8s ease}
+.adm-ms-prog-label{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);margin-top:3px}
+
+/* Tab logo icons — update existing tab-btn icons with color hints */
+.tab-btn[data-tab="monitor"] svg{color:var(--cyan)}
+.tab-btn[data-tab="etalase"] svg{color:var(--green)}
+.tab-btn[data-tab="hdd"] svg{color:var(--amber)}
+.tab-btn[data-tab="log"] svg{color:var(--purple)}
+.tab-btn[data-tab="admin"] svg{color:var(--amber)}
+.tab-btn[data-tab="monitor"].active{color:var(--cyan) !important;border-bottom-color:var(--cyan) !important}
+.tab-btn[data-tab="etalase"].active{color:var(--green) !important;border-bottom-color:var(--green) !important;background:rgba(57,255,20,.04) !important;text-shadow:0 0 10px rgba(57,255,20,.4) !important}
+.tab-btn[data-tab="hdd"].active{color:var(--amber) !important;border-bottom-color:var(--amber) !important;background:rgba(255,204,0,.04) !important;text-shadow:0 0 10px rgba(255,204,0,.4) !important}
+.tab-btn[data-tab="log"].active{color:var(--purple) !important;border-bottom-color:var(--purple) !important;background:rgba(168,85,247,.04) !important;text-shadow:0 0 10px rgba(168,85,247,.4) !important}
 </style>
 </head>
 <body>
@@ -417,7 +535,11 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
   <div class="top">
     <div class="brand">
       <div class="logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round">
+          <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5" stroke="var(--cyan)"/>
+          <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19" stroke="var(--cyan)"/>
+          <circle cx="19" cy="5" r="2.5" fill="rgba(255,204,0,.3)" stroke="var(--amber)" stroke-width="1.5"/>
+        </svg>
       </div>
       <div>
         <h1>Link Monitor</h1>
@@ -452,6 +574,10 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <button class="tab-btn" data-tab="log">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
       Log Update
+    </button>
+    <button class="tab-btn adm-tab" data-tab="admin">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Admin
     </button>
   </div>
 
@@ -627,6 +753,59 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
   <div class="section-title">Riwayat Pembaruan <span class="tag">— log import sesi ini & tersimpan</span></div>
   <div class="table-wrap" style="padding:6px 16px"><div id="logList"><div class="logrow"><span class="ld" style="color:var(--muted)">Belum ada pembaruan.</span></div></div></div>
   </div><!-- /tab-log -->
+
+  <!-- TAB: ADMIN DASHBOARD -->
+  <div class="tab-pane" id="tab-admin">
+    <div class="adm-header">
+      <div class="adm-header-left">
+        <div class="adm-clock" id="admClock">--:--:--</div>
+        <div class="adm-date" id="admDate">---</div>
+      </div>
+      <div class="adm-header-right">
+        <div class="adm-refresh-info"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh: <span id="admRefreshCountdown">60</span>s</div>
+        <button class="btn ghost" id="admRefreshBtn" style="padding:7px 12px;font-size:11px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Refresh Now</button>
+      </div>
+    </div>
+    <div class="adm-kpi-grid" id="admKpiGrid"></div>
+    <div class="adm-row2">
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Distribusi Status Link</div>
+        <div id="admStatusChart" class="adm-donut-wrap"></div>
+      </div>
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Aktivitas Update — 7 Hari Terakhir</div>
+        <div id="admActivityChart" class="adm-bar-chart"></div>
+      </div>
+    </div>
+    <div class="adm-row3">
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span style="color:var(--green)">Ringkasan Etalase</span></div>
+        <div id="admEtlSummary" class="adm-summary-list"></div>
+      </div>
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg><span style="color:var(--amber)">Ringkasan HDD</span></div>
+        <div id="admHddSummary" class="adm-summary-list"></div>
+      </div>
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--magenta)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span style="color:var(--magenta)">Kesehatan Link</span></div>
+        <div id="admLinkHealth" class="adm-link-health"></div>
+      </div>
+    </div>
+    <div class="adm-row2" style="margin-top:14px">
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Top Region</div>
+        <div id="admRegionChart" class="adm-bar-chart"></div>
+      </div>
+      <div class="adm-panel">
+        <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Log Aktivitas Terbaru</div>
+        <div id="admRecentLog" class="adm-log-list"></div>
+      </div>
+    </div>
+    <div class="adm-panel" style="margin-top:14px">
+      <div class="adm-panel-head"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span style="color:var(--amber)">Pencapaian &amp; Milestone</span></div>
+      <div id="admMilestones" class="adm-milestones"></div>
+    </div>
+  </div><!-- /tab-admin -->
 
 </div><!-- /wrap -->
 
@@ -2637,6 +2816,273 @@ async function etlInit(){
   $('#etlImgUrl').addEventListener('keydown',e=>{ if(e.key==='Enter') etlPreviewImg(); });
 }
 
+// ==================== ADMIN DASHBOARD ====================
+let admTimer=null, admCountdown=60, admClockTimer=null;
+
+function admClock(){
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  const el=$('#admClock'); if(el) el.textContent=`${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+  const days=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const months=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const de=$('#admDate'); if(de) de.textContent=`${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+
+function admBuildKpi(){
+  const el=$('#admKpiGrid'); if(!el) return;
+  const total=DATA.length;
+  const statMap={};
+  DATA.forEach(r=>{ const s=(r.status||'blank').toLowerCase(); statMap[s]=(statMap[s]||0)+1; });
+  const complete=statMap['complete']||0;
+  const broken=(statMap['broken link']||0)+(statMap['broken']||0);
+  const lost=statMap['lost file']||0;
+  const pct=total?Math.round(complete/total*100):0;
+  const etlTotal=(typeof ETL_DATA!=='undefined')?ETL_DATA.length:0;
+  const hddCount=(typeof HDD_DATA!=='undefined')?HDD_DATA.length:0;
+  const kpis=[
+    {icon:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/>',
+     val:total,lab:'Total Link',sub:'semua data',color:'var(--cyan)',bg:'rgba(0,245,255,.08)'},
+    {icon:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+     val:complete,lab:'Complete',sub:`${pct}% dari total`,color:'var(--green)',bg:'rgba(57,255,20,.08)',trend:pct>=80?'up':pct<50?'down':null,trendVal:pct+'%'},
+    {icon:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+     val:broken,lab:'Broken Link',sub:'perlu diperbaiki',color:'var(--red)',bg:'rgba(255,34,68,.08)',trend:broken>0?'down':null,trendVal:'!'},
+    {icon:'<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+     val:lost,lab:'Lost File',sub:'file hilang',color:'var(--orange)',bg:'rgba(255,102,0,.08)'},
+    {icon:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+     val:etlTotal,lab:'Produk Etalase',sub:'listing aktif',color:'var(--magenta)',bg:'rgba(255,0,170,.08)'},
+    {icon:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>',
+     val:hddCount,lab:'HDD Terdaftar',sub:'unit storage',color:'var(--amber)',bg:'rgba(255,204,0,.08)'},
+  ];
+  el.innerHTML=kpis.map(k=>`
+    <div class="adm-kpi" style="border-color:${k.color}22">
+      <div class="ak-bar" style="background:${k.color}"></div>
+      <div class="ak-icon" style="background:${k.bg};border:1px solid ${k.color}33">
+        <svg viewBox="0 0 24 24" fill="none" stroke="${k.color}" stroke-width="2">${k.icon}</svg>
+      </div>
+      <div class="ak-val" style="color:${k.color};text-shadow:0 0 12px ${k.color}66">${k.val.toLocaleString()}</div>
+      <div class="ak-lab">${k.lab}</div>
+      <div class="ak-sub">${k.sub}</div>
+      ${k.trend?`<div class="ak-trend ${k.trend}">${k.trend==='up'?'▲':'▼'} ${k.trendVal}</div>`:''}
+    </div>`).join('');
+}
+
+function admBuildStatusChart(){
+  const el=$('#admStatusChart'); if(!el) return;
+  const COLOR_MAP={
+    'complete':'var(--green)','uncomplete':'var(--amber)','broken link':'var(--red)',
+    'lost file':'var(--orange)','skip':'var(--purple)','blank':'var(--gray)'
+  };
+  const counts={};
+  DATA.forEach(r=>{ const s=(r.status||'blank').toLowerCase(); counts[s]=(counts[s]||0)+1; });
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const total=DATA.length||1;
+  // build SVG donut
+  const R=52,CX=60,CY=60,stroke=16;
+  let offset=0;
+  const circ=2*Math.PI*R;
+  let arcs='';
+  entries.forEach(([s,n])=>{
+    const pct=n/total;
+    const dash=pct*circ;
+    const col=COLOR_MAP[s]||'var(--muted-2)';
+    arcs+=`<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${col}" stroke-width="${stroke}" stroke-dasharray="${dash} ${circ}" stroke-dashoffset="${-offset*circ}" stroke-linecap="butt" style="transition:all .5s"/>`;
+    offset+=pct;
+  });
+  const svg=`<svg class="adm-donut-svg" width="120" height="120" viewBox="0 0 120 120">
+    <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="var(--line-soft)" stroke-width="${stroke}"/>
+    ${arcs}
+    <text x="${CX}" y="${CY}" text-anchor="middle" dominant-baseline="middle" fill="var(--cyan)" font-family="Orbitron,monospace" font-size="14" font-weight="900">${total}</text>
+    <text x="${CX}" y="${CY+16}" text-anchor="middle" fill="var(--muted)" font-family="Share Tech Mono,monospace" font-size="8">TOTAL</text>
+  </svg>`;
+  const legend=entries.map(([s,n])=>`
+    <div class="adm-legend-row">
+      <div class="adm-legend-dot" style="background:${COLOR_MAP[s]||'var(--muted-2)'};box-shadow:0 0 6px ${COLOR_MAP[s]||'transparent'}"></div>
+      <span class="adm-legend-lab">${s}</span>
+      <span class="adm-legend-val">${n}</span>
+      <span class="adm-legend-pct">${Math.round(n/total*100)}%</span>
+    </div>`).join('');
+  el.innerHTML=svg+`<div class="adm-donut-legend">${legend}</div>`;
+}
+
+function admBuildActivityChart(){
+  const el=$('#admActivityChart'); if(!el) return;
+  // build 7-day buckets from LOG_DATA or simulate from DATA timestamps
+  const days=[]; const now=Date.now();
+  for(let i=6;i>=0;i--){
+    const d=new Date(now-i*86400000);
+    days.push({label:['Min','Sen','Sel','Rab','Kam','Jum','Sab'][d.getDay()]+' '+d.getDate(), count:0, ts: now-i*86400000});
+  }
+  // try to count from DATA update timestamps
+  DATA.forEach(r=>{
+    if(!r.update) return;
+    const t=new Date(r.update).getTime();
+    if(isNaN(t)) return;
+    days.forEach(d=>{ if(Math.abs(t-d.ts)<43200000) d.count++; });
+  });
+  const max=Math.max(...days.map(d=>d.count),1);
+  el.innerHTML=days.map(d=>`
+    <div class="adm-bc-row">
+      <div class="adm-bc-lab">${d.label}</div>
+      <div class="adm-bc-track"><div class="adm-bc-fill" style="width:${Math.round(d.count/max*100)}%;background:linear-gradient(90deg,var(--cyan-dim),var(--cyan))"></div></div>
+      <div class="adm-bc-val">${d.count}</div>
+    </div>`).join('');
+}
+
+function admBuildRegionChart(){
+  const el=$('#admRegionChart'); if(!el) return;
+  const counts={};
+  DATA.forEach(r=>{ if(r.region){ const k=r.region.trim().toUpperCase(); counts[k]=(counts[k]||0)+1; }});
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  if(!entries.length){ el.innerHTML='<div style="color:var(--muted-2);font-family:\'Share Tech Mono\',monospace;font-size:11px;padding:12px 0">Tidak ada data region.</div>'; return; }
+  const max=entries[0][1];
+  const COLS=['var(--cyan)','var(--green)','var(--amber)','var(--magenta)','var(--purple)','var(--orange)','var(--red)'];
+  el.innerHTML=entries.map(([r,n],i)=>`
+    <div class="adm-bc-row">
+      <div class="adm-bc-lab">${r}</div>
+      <div class="adm-bc-track"><div class="adm-bc-fill" style="width:${Math.round(n/max*100)}%;background:${COLS[i%COLS.length]}"></div></div>
+      <div class="adm-bc-val">${n}</div>
+    </div>`).join('');
+}
+
+function admBuildEtlSummary(){
+  const el=$('#admEtlSummary'); if(!el) return;
+  const etl=(typeof ETL_DATA!=='undefined')?ETL_DATA:[];
+  const cats=[...new Set(etl.map(p=>p.cat).filter(Boolean))];
+  const withImg=etl.filter(p=>p.img).length;
+  const withLink=etl.filter(p=>p.link).length;
+  const rows=[
+    ['Total Produk', etl.length],
+    ['Kategori', cats.length],
+    ['Dengan Foto', withImg],
+    ['Dengan Link', withLink],
+  ];
+  el.innerHTML=rows.map(([l,v])=>`<div class="adm-sl-row"><span class="adm-sl-label">${l}</span><span class="adm-sl-val" style="color:var(--green)">${v}</span></div>`).join('')
+    || '<div class="adm-sl-row"><span class="adm-sl-label" style="color:var(--muted-2)">Belum ada produk</span></div>';
+}
+
+function admBuildHddSummary(){
+  const el=$('#admHddSummary'); if(!el) return;
+  const hdd=(typeof HDD_DATA!=='undefined')?HDD_DATA:[];
+  const totalCap=hdd.reduce((s,h)=>s+(h.cap||0),0);
+  const totalUsed=hdd.reduce((s,h)=>s+(h.used||0),0);
+  const totalFiles=hdd.reduce((s,h)=>s+((h.files||[]).length),0);
+  const pct=totalCap?Math.round(totalUsed/totalCap*100):0;
+  const rows=[
+    ['Unit HDD', hdd.length],
+    ['Total Kapasitas', totalCap?totalCap.toFixed(1)+' TB':'—'],
+    ['Terpakai', totalUsed?totalUsed.toFixed(1)+' TB':'—'],
+    ['Utilisasi', pct+'%'],
+    ['Total File', totalFiles],
+  ];
+  el.innerHTML=rows.map(([l,v])=>`<div class="adm-sl-row"><span class="adm-sl-label">${l}</span><span class="adm-sl-val" style="color:var(--amber)">${v}</span></div>`).join('')
+    || '<div class="adm-sl-row"><span class="adm-sl-label" style="color:var(--muted-2)">Belum ada data HDD</span></div>';
+}
+
+function admBuildLinkHealth(){
+  const el=$('#admLinkHealth'); if(!el) return;
+  const COLOR_MAP={'complete':'var(--green)','uncomplete':'var(--amber)','broken link':'var(--red)','lost file':'var(--orange)','skip':'var(--purple)','blank':'var(--gray)'};
+  const counts={};
+  DATA.forEach(r=>{ const s=(r.status||'blank').toLowerCase(); counts[s]=(counts[s]||0)+1; });
+  const total=DATA.length||1;
+  const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  el.innerHTML=entries.map(([s,n])=>`
+    <div class="adm-lh-row">
+      <div class="adm-lh-dot" style="background:${COLOR_MAP[s]||'var(--muted-2)'};box-shadow:0 0 5px ${COLOR_MAP[s]||'transparent'}"></div>
+      <span class="adm-lh-lab">${s}</span>
+      <div class="adm-lh-bar-wrap"><div class="adm-lh-bar" style="width:${Math.round(n/total*100)}%;background:${COLOR_MAP[s]||'var(--muted-2)'}"></div></div>
+      <span class="adm-lh-num" style="color:${COLOR_MAP[s]||'var(--muted)'}">${n}</span>
+    </div>`).join('') || '<div style="color:var(--muted-2);font-family:\'Share Tech Mono\',monospace;font-size:11px">Belum ada data.</div>';
+}
+
+function admBuildRecentLog(){
+  const el=$('#admRecentLog'); if(!el) return;
+  const logEl=$('#logList');
+  if(!logEl||!logEl.children.length){
+    el.innerHTML='<div class="adm-ll-row"><span class="adm-ll-text" style="color:var(--muted-2)">Belum ada log aktivitas.</span></div>';
+    return;
+  }
+  const rows=[...logEl.querySelectorAll('.logrow')].slice(0,12);
+  el.innerHTML=rows.map(r=>{
+    const lt=r.querySelector('.lt'); const ld=r.querySelector('.ld');
+    return `<div class="adm-ll-row">
+      <div class="adm-ll-dot" style="background:var(--cyan);box-shadow:0 0 4px var(--cyan)"></div>
+      <span class="adm-ll-time">${lt?lt.textContent:''}</span>
+      <span class="adm-ll-text">${ld?ld.innerHTML:'—'}</span>
+    </div>`;
+  }).join('') || '<div class="adm-ll-row"><span class="adm-ll-text" style="color:var(--muted-2)">Belum ada log.</span></div>';
+}
+
+function admBuildMilestones(){
+  const el=$('#admMilestones'); if(!el) return;
+  const total=DATA.length;
+  const complete=DATA.filter(r=>(r.status||'').toLowerCase()==='complete').length;
+  const etl=(typeof ETL_DATA!=='undefined')?ETL_DATA.length:0;
+  const hdd=(typeof HDD_DATA!=='undefined')?HDD_DATA.length:0;
+  const pct=total?Math.round(complete/total*100):0;
+  const ms=[
+    {icon:'<polyline points="22 4 12 14.01 9 11.01"/>',title:'100 Link',desc:'Kumpulkan 100 link',target:100,current:total,color:'var(--cyan)',bg:'rgba(0,245,255,.08)'},
+    {icon:'<polyline points="22 4 12 14.01 9 11.01"/>',title:'500 Link',desc:'Kumpulkan 500 link',target:500,current:total,color:'var(--cyan)',bg:'rgba(0,245,255,.08)'},
+    {icon:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',title:'50% Complete',desc:'Setengah link berstatus complete',target:50,current:pct,color:'var(--green)',bg:'rgba(57,255,20,.08)',isPercent:true},
+    {icon:'<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',title:'90% Complete',desc:'90% link berstatus complete',target:90,current:pct,color:'var(--green)',bg:'rgba(57,255,20,.08)',isPercent:true},
+    {icon:'<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',title:'10 Produk',desc:'Tambahkan 10 produk etalase',target:10,current:etl,color:'var(--magenta)',bg:'rgba(255,0,170,.08)'},
+    {icon:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>',title:'5 Unit HDD',desc:'Daftarkan 5 HDD ke sistem',target:5,current:hdd,color:'var(--amber)',bg:'rgba(255,204,0,.08)'},
+  ];
+  el.innerHTML=ms.map(m=>{
+    const done=m.current>=m.target;
+    const prog=Math.min(100,Math.round(m.current/m.target*100));
+    return `<div class="adm-ms-card ${done?'achieved':''}">
+      <div class="adm-ms-icon" style="background:${m.bg};border-color:${m.color}44">
+        <svg viewBox="0 0 24 24" fill="none" stroke="${m.color}" stroke-width="2">${m.icon}</svg>
+      </div>
+      <div class="adm-ms-body">
+        <div class="adm-ms-title" style="${done?'color:'+m.color:''}">${m.title}</div>
+        <div class="adm-ms-desc">${m.desc}</div>
+        <div class="adm-ms-prog">
+          <div class="adm-ms-prog-track"><div class="adm-ms-prog-fill" style="width:${prog}%;background:${m.color}${done?';box-shadow:0 0 6px '+m.color:''}"></div></div>
+          <div class="adm-ms-prog-label">${m.current}${m.isPercent?'%':''} / ${m.target}${m.isPercent?'%':''} (${prog}%)</div>
+        </div>
+      </div>
+      <div class="adm-ms-badge ${done?'done':'pending'}">${done?'✓ DONE':'...WIP'}</div>
+    </div>`;
+  }).join('');
+}
+
+function admRefresh(){
+  admBuildKpi();
+  admBuildStatusChart();
+  admBuildActivityChart();
+  admBuildRegionChart();
+  admBuildEtlSummary();
+  admBuildHddSummary();
+  admBuildLinkHealth();
+  admBuildRecentLog();
+  admBuildMilestones();
+}
+
+function admStartAutoRefresh(){
+  if(admTimer) clearInterval(admTimer);
+  admCountdown=60;
+  admTimer=setInterval(()=>{
+    admCountdown--;
+    const c=$('#admRefreshCountdown'); if(c) c.textContent=admCountdown;
+    if(admCountdown<=0){ admRefresh(); admCountdown=60; }
+  },1000);
+}
+
+function admInit(){
+  admClockTimer=setInterval(admClock,1000);
+  admClock();
+  const btn=$('#admRefreshBtn');
+  if(btn) btn.onclick=()=>{ admRefresh(); admCountdown=60; toast('✓ Admin dashboard diperbarui'); };
+  // refresh when tab is clicked
+  document.querySelectorAll('.tab-btn[data-tab="admin"]').forEach(b=>{
+    b.addEventListener('click',()=>{ setTimeout(admRefresh,60); });
+  });
+  admStartAutoRefresh();
+}
+
+// Run admin init after everything else
+setTimeout(admInit, 200);
 </script>
 </body>
 </html>
