@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -327,6 +329,23 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .hdd-file-chk-label{flex:1;color:var(--text)}
 .hdd-file-chk-size{color:var(--muted);white-space:nowrap}
 
+/* ---- POWER UPGRADES ---- */
+.kpi{cursor:pointer}
+.kpi:active{transform:scale(.98)}
+.kpi.status-active{border-color:var(--cyan)!important;box-shadow:0 0 22px rgba(0,245,255,.3)!important;background:rgba(0,245,255,.1)!important}
+.th-sort{cursor:pointer;user-select:none}
+.th-sort:hover{color:var(--text)!important;background:rgba(0,245,255,.04)}
+.sort-arrow{margin-left:5px;font-size:9px;opacity:.3;transition:.12s;font-family:monospace}
+.sort-arrow::after{content:'↕'}
+.sort-arrow.asc::after{content:'↑'}
+.sort-arrow.desc::after{content:'↓'}
+.sort-arrow.asc,.sort-arrow.desc{opacity:1;color:var(--cyan);text-shadow:0 0 6px rgba(0,245,255,.6)}
+.copy-btn{border:none;background:none;color:var(--muted-2);cursor:pointer;padding:3px 5px;border-radius:2px;font-size:10px;font-family:'Share Tech Mono',monospace;transition:.12s;display:inline-flex;align-items:center;gap:3px;vertical-align:middle;margin-right:2px}
+.copy-btn:hover{color:var(--cyan);background:rgba(0,245,255,.1)}
+.lock-icon{font-size:9px;margin-left:3px;color:var(--amber);opacity:.7;cursor:help;vertical-align:middle;display:inline-block}
+.flt-badge{background:var(--cyan);color:var(--bg);border-radius:50%;width:15px;height:15px;font-size:8px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;margin-left:3px;flex:none}
+.pgsize{background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--muted);padding:5px 7px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;cursor:pointer;transition:.14s}
+.pgsize:focus{border-color:var(--cyan-dim)}
 /* corner decorations on modal */
 .modal::before,.modal::after{content:'';position:absolute;width:12px;height:12px;border-color:var(--cyan);border-style:solid;pointer-events:none}
 .modal{position:relative}
@@ -480,6 +499,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <label class="toggle"><input type="checkbox" id="fUpdated"> Hanya yang baru di-update</label>
     <label class="toggle"><input type="checkbox" id="fDups"> Hanya duplikat</label>
     <button class="btn ghost" id="dupBtn" style="padding:8px 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Cek &amp; pilih duplikat</button>
+    <button class="btn ghost" id="clearFiltersBtn" style="padding:8px 12px" title="Hapus semua filter aktif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reset <span class="flt-badge" id="filterCount" style="display:none">0</span></button>
     <span class="count-info" id="countInfo"></span>
   </div>
 
@@ -509,8 +529,14 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
       <table>
         <thead><tr>
           <th class="c-chk"><input type="checkbox" class="cb" id="chkAll" title="Pilih semua di halaman ini"></th>
-          <th>No</th><th>Link</th><th>Test</th><th>Status</th><th>Link Part</th>
-          <th>Region</th><th>Update</th><th>Perubahan</th><th>Last Page</th><th>Aksi</th>
+          <th>No</th>
+          <th class="th-sort" data-col="link" title="Sort by Link">Link <span class="sort-arrow" id="srt-link"></span></th>
+          <th class="th-sort" data-col="test" title="Sort by Test">Test <span class="sort-arrow" id="srt-test"></span></th>
+          <th class="th-sort" data-col="status" title="Sort by Status">Status <span class="sort-arrow" id="srt-status"></span></th>
+          <th class="th-sort" data-col="part" title="Sort by Part">Link Part <span class="sort-arrow" id="srt-part"></span></th>
+          <th class="th-sort" data-col="region" title="Sort by Region">Region <span class="sort-arrow" id="srt-region"></span></th>
+          <th class="th-sort" data-col="date" title="Sort by Tanggal">Update <span class="sort-arrow" id="srt-date"></span></th>
+          <th>Perubahan</th><th>Last Page</th><th>Aksi</th>
         </tr></thead>
         <tbody id="tbody"></tbody>
       </table>
@@ -554,6 +580,9 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         </button>
         <button class="btn ghost" id="hddCalcToggle" style="padding:7px 12px;font-size:11px">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>Kalkulator &amp; Pindah
+        </button>
+        <button class="btn ghost" id="exportHDDBtn" style="padding:7px 12px;font-size:11px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export XLSX
         </button>
       </div>
       <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted-2)" id="hddSaveStatus"></span>
@@ -748,8 +777,8 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 <div class="overlay" id="confirmOverlay">
   <div class="modal" style="width:min(400px,100%)">
     <div class="modal-body" style="padding:24px 22px">
-      <h2 style="font-family:'Bricolage Grotesque';font-weight:800;font-size:18px;margin-bottom:8px">Hapus link?</h2>
-      <p style="color:var(--muted);font-size:13px;line-height:1.5;font-family:'JetBrains Mono';word-break:break-all" id="confirmMsg"></p>
+      <h2 id="confirmTitle" style="font-family:'Orbitron',monospace;font-weight:700;font-size:16px;letter-spacing:.08em;color:var(--cyan);text-shadow:0 0 8px rgba(0,245,255,.4);margin-bottom:8px">Hapus?</h2>
+      <p style="color:var(--muted);font-size:12px;line-height:1.6;font-family:'Share Tech Mono',monospace;word-break:break-all" id="confirmMsg"></p>
       <div class="modal-foot" style="margin-top:20px">
         <button class="btn ghost" id="cancelDelete">Batal</button>
         <button class="btn primary" id="confirmDeleteBtn" style="background:linear-gradient(135deg,#d6473f,#a8283a);border-color:#d6473f">Hapus</button>
@@ -1037,7 +1066,7 @@ function buildRecord(o){
 // ---------- state ----------
 let DATA=[];
 let view=[];
-let page=1; const PAGE_SIZE=50;
+let page=1; let PAGE_SIZE=50;
 let importMode='merge';
 let pendingRows=null;
 const filters={q:'',status:'',region:'',part:'',updated:false,dups:false,sort:'',from:'',to:''};
@@ -1423,7 +1452,10 @@ function renderKPI(){
     const numStyle = c.color==='maroon'
       ? 'color:var(--cyan);text-shadow:0 0 12px rgba(0,245,255,.6)'
       : `color:var(${COLOR[c.color]})`;
-    return `<div class="kpi ${c.key==='total'?'total':''}">
+    const isActive = c.key!=='total' && filters.status===c.lab;
+    const clickFn = c.key==='total' ? `filterByStatus('')` : `filterByStatus('${c.lab}')`;
+    const tip = c.key==='total' ? 'Klik untuk hapus filter status' : `Klik untuk filter: ${c.lab}`;
+    return `<div class="kpi ${c.key==='total'?'total':''} ${isActive?'status-active':''}" onclick="${clickFn}" title="${tip}">
       <span class="bar" style="background:var(${cv});box-shadow:0 0 6px var(${cv})"></span>
       <div class="lab">${c.lab}</div>
       <div class="num" style="${numStyle}">${fmt(c.num)}</div>
@@ -1464,7 +1496,7 @@ function applyFilters(){
   const from = filters.from ? new Date(filters.from+'T00:00:00').getTime() : null;
   const to   = filters.to   ? new Date(filters.to  +'T23:59:59').getTime() : null;
   view=DATA.filter(r=>{
-    if(q && !(r.link.toLowerCase().includes(q))) return false;
+    if(q && !([r.link,r.test,r.region,r.part,r.update,r.lastpage].some(f=>(f||'').toLowerCase().includes(q)))) return false;
     if(filters.status && STATUS[r.status].label!==filters.status) return false;
     if(filters.region && r.region!==filters.region) return false;
     if(filters.part && r.part!==filters.part) return false;
@@ -1475,12 +1507,20 @@ function applyFilters(){
     return true;
   });
   switch(filters.sort){
-    case 'link-asc':  view.sort((a,b)=>a.link.localeCompare(b.link)); break;
-    case 'link-desc': view.sort((a,b)=>b.link.localeCompare(a.link)); break;
-    case 'date-desc': view.sort((a,b)=>(b.inputAt||0)-(a.inputAt||0)); break;
-    case 'date-asc':  view.sort((a,b)=>(a.inputAt||0)-(b.inputAt||0)); break;
+    case 'link-asc':   view.sort((a,b)=>a.link.localeCompare(b.link)); break;
+    case 'link-desc':  view.sort((a,b)=>b.link.localeCompare(a.link)); break;
+    case 'date-desc':  view.sort((a,b)=>(b.inputAt||0)-(a.inputAt||0)); break;
+    case 'date-asc':   view.sort((a,b)=>(a.inputAt||0)-(b.inputAt||0)); break;
+    case 'status-asc': view.sort((a,b)=>(a.status||'').localeCompare(b.status||'')); break;
+    case 'status-desc':view.sort((a,b)=>(b.status||'').localeCompare(a.status||'')); break;
+    case 'part-asc':   view.sort((a,b)=>(a.part||'').localeCompare(b.part||'')); break;
+    case 'part-desc':  view.sort((a,b)=>(b.part||'').localeCompare(a.part||'')); break;
+    case 'region-asc': view.sort((a,b)=>(a.region||'').localeCompare(b.region||'')); break;
+    case 'region-desc':view.sort((a,b)=>(b.region||'').localeCompare(a.region||'')); break;
+    case 'test-asc':   view.sort((a,b)=>(a.test||'').localeCompare(b.test||'')); break;
+    case 'test-desc':  view.sort((a,b)=>(b.test||'').localeCompare(a.test||'')); break;
   }
-  page=1; renderTable();
+  page=1; renderTable(); updateSortArrows(); updateFilterBadge();
 }
 function renderTable(){
   const tb=$('#tbody');
@@ -1509,13 +1549,14 @@ function renderTable(){
       <td class="c-idx">${idx}</td>
       <td class="c-link" title="${esc(r.link)}">${linkCell(r.link)}</td>
       <td>${testCell}</td>
-      <td><span class="pill" style="background:var(${COLORBG[s.color]});color:var(${COLOR[s.color]})"><span class="dot" style="background:var(${COLOR[s.color]})"></span>${s.label}</span></td>
+      <td><span class="pill" style="background:var(${COLORBG[s.color]});color:var(${COLOR[s.color]})"><span class="dot" style="background:var(${COLOR[s.color]})"></span>${s.label}</span>${r._statusLocked?'<span class="lock-icon" title="Status dikunci — tidak akan ditimpa sync">🔒</span>':''}</td>
       <td>${partPill}</td>
       <td>${regPill}</td>
       <td class="mono">${fmtDate(r.inputAt)}</td>
       <td>${flag}</td>
       <td><input class="lpedit" data-id="${r._id}" value="${esc(r.lastpage)}" placeholder="ketik…"></td>
       <td class="c-act">
+        <button class="copy-btn" onclick="copyLink('${esc(r.link)}')" title="Salin link ke clipboard"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
         <button class="iconbtn edit" data-id="${r._id}" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
         <button class="iconbtn del" data-id="${r._id}" title="Hapus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
       </td>
@@ -1563,8 +1604,10 @@ function renderPager(pages,total){
   win.forEach(p=>html+=btn(p,p===page));
   if(win[win.length-1]<pages){html+=(win[win.length-1]<pages-1?'<span class="pg-info">…</span>':'')+btn(pages);}
   html+=`<button class="pg" data-p="${page+1}" ${page>=pages?'disabled':''}>›</button>`;
-  $('#pager').innerHTML=`<span class="pg-info">Hal. ${page} / ${pages} · ${fmt(total)} baris</span><div class="pg-btns">${html}</div>`;
+  const pageSizeOpts=[25,50,100,200].map(n=>`<option value="${n}"${PAGE_SIZE===n?' selected':''}>${n}/hal</option>`).join('');
+  $('#pager').innerHTML=`<span class="pg-info">Hal. ${page} / ${pages} · ${fmt(total)} baris</span><select class="pgsize" id="pageSizeSel">${pageSizeOpts}</select><div class="pg-btns">${html}</div>`;
   $('#pager').querySelectorAll('.pg[data-p]').forEach(b=>b.onclick=()=>{const p=+b.dataset.p; if(p>=1&&p<=pages){page=p;renderTable();}});
+  const pss=$('#pageSizeSel'); if(pss) pss.onchange=e=>{PAGE_SIZE=+e.target.value;page=1;renderTable();};
 }
 
 // ---------- edit / delete ----------
@@ -2116,8 +2159,7 @@ async function saveHDDEntry(){
 }
 function confirmDeleteHDD(id){
   const h=HDD_DATA.find(x=>x._id===id); if(!h) return;
-  if(!confirm('Hapus "'+h.name+'" beserta '+((h.files||[]).length)+' file di dalamnya?')) return;
-  deleteHDD(id);
+  showConfirm('Hapus HDD?','Hapus "'+h.name+'" beserta '+((h.files||[]).length)+' file di dalamnya? Tindakan ini tidak bisa diurungkan.',()=>deleteHDD(id));
 }
 async function deleteHDD(id){
   HDD_DATA=HDD_DATA.filter(x=>x._id!==id);
@@ -2182,8 +2224,7 @@ async function saveHDDFileEntry(){
 function confirmDeleteHDDFile(hid,fid){
   const h=HDD_DATA.find(x=>x._id===hid); if(!h) return;
   const f=(h.files||[]).find(x=>x._id===fid); if(!f) return;
-  if(!confirm('Hapus "'+f.name+'" ('+fmtGB(f.sizeGB)+') dari '+h.name+'?')) return;
-  deleteHDDFile(hid,fid);
+  showConfirm('Hapus File?','"'+f.name+'" ('+fmtGB(f.sizeGB)+') dari '+h.name+' akan dihapus.',()=>deleteHDDFile(hid,fid));
 }
 async function deleteHDDFile(hid,fid){
   const h=HDD_DATA.find(x=>x._id===hid); if(!h) return;
@@ -2314,6 +2355,82 @@ function runCalcSpace(){
     </div>`).join('');
 }
 
+// ---------- POWER UPGRADE helpers ----------
+function filterByStatus(label){
+  filters.status=(filters.status===label&&label!=='')?'':label;
+  const fs=$('#fStatus'); if(fs) fs.value=filters.status;
+  renderKPI(); applyFilters();
+}
+function updateFilterBadge(){
+  const count=[filters.q,filters.status,filters.region,filters.part,filters.from,filters.to]
+    .filter(Boolean).length+(filters.updated?1:0)+(filters.dups?1:0)+(filters.sort?1:0);
+  const el=$('#filterCount');
+  if(el){ el.textContent=count; el.style.display=count?'':'none'; }
+}
+function updateSortArrows(){
+  const cols=['link','status','part','region','date','test'];
+  cols.forEach(col=>{
+    const el=document.getElementById('srt-'+col); if(!el) return;
+    if(filters.sort===col+'-asc') el.className='sort-arrow asc';
+    else if(filters.sort===col+'-desc') el.className='sort-arrow desc';
+    else el.className='sort-arrow';
+  });
+}
+function cycleSort(col){
+  const asc=col+'-asc', desc=col+'-desc';
+  filters.sort=filters.sort===asc?desc:(filters.sort===desc?'':asc);
+  const fs=$('#fSort'); if(fs) fs.value=filters.sort||'';
+  applyFilters();
+}
+function copyLink(link){
+  if(!link){toast('⚠ Link kosong');return;}
+  navigator.clipboard.writeText(link)
+    .then(()=>toast('✓ Disalin: '+link.slice(0,50)+(link.length>50?'…':'')))
+    .catch(()=>{
+      // fallback
+      try{const ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('✓ Disalin (fallback)');}
+      catch(_){toast('⚠ Gagal salin — klik kanan dan pilih Copy');}
+    });
+}
+function showConfirm(title, msg, onOk){
+  const t=$('#confirmTitle'); if(t) t.textContent=title;
+  $('#confirmMsg').textContent=msg;
+  const btn=$('#confirmDeleteBtn'); const cancel=$('#cancelDelete');
+  const overlay=$('#confirmOverlay');
+  // temporarily override handlers
+  btn.onclick=()=>{ overlay.classList.remove('show'); resetConfirmHandlers(); onOk(); };
+  cancel.onclick=()=>{ overlay.classList.remove('show'); resetConfirmHandlers(); };
+  overlay.onclick=e=>{ if(e.target===overlay){ overlay.classList.remove('show'); resetConfirmHandlers(); } };
+  overlay.classList.add('show');
+}
+function resetConfirmHandlers(){
+  $('#confirmDeleteBtn').onclick=doDelete;
+  $('#cancelDelete').onclick=()=>$('#confirmOverlay').classList.remove('show');
+  $('#confirmOverlay').onclick=e=>{if(e.target===$('#confirmOverlay'))$('#confirmOverlay').classList.remove('show');};
+}
+function exportHDD(){
+  if(!HDD_DATA.length){toast('Tidak ada data HDD untuk di-export');return;}
+  const aoa=[['HDD','Tipe','Total','Terpakai','Tersisa','Penggunaan%','Status','Lokasi','Catatan','File/Folder','Ukuran File','Catatan File']];
+  HDD_DATA.forEach(h=>{
+    const used=hddUsedGB(h); const total=h.totalGB||0; const free=Math.max(0,total-used);
+    const pct=total>0?(used/total*100).toFixed(1)+'%':'—';
+    const st=HDD_STATUS[h.status]?.label||h.status;
+    if(!h.files||!h.files.length){
+      aoa.push([h.name,h.type,fmtGB(total),fmtGB(used),fmtGB(free),pct,st,h.location||'',h.note||'','','','']);
+    }else{
+      h.files.forEach((f,i)=>{
+        aoa.push(i===0
+          ?[h.name,h.type,fmtGB(total),fmtGB(used),fmtGB(free),pct,st,h.location||'',h.note||'',f.name,fmtGB(f.sizeGB),f.note||'']
+          :['','','','','','','','','',f.name,fmtGB(f.sizeGB),f.note||'']);
+      });
+    }
+  });
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'HDD Storage');
+  XLSX.writeFile(wb,'hdd-storage-'+new Date().toISOString().slice(0,10)+'.xlsx');
+  toast('✓ HDD data diekspor ke XLSX');
+}
+
 // ---------- events ----------
 $('#importBtn').onclick=()=>{$('#overlay').classList.add('show');};
 $('#closeModal').onclick=$('#cancelImport').onclick=()=>{$('#overlay').classList.remove('show');pendingRows=null;$('#doImport').disabled=true;$('#pasteArea').value='';$('#fileInput').value='';};
@@ -2394,6 +2511,50 @@ $('#autoSyncToggle').onchange=async e=>{
   if(AS.on){ asStatus('Sinkron otomatis aktif — mengecek…','on'); asStart(); toast('Sinkron otomatis aktif'); }
   else{ asStop(); asStatus('Sinkron otomatis dimatikan.'); toast('Sinkron otomatis nonaktif'); }
 };
+
+// clear filters
+$('#clearFiltersBtn').onclick=()=>{
+  filters.q='';filters.status='';filters.region='';filters.part='';
+  filters.updated=false;filters.dups=false;filters.sort='';filters.from='';filters.to='';
+  $('#search').value='';$('#fStatus').value='';$('#fRegion').value='';$('#fPart').value='';
+  $('#fSort').value='';$('#fFrom').value='';$('#fTo').value='';
+  $('#fUpdated').checked=false;$('#fDups').checked=false;
+  renderKPI();applyFilters();
+};
+
+// thead column sort clicks
+document.querySelectorAll('.th-sort[data-col]').forEach(th=>{
+  th.onclick=()=>cycleSort(th.dataset.col);
+});
+
+// HDD export
+$('#exportHDDBtn').onclick=exportHDD;
+
+// keyboard shortcuts
+document.addEventListener('keydown',e=>{
+  const tag=(document.activeElement||{}).tagName||'';
+  const inInput=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';
+  // / → focus search (switch to monitor tab first)
+  if(e.key==='/'&&!inInput&&!e.ctrlKey&&!e.metaKey){
+    e.preventDefault();
+    const mt=document.querySelector('.tab-btn[data-tab="monitor"]');
+    if(mt&&!mt.classList.contains('active')) mt.click();
+    setTimeout(()=>{const s=$('#search');if(s){s.focus();s.select();}},50);
+  }
+  // Escape → close any open overlay
+  if(e.key==='Escape'){
+    document.querySelectorAll('.overlay.show').forEach(o=>{
+      const x=o.querySelector('.x');if(x)x.click();
+      else o.classList.remove('show');
+    });
+  }
+  // Alt+1..4 → switch tabs
+  if(e.altKey&&!e.ctrlKey&&!e.metaKey){
+    const tabs=['monitor','etalase','hdd','log'];
+    const idx=parseInt(e.key)-1;
+    if(idx>=0&&idx<tabs.length){e.preventDefault();const b=document.querySelector(`.tab-btn[data-tab="${tabs[idx]}"]`);if(b)b.click();}
+  }
+});
 
 // HDD wiring
 $('#addHDDBtn').onclick=openHDDAdd;
@@ -2656,12 +2817,11 @@ async function etlSaveProduct(){
 
 async function etlDeleteProduct(){
   if(!etlEditId) return;
-  if(!confirm('Hapus produk ini dari etalase?')) return;
-  ETL_DATA=ETL_DATA.filter(x=>x.id!==etlEditId);
-  await etlSave();
-  $('#etlOverlay').classList.remove('show');
-  etlRender();
-  toast('Produk dihapus dari etalase');
+  const p=ETL_DATA.find(x=>x.id===etlEditId);
+  showConfirm('Hapus Produk?','"'+(p?.name||'Produk ini')+'" akan dihapus dari etalase.',async()=>{
+    ETL_DATA=ETL_DATA.filter(x=>x.id!==etlEditId);
+    await etlSave(); $('#etlOverlay').classList.remove('show'); etlRender(); toast('Produk dihapus dari etalase');
+  });
 }
 
 async function etlInit(){
