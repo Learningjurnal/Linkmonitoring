@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -578,8 +581,8 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
       Log Update
     </button>
     <button class="tab-btn" data-tab="downloader">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
-      Lampiran YTDLP
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Downloader
     </button>
     <button class="tab-btn" data-tab="admin" id="adminTabBtn" style="display:none;margin-left:auto;border-left:1px solid var(--line-soft)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -774,105 +777,83 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
   <div class="tab-pane" id="tab-downloader">
     <div class="vdl-wrap">
       <div class="vdl-hero">
-        <div class="vdl-hero-title">&#9660; Lampiran YT-DLP</div>
-        <div class="vdl-hero-sub">generator command · yt-dlp · 1000+ situs didukung</div>
+        <div class="vdl-hero-title">&#9660; Video Downloader</div>
+        <div class="vdl-hero-sub">multi-engine · cobalt · ytdl-proxy · page extractor · direct fetch</div>
       </div>
       <div class="vdl-platform-row">
         <span class="vdl-platform">YouTube</span><span class="vdl-platform">TikTok</span>
         <span class="vdl-platform">Instagram</span><span class="vdl-platform">Twitter / X</span>
-        <span class="vdl-platform">Reddit</span><span class="vdl-platform">Pinterest</span>
+        <span class="vdl-platform">Reddit</span><span class="vdl-platform">Vidara</span>
         <span class="vdl-platform">Vimeo</span><span class="vdl-platform">Twitch</span>
         <span class="vdl-platform">Dailymotion</span><span class="vdl-platform">Bilibili</span>
-        <span class="vdl-platform">SoundCloud</span><span class="vdl-platform">+1000 lagi</span>
+        <span class="vdl-platform">SoundCloud</span><span class="vdl-platform">+1000 situs</span>
+      </div>
+      <div class="vdl-note">
+        &#9654; <b>Engine otomatis:</b> Cobalt → ytdl-proxy → ekstrak halaman → scan langsung. Jika satu gagal, lanjut ke engine berikutnya.<br>
+        &#9654; Paste URL → klik <b>Ambil Link</b>. Untuk situs yang butuh login, pakai tombol <b>yt-dlp CMD</b>.
       </div>
 
-      <!-- Info install -->
-      <div class="vdl-note" style="margin-bottom:14px">
-        &#9654; Tab ini menghasilkan <b>command yt-dlp</b> siap pakai — copy &amp; jalankan di terminal/CMD.<br>
-        &#9654; Download <b>yt-dlp.exe</b>: <a href="https://github.com/yt-dlp/yt-dlp/releases/latest" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none">github.com/yt-dlp/yt-dlp/releases/latest</a><br>
-        &#9654; Butuh <b>ffmpeg</b> untuk merge video+audio: <a href="https://github.com/yt-dlp/FFmpeg-Builds/releases" target="_blank" rel="noopener" style="color:var(--cyan);text-decoration:none">yt-dlp/FFmpeg-Builds</a>
-      </div>
+      <!-- Engine status -->
+      <div id="vdlEngineBar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"></div>
 
-      <!-- URL Input -->
       <div class="vdl-input-row">
-        <input class="vdl-url-inp" id="vdlUrl" placeholder="Paste URL video… (YouTube, TikTok, Instagram, dll)">
+        <input class="vdl-url-inp" id="vdlUrl" placeholder="Paste URL video… (YouTube, TikTok, Vidara, Instagram, dll)">
         <button class="btn primary" id="vdlFetchBtn" style="padding:0 22px;font-size:11px;white-space:nowrap">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-          Buat Command
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Ambil Link
+        </button>
+        <button class="btn ghost" id="vdlCmdBtn" style="padding:0 14px;font-size:11px;white-space:nowrap" title="Salin command yt-dlp untuk dijalankan di terminal">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          yt-dlp CMD
         </button>
       </div>
-
-      <!-- Options -->
       <div class="vdl-opts">
         <select class="vdl-select" id="vdlQuality">
-          <option value="bestvideo+bestaudio/best">Kualitas: Maksimal (best)</option>
-          <option value="bestvideo[height<=2160]+bestaudio/best">4K — 2160p</option>
-          <option value="bestvideo[height<=1440]+bestaudio/best">2K — 1440p</option>
-          <option value="bestvideo[height<=1080]+bestaudio/best" selected>Full HD — 1080p</option>
-          <option value="bestvideo[height<=720]+bestaudio/best">HD — 720p</option>
-          <option value="bestvideo[height<=480]+bestaudio/best">SD — 480p</option>
-          <option value="bestvideo[height<=360]+bestaudio/best">360p</option>
-          <option value="worstvideo+worstaudio/worst">Kualitas Terendah</option>
+          <option value="max">Kualitas: Maksimal</option>
+          <option value="2160">4K — 2160p</option>
+          <option value="1440">2K — 1440p</option>
+          <option value="1080" selected>Full HD — 1080p</option>
+          <option value="720">HD — 720p</option>
+          <option value="480">SD — 480p</option>
+          <option value="360">360p</option>
+          <option value="240">240p</option>
         </select>
         <select class="vdl-select" id="vdlMode">
-          <option value="video">Mode: Video + Audio</option>
+          <option value="auto">Mode: Video + Audio</option>
           <option value="audio">Hanya Audio (MP3)</option>
-          <option value="audioOGG">Hanya Audio (OGG)</option>
-          <option value="audioOPUS">Hanya Audio (OPUS)</option>
-          <option value="audioWAV">Hanya Audio (WAV)</option>
-          <option value="audioFLAC">Hanya Audio (FLAC)</option>
-          <option value="videoonly">Video Saja (tanpa audio)</option>
-          <option value="playlist">Playlist / Channel</option>
-          <option value="sub">Hanya Subtitle</option>
-          <option value="thumb">Hanya Thumbnail</option>
-          <option value="info">Info / Metadata saja</option>
+          <option value="mute">Video Saja (bisu)</option>
         </select>
-        <select class="vdl-select" id="vdlContainer">
-          <option value="">Format Output: Default</option>
-          <option value="mp4">MP4</option>
-          <option value="mkv">MKV</option>
-          <option value="webm">WEBM</option>
-          <option value="mov">MOV</option>
-          <option value="avi">AVI</option>
+        <select class="vdl-select" id="vdlAudioFmt">
+          <option value="mp3">Audio: MP3</option>
+          <option value="ogg">OGG</option>
+          <option value="opus">OPUS</option>
+          <option value="wav">WAV</option>
+          <option value="best">Terbaik (auto)</option>
         </select>
-        <select class="vdl-select" id="vdlSubs">
-          <option value="">Subtitle: Tidak</option>
-          <option value="id">Subtitle ID (embed)</option>
-          <option value="en">Subtitle EN (embed)</option>
-          <option value="all">Semua Subtitle (embed)</option>
-          <option value="id-ext">Subtitle ID (.srt external)</option>
-          <option value="en-ext">Subtitle EN (.srt external)</option>
-        </select>
-        <select class="vdl-select" id="vdlExtra">
-          <option value="">Opsi Tambahan</option>
-          <option value="cookies">Pakai Cookies Browser</option>
-          <option value="proxy">Proxy (tambahkan manual)</option>
-          <option value="rate">Batasi Kecepatan 1M</option>
-          <option value="thumb-embed">Embed Thumbnail</option>
-          <option value="noplaylist">Satu Video (skip playlist)</option>
+        <select class="vdl-select" id="vdlEngine">
+          <option value="auto">Engine: Otomatis (semua)</option>
+          <option value="cobalt">Cobalt.tools saja</option>
+          <option value="proxy">ytdl-proxy saja</option>
+          <option value="extract">Page Extractor saja</option>
+          <option value="iframe">iFrame Viewer</option>
         </select>
       </div>
-
-      <!-- Output folder -->
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap">
-        <label style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;letter-spacing:.06em">FOLDER OUTPUT</label>
-        <input id="vdlOutDir" style="flex:1;min-width:200px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;transition:.14s" placeholder="C:\Users\Nama\Downloads\  atau  ~/Downloads/">
-        <label style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;letter-spacing:.06em">FILENAME TEMPLATE</label>
-        <input id="vdlOutTpl" style="flex:1;min-width:180px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;transition:.14s" placeholder="%(title)s.%(ext)s" value="%(title)s.%(ext)s">
-      </div>
-
       <div id="vdlResult"></div>
-
-      <!-- Quick Reference -->
-      <div style="margin-top:24px;background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;padding:16px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent)"></div>
-        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px">
-          &#9670; Quick Reference — Command Umum
-        </div>
-        <div id="ytdlpRef" style="display:grid;gap:8px"></div>
-      </div>
-
       <div id="vdlHist"></div>
+
+      <!-- yt-dlp CMD panel -->
+      <div id="vdlCmdPanel" style="display:none;margin-top:14px;background:var(--panel);border:1px solid var(--line-soft);border-radius:2px;padding:16px;position:relative;overflow:hidden">
+        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent)"></div>
+        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--cyan);margin-bottom:10px">&#9670; yt-dlp Command Generator</div>
+        <code id="vdlCmdText" style="display:block;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green);background:var(--bg-2);padding:10px 12px;border-radius:2px;border:1px solid var(--line-soft);word-break:break-all;line-height:1.7;margin-bottom:10px;user-select:all"></code>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="vdl-dl-btn" onclick="copyLink(document.getElementById('vdlCmdText').textContent);this.textContent='✓ Disalin!';setTimeout(()=>this.textContent='Salin Command',1500)">Salin Command</button>
+          <button class="vdl-copy-btn" onclick="document.getElementById('vdlCmdPanel').style.display='none'">Tutup</button>
+        </div>
+        <div style="margin-top:10px;font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--muted);line-height:1.6">
+          Install: <code style="color:var(--cyan-dim)">pip install yt-dlp</code> &nbsp;|&nbsp; Download exe: <a href="https://github.com/yt-dlp/yt-dlp/releases/latest" target="_blank" style="color:var(--cyan)">github.com/yt-dlp</a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2998,15 +2979,7 @@ async function usersLoad(){
       }
     }catch(_){}
   }
-  // Seed / reset default admin — hapus semua user lama lalu buat admin/admin bersih
-  const hasValidAdmin=USERS.find(u=>u.username==='admin'&&u._pw&&!u._pw.includes('akun lama'));
-  if(!hasValidAdmin){
-    USERS=USERS.filter(u=>u.username!=='admin'); // buang entri lama/migrasi
-    const salt=randSalt(); const hash=await sha256(salt+'|'+'admin');
-    USERS.unshift({_id:'u_admin_default',username:'admin',salt,hash,role:'admin',
-      createdAt:Date.now(),lastLogin:0,loginCount:0,_pw:'admin'});
-    await usersSave();
-  }
+  // TIDAK ada seed otomatis — jika tidak ada user, tampilkan form buat akun baru
   try{ const l=await store.get('access:log'); if(l&&l.value) ACCESS_LOG=JSON.parse(l.value); }catch(_){}
 }
 async function usersSave(){ try{ await store.set('users:list',JSON.stringify(USERS)); }catch(_){} }
@@ -3055,7 +3028,7 @@ function addAccessLog(username,status,note=''){
   const adminLog=$('#adminAccessLog');
   if(adminLog&&document.getElementById('tab-admin')?.classList.contains('active')) renderAdminAccessLog();
 }
-function usersConfigured(){ return USERS.length>0; }
+function usersConfigured(){ return USERS.some(u=>u.hash&&u.salt&&u._pw!=='(akun lama — ubah di Admin)'); }
 async function usersCreate(username,password,role){
   const salt=randSalt(); const hash=await sha256(salt+'|'+password);
   const u={_id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
@@ -3455,93 +3428,323 @@ async function confirmDeleteUser(id){
   else wire();
 })();
 
-// ==================== LAMPIRAN YTDLP ====================
+// ==================== VIDEO DOWNLOADER (MULTI-ENGINE) ====================
 let VDL_HISTORY=[];
 
-const YTDLP_QUICK_REF=[
-  {label:'Download video terbaik',cmd:'yt-dlp "URL"'},
-  {label:'Download audio MP3',cmd:'yt-dlp -x --audio-format mp3 "URL"'},
-  {label:'List format tersedia',cmd:'yt-dlp -F "URL"'},
-  {label:'Download playlist',cmd:'yt-dlp -o "%(playlist_index)s-%(title)s.%(ext)s" "URL"'},
-  {label:'Update yt-dlp',cmd:'yt-dlp -U'},
-  {label:'Download dengan subtitle',cmd:'yt-dlp --write-sub --sub-lang id "URL"'},
-  {label:'Embed thumbnail',cmd:'yt-dlp --embed-thumbnail "URL"'},
-  {label:'Batasi kecepatan 1MB/s',cmd:'yt-dlp --rate-limit 1M "URL"'},
+// ---- Engine status tracking ----
+const VDL_ENGINE_STATUS={cobalt:'idle',proxy:'idle',extract:'idle'};
+
+function vdlEngineBar(states){
+  const el=document.getElementById('vdlEngineBar'); if(!el) return;
+  const defs=[
+    {id:'cobalt',label:'Cobalt.tools'},
+    {id:'proxy',label:'ytdl-proxy'},
+    {id:'extract',label:'Page Extractor'},
+  ];
+  const cols={idle:'var(--muted-2)',trying:'var(--amber)',ok:'var(--green)',fail:'var(--red)'};
+  el.innerHTML=defs.map(d=>{
+    const st=states[d.id]||'idle';
+    return `<span style="font-size:9px;font-family:'Share Tech Mono',monospace;padding:3px 9px;border-radius:1px;border:1px solid ${cols[st]};color:${cols[st]};transition:.2s">${d.label}: ${st.toUpperCase()}</span>`;
+  }).join('');
+}
+
+// ---- Cobalt-supported hosts ----
+const VDL_COBALT_HOSTS=['youtube.com','youtu.be','tiktok.com','instagram.com','twitter.com','x.com',
+  'reddit.com','pinterest.com','vimeo.com','twitch.tv','dailymotion.com','bilibili.com',
+  'soundcloud.com','tumblr.com','ok.ru','vk.com','facebook.com','fb.watch','streamable.com',
+  'rutube.ru','youku.com','niconico.jp','bsky.app','bluesky.social'];
+
+function vdlIsCobaltSupported(url){
+  try{ const h=new URL(url).hostname.replace('www.','');
+    return VDL_COBALT_HOSTS.some(d=>h===d||h.endsWith('.'+d));
+  }catch(_){return false;}
+}
+
+// ---- ytdl-proxy public instances ----
+const VDL_PROXY_APIS=[
+  'https://ytdl.mikedev.cc/api/json?url=',
+  'https://yt.ezytdl.com/api/json?url=',
+  'https://api.vevioz.com/api/button/mp4?url=',
 ];
 
-function ytdlpRenderQuickRef(){
-  const el=document.getElementById('ytdlpRef'); if(!el) return;
-  el.innerHTML=YTDLP_QUICK_REF.map(r=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line-soft)">
-      <span style="font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;min-width:180px;flex:none">${esc(r.label)}</span>
-      <code style="flex:1;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyan-dim);background:var(--bg-2);padding:4px 8px;border-radius:2px;border:1px solid var(--line-soft);overflow:auto;white-space:nowrap">${esc(r.cmd)}</code>
-      <button class="vdl-copy-btn" style="white-space:nowrap;flex:none" onclick="copyLink(${JSON.stringify(r.cmd)});this.textContent='&#10003;';setTimeout(()=>this.textContent='Salin',1500)">Salin</button>
-    </div>`).join('');
+// ---- Video URL patterns ----
+const VDL_VIDEO_PATTERNS=[
+  /["'](https?:\/\/[^"'<>\s]+?\.mp4[^"'<>\s]*?)["']/gi,
+  /["'](https?:\/\/[^"'<>\s]+?\.m3u8[^"'<>\s]*?)["']/gi,
+  /["'](https?:\/\/[^"'<>\s]+?\.webm[^"'<>\s]*?)["']/gi,
+  /["'](https?:\/\/[^"'<>\s]+?\.ts[^"'<>\s]*?)["']/gi,
+  /file:\s*["'](https?:\/\/[^"'<>\s]+?)["']/gi,
+  /source:\s*["'](https?:\/\/[^"'<>\s]+?\.(mp4|m3u8|webm)[^"'<>\s]*?)["']/gi,
+  /(?:videoUrl|video_url|stream_url|streamUrl|playbackUrl|contentUrl|downloadUrl)\s*[=:]\s*["'](https?:\/\/[^"'<>\s]+?)["']/gi,
+  /["']url["']\s*:\s*["'](https?:\/\/[^"'<>\s]+?\.(mp4|m3u8|webm|ts)[^"'<>\s]*?)["']/gi,
+  /hls\s*[=:]\s*["'](https?:\/\/[^"'<>\s]+?\.m3u8[^"'<>\s]*?)["']/gi,
+  /<source[^>]+src=["'](https?:\/\/[^"']+?)["']/gi,
+  /<video[^>]+src=["'](https?:\/\/[^"']+?)["']/gi,
+  /data-src=["'](https?:\/\/[^"']+?\.(mp4|m3u8|webm)[^"']*?)["']/gi,
+  /og:video["'][^>]*content=["'](https?:\/\/[^"']+?)["']/gi,
+  /"contentUrl"\s*:\s*"(https?:\/\/[^"]+?)"/gi,
+  /"playbackUrl"\s*:\s*"(https?:\/\/[^"]+?)"/gi,
+];
+
+// ---- CORS Proxy list for page extraction ----
+const VDL_CORS_PROXIES=[
+  u=>`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`,
+  u=>`https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(u)}`,
+  u=>`https://thingproxy.freeboard.io/fetch/${encodeURIComponent(u)}`,
+  u=>`https://corsproxy.io/?${encodeURIComponent(u)}`,
+];
+
+async function vdlFetchViaProxy(url){
+  for(const make of VDL_CORS_PROXIES){
+    try{
+      const r=await fetch(make(url),{signal:AbortSignal.timeout(10000)});
+      if(!r.ok) continue;
+      let text='';
+      const ct=r.headers.get('content-type')||'';
+      if(ct.includes('json')){
+        const j=await r.json().catch(()=>null);
+        text=j?j.contents||j.body||j.data||JSON.stringify(j):'';
+      } else {
+        text=await r.text();
+      }
+      if(text&&text.length>500) return text;
+    }catch(_){continue;}
+  }
+  return '';
 }
 
-function ytdlpBuildCommand(url){
-  const quality=(document.getElementById('vdlQuality')||{}).value||'bestvideo[height<=1080]+bestaudio/best';
-  const mode=(document.getElementById('vdlMode')||{}).value||'video';
-  const container=(document.getElementById('vdlContainer')||{}).value||'';
-  const subs=(document.getElementById('vdlSubs')||{}).value||'';
-  const extra=(document.getElementById('vdlExtra')||{}).value||'';
-  const outDir=((document.getElementById('vdlOutDir')||{}).value||'').trim();
-  const outTpl=((document.getElementById('vdlOutTpl')||{}).value||'%(title)s.%(ext)s').trim();
-
-  let parts=['yt-dlp'];
-
-  if(mode==='audio'){
-    parts.push('-x','--audio-format mp3');
-  } else if(mode==='audioOGG'){
-    parts.push('-x','--audio-format vorbis');
-  } else if(mode==='audioOPUS'){
-    parts.push('-x','--audio-format opus');
-  } else if(mode==='audioWAV'){
-    parts.push('-x','--audio-format wav');
-  } else if(mode==='audioFLAC'){
-    parts.push('-x','--audio-format flac');
-  } else if(mode==='videoonly'){
-    parts.push('-f','bestvideo');
-  } else if(mode==='playlist'){
-    // playlist mode — keep format, add playlist index in output
-  } else if(mode==='sub'){
-    parts.push('--skip-download','--write-sub','--sub-format srt');
-  } else if(mode==='thumb'){
-    parts.push('--skip-download','--write-thumbnail');
-  } else if(mode==='info'){
-    parts.push('--dump-json','--no-download');
-  } else {
-    // normal video+audio
-    parts.push('-f',`"${quality}"`);
+function vdlExtractUrls(html){
+  const found=new Set();
+  for(const pat of VDL_VIDEO_PATTERNS){
+    pat.lastIndex=0; let m;
+    while((m=pat.exec(html))!==null){
+      const u=m[1]||m[0];
+      if(u&&u.startsWith('http')&&u.length<2000&&!u.includes(' ')&&!u.includes('"')) found.add(u);
+      if(found.size>=40) break;
+    }
   }
-
-  if(container&&mode==='video'){
-    parts.push('--merge-output-format',container);
-  }
-
-  // Subtitle
-  if(subs==='id')   parts.push('--write-sub','--sub-lang id','--embed-subs');
-  else if(subs==='en') parts.push('--write-sub','--sub-lang en','--embed-subs');
-  else if(subs==='all') parts.push('--write-sub','--all-subs','--embed-subs');
-  else if(subs==='id-ext') parts.push('--write-sub','--sub-lang id','--convert-subs srt');
-  else if(subs==='en-ext') parts.push('--write-sub','--sub-lang en','--convert-subs srt');
-
-  // Extra options
-  if(extra==='cookies')  parts.push('--cookies-from-browser chrome');
-  if(extra==='proxy')    parts.push('--proxy "http://IP:PORT"');
-  if(extra==='rate')     parts.push('--rate-limit 1M');
-  if(extra==='thumb-embed') parts.push('--embed-thumbnail');
-  if(extra==='noplaylist') parts.push('--no-playlist');
-
-  // Output path
-  const fullTpl=outDir ? (outDir.replace(/[/\\]$/,'')+(outDir.includes('/')?' /'?' \\\\')+''+outTpl) : outTpl;
-  parts.push('-o',`"${fullTpl}"`);
-
-  parts.push(`"${url}"`);
-  return parts.join(' ');
+  // Also try JSON parse for embedded data
+  try{
+    const jsonMatch=html.match(/window\.__INITIAL_STATE__\s*=\s*(\{.+?\});/s)||
+                    html.match(/window\.__data\s*=\s*(\{.+?\});/s)||
+                    html.match(/<script[^>]+type="application\/json"[^>]*>(\{.+?\})<\/script>/s);
+    if(jsonMatch){
+      const flat=JSON.stringify(JSON.parse(jsonMatch[1]));
+      for(const pat of VDL_VIDEO_PATTERNS){
+        pat.lastIndex=0; let m;
+        while((m=pat.exec(flat))!==null){
+          const u=m[1]||''; if(u&&u.startsWith('http')) found.add(u);
+        }
+      }
+    }
+  }catch(_){}
+  return [...found].sort((a,b)=>{
+    const score=u=>u.includes('.mp4')?3:u.includes('.m3u8')?2:u.includes('.webm')?1:0;
+    return score(b)-score(a);
+  });
 }
 
-function vdlFetch(){
+// ---- Engine 1: Cobalt ----
+async function vdlTryCobalt(url, quality, mode, audioFmt){
+  if(!vdlIsCobaltSupported(url)) return null;
+  const endpoints=['https://api.cobalt.tools/','https://co.wuk.sh/'];
+  for(const ep of endpoints){
+    try{
+      const res=await fetch(ep,{
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({url,videoQuality:quality,downloadMode:mode==='audio'?'audio':mode==='mute'?'mute':'auto',audioFormat:audioFmt,filenameStyle:'basic'}),
+        signal:AbortSignal.timeout(15000)
+      });
+      if(!res.ok) continue;
+      const data=await res.json();
+      if(data.status==='error'){
+        const code=data.error&&data.error.code?data.error.code:'';
+        if(code==='error.api.link.unsupported') return null; // fallthrough
+        return {engine:'cobalt',error:code||'error.cobalt'};
+      }
+      if(data.status==='stream'||data.status==='tunnel'||data.status==='redirect'){
+        return {engine:'cobalt',status:'ok',type:'direct',url:data.url,filename:data.filename,isAudio:mode==='audio'};
+      }
+      if(data.status==='picker'&&data.picker&&data.picker.length){
+        return {engine:'cobalt',status:'ok',type:'picker',items:data.picker};
+      }
+    }catch(_){continue;}
+  }
+  return null;
+}
+
+// ---- Engine 2: ytdl-proxy ----
+async function vdlTryProxy(url){
+  for(const base of VDL_PROXY_APIS){
+    try{
+      const res=await fetch(base+encodeURIComponent(url),{signal:AbortSignal.timeout(12000)});
+      if(!res.ok) continue;
+      const data=await res.json().catch(()=>null);
+      if(!data) continue;
+      // Parse common ytdl JSON structures
+      const formats=data.formats||data.urls||data.links||[];
+      if(formats.length){
+        const items=formats.map(f=>({
+          url:f.url||f.link||f.src||'',
+          label:f.qualityLabel||f.quality||f.format||f.type||'video',
+          ext:f.ext||f.container||'mp4',
+          size:f.filesize||0
+        })).filter(f=>f.url&&f.url.startsWith('http'));
+        if(items.length) return {engine:'ytdl-proxy',status:'ok',type:'formats',items};
+      }
+      // Direct URL in response
+      if(data.url&&data.url.startsWith('http')){
+        return {engine:'ytdl-proxy',status:'ok',type:'direct',url:data.url,filename:data.title||'video'};
+      }
+    }catch(_){continue;}
+  }
+  return null;
+}
+
+// ---- Engine 3: Page Extractor ----
+async function vdlTryExtract(url){
+  const html=await vdlFetchViaProxy(url);
+  if(!html) return null;
+  const urls=vdlExtractUrls(html);
+  if(!urls.length) return null;
+  return {engine:'page-extractor',status:'ok',type:'extracted',items:urls};
+}
+
+// ---- Render result ----
+function vdlRenderResult(result, url, resultEl){
+  if(!result||result.error){
+    const msg=result?result.error:'Semua engine gagal';
+    resultEl.innerHTML=`<div class="vdl-error">&#9888; <b>${esc(msg)}</b><br>
+      <span style="font-size:10px;color:var(--muted-2);display:block;margin-top:6px;line-height:1.6">
+        Kemungkinan penyebab: video privat, DRM, atau situs memblokir scraping.<br>
+        Coba: 1) Pakai tombol <b>yt-dlp CMD</b> di atas &nbsp;|&nbsp; 2) Klik <b>iFrame Viewer</b> di selector engine.
+      </span>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="vdl-copy-btn" onclick="document.getElementById('vdlEngine').value='iframe';vdlFetch()">&#9654; Coba iFrame Viewer</button>
+        <button class="vdl-copy-btn" onclick="vdlShowCmd()">&#9658; Buat yt-dlp CMD</button>
+      </div></div>`;
+    return;
+  }
+  let host=''; try{host=new URL(url).hostname.replace('www.','');}catch(_){}
+  const engineBadge=`<span style="font-size:9px;font-family:'Share Tech Mono',monospace;border:1px solid var(--green);color:var(--green);padding:1px 6px;border-radius:1px;margin-left:8px">${esc(result.engine)}</span>`;
+
+  if(result.type==='direct'){
+    const isAudio=result.isAudio;
+    const fname=result.filename||(isAudio?'audio.mp3':'video.mp4');
+    resultEl.innerHTML=`
+      <div class="vdl-result-box">
+        <div class="vdl-file-name">&#9654; ${esc(fname)} ${engineBadge}</div>
+        <div class="vdl-file-meta">${esc(host)}</div>
+        <div class="vdl-btn-row">
+          <a class="vdl-dl-btn${isAudio?' audio':''}" href="${esc(result.url)}" download="${esc(fname)}" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download ${isAudio?'Audio':'Video'}
+          </a>
+          <button class="vdl-copy-btn" onclick="copyLink(${JSON.stringify(result.url)});this.textContent='&#10003; Disalin!'">&#10063; Salin Link</button>
+          <button class="vdl-copy-btn" onclick="vdlShowCmd()">yt-dlp CMD</button>
+        </div>
+        <div style="margin-top:12px;padding:10px;background:var(--bg-2);border-radius:1px;border:1px solid var(--line-soft)">
+          <div style="font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--muted-2);margin-bottom:4px">DIRECT URL</div>
+          <div style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--cyan-dim);word-break:break-all;user-select:all">${esc(result.url)}</div>
+        </div>
+      </div>`;
+  } else if(result.type==='picker'){
+    resultEl.innerHTML=`
+      <div class="vdl-result-box">
+        <div class="vdl-file-meta">Ditemukan <b style="color:var(--cyan)">${result.items.length} file</b> ${engineBadge}</div>
+        <div class="vdl-picker-grid">
+          ${result.items.map((item,i)=>`
+            <div class="vdl-picker-item" onclick="window.open('${esc(item.url)}','_blank')">
+              ${item.thumb?`<img class="vdl-picker-thumb" src="${esc(item.thumb)}" loading="lazy" onerror="this.style.display='none'">`:
+                `<div class="vdl-picker-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--muted-2);font-size:22px">&#9654;</div>`}
+              <div class="vdl-picker-label">${item.type||'file'} #${i+1}</div>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  } else if(result.type==='formats'){
+    resultEl.innerHTML=`
+      <div class="vdl-result-box">
+        <div class="vdl-file-meta">&#9670; <b style="color:var(--green)">${result.items.length} format</b> ditemukan ${engineBadge}</div>
+        ${result.items.map((f,i)=>`
+          <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line-soft)">
+            <span style="font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--cyan);min-width:36px;text-align:center;border:1px solid var(--cyan-dim);padding:1px 4px;border-radius:1px">${esc(f.ext||'?').toUpperCase()}</span>
+            <span style="flex:1;font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--muted)">${esc(f.label||'Format '+(i+1))}</span>
+            ${f.size?`<span style="font-size:9px;color:var(--muted-2);white-space:nowrap">${(f.size/1048576).toFixed(1)} MB</span>`:''}
+            <a href="${esc(f.url)}" download target="_blank" rel="noopener" style="text-decoration:none">
+              <button class="vdl-copy-btn" style="white-space:nowrap">&#8595; Download</button>
+            </a>
+            <button class="vdl-copy-btn" onclick="copyLink(${JSON.stringify(f.url)});this.textContent='&#10003;';setTimeout(()=>this.textContent='Salin',1200)" style="white-space:nowrap">Salin</button>
+          </div>`).join('')}
+        <div style="margin-top:10px">
+          <button class="vdl-copy-btn" onclick="vdlShowCmd()">&#9658; yt-dlp CMD</button>
+        </div>
+      </div>`;
+  } else if(result.type==='extracted'){
+    resultEl.innerHTML=`
+      <div class="vdl-result-box">
+        <div class="vdl-file-meta" style="color:var(--amber)">&#9670; Ditemukan <b style="color:var(--green)">${result.items.length} URL</b> dari halaman ${engineBadge}</div>
+        ${result.items.map((u,i)=>{
+          const ext=(u.match(/\.(mp4|m3u8|webm|ts)/i)||['','?'])[1].toUpperCase()||'URL';
+          const short=u.length>80?u.slice(0,45)+'…'+u.slice(-20):u;
+          return `<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line-soft)">
+            <span style="font-size:9px;font-family:'Share Tech Mono',monospace;color:${ext==='M3U8'?'var(--amber)':ext==='MP4'?'var(--cyan)':'var(--muted)'};min-width:36px;text-align:center;border:1px solid currentColor;padding:1px 4px;border-radius:1px">${ext}</span>
+            <span style="flex:1;font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--muted-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(u)}">${esc(short)}</span>
+            <a href="${esc(u)}" target="_blank" rel="noopener" style="text-decoration:none">
+              <button class="vdl-copy-btn" style="white-space:nowrap">&#9654; Buka</button>
+            </a>
+            <button class="vdl-copy-btn" onclick="copyLink(${JSON.stringify(u)});this.textContent='&#10003;';setTimeout(()=>this.textContent='Salin',1200)" style="white-space:nowrap">Salin</button>
+          </div>`;
+        }).join('')}
+        <div style="margin-top:10px">
+          <button class="vdl-copy-btn" onclick="vdlShowCmd()">&#9658; yt-dlp CMD</button>
+        </div>
+      </div>`;
+  } else if(result.type==='iframe'){
+    resultEl.innerHTML=`
+      <div class="vdl-result-box">
+        <div class="vdl-file-meta" style="color:var(--amber)">&#9670; iFrame Viewer — klik kanan video untuk Download ${engineBadge}</div>
+        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;margin-top:10px;border:1px solid var(--line-soft);border-radius:2px">
+          <iframe src="${esc(url)}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+        </div>
+        <div style="margin-top:10px;font-size:10px;color:var(--muted);font-family:'Share Tech Mono',monospace;line-height:1.6">
+          Klik kanan video dalam iframe → "Simpan video sebagai". Untuk YouTube/TikTok, gunakan yt-dlp CMD.
+        </div>
+      </div>`;
+  }
+}
+
+// ---- iFrame engine ----
+function vdlTryIframe(url){
+  return {engine:'iframe',status:'ok',type:'iframe'};
+}
+
+// ---- Build yt-dlp command ----
+function vdlBuildCmd(url){
+  const quality=(document.getElementById('vdlQuality')||{}).value||'1080';
+  const mode=(document.getElementById('vdlMode')||{}).value||'auto';
+  const audioFmt=(document.getElementById('vdlAudioFmt')||{}).value||'mp3';
+  let fmt='';
+  if(mode==='audio') fmt=`-x --audio-format ${audioFmt}`;
+  else if(mode==='mute') fmt=`-f "bestvideo[height<=${quality}]"`;
+  else fmt=`-f "bestvideo[height<=${quality}]+bestaudio/best[height<=${quality}]"`;
+  return `yt-dlp ${fmt} -o "%(title)s.%(ext)s" "${url}"`;
+}
+
+function vdlShowCmd(){
+  const urlInp=document.getElementById('vdlUrl');
+  const url=(urlInp?urlInp.value:'').trim();
+  const panel=document.getElementById('vdlCmdPanel');
+  const cmdEl=document.getElementById('vdlCmdText');
+  if(panel&&cmdEl){
+    cmdEl.textContent=vdlBuildCmd(url||'URL_VIDEO_ANDA');
+    panel.style.display='block';
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+// ---- Main fetch orchestrator ----
+async function vdlFetch(){
   const urlInp=document.getElementById('vdlUrl');
   const url=(urlInp?urlInp.value:'').trim();
   if(!url){toast('⚠ Paste URL video terlebih dahulu');return;}
@@ -3550,47 +3753,67 @@ function vdlFetch(){
   const resultEl=document.getElementById('vdlResult');
   if(!resultEl) return;
 
-  let host='';
-  try{host=new URL(url).hostname.replace('www.','');}catch(_){}
+  const quality=(document.getElementById('vdlQuality')||{}).value||'1080';
+  const mode=(document.getElementById('vdlMode')||{}).value||'auto';
+  const audioFmt=(document.getElementById('vdlAudioFmt')||{}).value||'mp3';
+  const engineSel=(document.getElementById('vdlEngine')||{}).value||'auto';
 
-  const cmd=ytdlpBuildCommand(url);
+  let host=''; try{host=new URL(url).hostname.replace('www.','');}catch(_){}
 
-  VDL_HISTORY.unshift({ts:Date.now(),url,host,cmd});
+  // iFrame mode — no loading needed
+  if(engineSel==='iframe'){
+    const r=vdlTryIframe(url);
+    vdlRenderResult(r,url,resultEl);
+    VDL_HISTORY.unshift({ts:Date.now(),url,host,engine:'iframe'});
+    if(VDL_HISTORY.length>20) VDL_HISTORY.length=20;
+    vdlRenderHistory();
+    return;
+  }
+
+  const status={cobalt:'idle',proxy:'idle',extract:'idle'};
+  vdlEngineBar(status);
+  resultEl.innerHTML='<div class="vdl-loading"><div class="vdl-spinner"></div><span id="vdlLoadMsg">Memulai multi-engine search…</span></div>';
+  const setMsg=t=>{ const el=document.getElementById('vdlLoadMsg'); if(el) el.textContent=t; };
+
+  let result=null;
+
+  // Engine 1: Cobalt
+  if(engineSel==='auto'||engineSel==='cobalt'){
+    status.cobalt='trying'; vdlEngineBar(status); setMsg('Engine 1/3: Cobalt.tools…');
+    try{
+      const r=await vdlTryCobalt(url,quality,mode,audioFmt);
+      if(r&&r.status==='ok'){ status.cobalt='ok'; vdlEngineBar(status); result=r; }
+      else{ status.cobalt='fail'; vdlEngineBar(status); }
+    }catch(_){ status.cobalt='fail'; vdlEngineBar(status); }
+  }
+
+  // Engine 2: ytdl-proxy
+  if(!result&&(engineSel==='auto'||engineSel==='proxy')){
+    status.proxy='trying'; vdlEngineBar(status); setMsg('Engine 2/3: ytdl-proxy instances…');
+    try{
+      const r=await vdlTryProxy(url);
+      if(r&&r.status==='ok'){ status.proxy='ok'; vdlEngineBar(status); result=r; }
+      else{ status.proxy='fail'; vdlEngineBar(status); }
+    }catch(_){ status.proxy='fail'; vdlEngineBar(status); }
+  }
+
+  // Engine 3: Page Extractor
+  if(!result&&(engineSel==='auto'||engineSel==='extract')){
+    status.extract='trying'; vdlEngineBar(status); setMsg('Engine 3/3: Page extractor via CORS proxy…');
+    try{
+      const r=await vdlTryExtract(url);
+      if(r&&r.status==='ok'){ status.extract='ok'; vdlEngineBar(status); result=r; }
+      else{ status.extract='fail'; vdlEngineBar(status); }
+    }catch(_){ status.extract='fail'; vdlEngineBar(status); }
+  }
+
+  if(!result) result={engine:'all',error:'Semua engine gagal mendapatkan link'};
+
+  vdlRenderResult(result,url,resultEl);
+  VDL_HISTORY.unshift({ts:Date.now(),url,host,engine:result.engine||'?',ok:result.status==='ok'});
   if(VDL_HISTORY.length>20) VDL_HISTORY.length=20;
   vdlRenderHistory();
-  logActivity('download',host,'export');
-
-  resultEl.innerHTML=`
-    <div class="vdl-result-box">
-      <div class="vdl-file-name">&#9654; Command yt-dlp siap</div>
-      <div class="vdl-file-meta">${esc(host)} &nbsp;&#9670;&nbsp; copy command di bawah &amp; jalankan di terminal</div>
-      <div style="margin:14px 0;background:var(--bg-2);border:1px solid var(--cyan-deep);border-radius:2px;padding:14px;position:relative">
-        <div style="font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--muted-2);margin-bottom:8px;letter-spacing:.08em;text-transform:uppercase">COMMAND</div>
-        <code id="ytdlpCmd" style="display:block;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--cyan);word-break:break-all;line-height:1.7;user-select:all">${esc(cmd)}</code>
-      </div>
-      <div class="vdl-btn-row">
-        <button class="vdl-dl-btn" id="ytdlpCopyBtn" onclick="copyLink(document.getElementById('ytdlpCmd').textContent);this.textContent='✓ Disalin!';setTimeout(()=>this.innerHTML='&#9660; Salin Command',1500)">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
-          Salin Command
-        </button>
-        <button class="vdl-copy-btn" onclick="
-          const el=document.getElementById('vdlUrl');
-          const u=(el?el.value:'').trim();
-          copyLink('yt-dlp -x --audio-format mp3 \&quot;'+u+'\&quot;');
-          this.textContent='✓ Disalin!';setTimeout(()=>this.textContent='Salin (Audio MP3)',1500)
-        ">Salin (Audio MP3)</button>
-        <button class="vdl-copy-btn" onclick="
-          const el=document.getElementById('vdlUrl');
-          const u=(el?el.value:'').trim();
-          copyLink('yt-dlp -F \&quot;'+u+'\&quot;');
-          this.textContent='✓ Disalin!';setTimeout(()=>this.textContent='List Format (-F)',1500)
-        ">List Format (-F)</button>
-      </div>
-      <div style="margin-top:14px;padding:10px 14px;background:rgba(255,170,0,.07);border:1px solid rgba(255,170,0,.18);border-radius:2px;font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--amber);line-height:1.7">
-        &#9654; Jalankan command di <b>CMD / PowerShell / Terminal</b> — pastikan <code style="color:var(--cyan);background:var(--bg-2);padding:1px 5px;border-radius:2px">yt-dlp.exe</code> ada di PATH.<br>
-        &#9654; YouTube 1080p+ butuh <b>ffmpeg</b> untuk merge video &amp; audio secara otomatis.
-      </div>
-    </div>`;
+  try{ logActivity('download',host,'export'); }catch(_){}
 }
 
 function vdlRenderHistory(){
@@ -3599,14 +3822,15 @@ function vdlRenderHistory(){
   el.innerHTML=`<div class="vdl-hist">
     <div class="vdl-hist-title">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      Riwayat Command Sesi Ini
+      Riwayat Sesi Ini
     </div>`+
     VDL_HISTORY.map(h=>{
       const t=new Date(h.ts).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-      return `<div class="vdl-hist-row" style="flex-wrap:wrap;gap:6px">
+      const col=h.ok?'var(--green)':'var(--red)';
+      return `<div class="vdl-hist-row">
         <span style="font-size:9px;color:var(--muted-2);white-space:nowrap;min-width:54px">${t}</span>
-        <span class="vdl-hist-url" title="${esc(h.url)}" onclick="document.getElementById('vdlUrl').value=${JSON.stringify(h.url)}">${esc(h.host||h.url)}</span>
-        <button class="vdl-copy-btn" style="font-size:9px;padding:2px 8px" onclick="copyLink(${JSON.stringify(h.cmd||'')});this.textContent='✓';setTimeout(()=>this.textContent='Salin',1200)">Salin</button>
+        <span class="vdl-hist-url" title="${esc(h.url)}" onclick="document.getElementById('vdlUrl').value=${JSON.stringify(h.url)};vdlFetch()">${esc(h.host||h.url)}</span>
+        <span style="font-size:9px;font-family:'Share Tech Mono',monospace;color:${col};white-space:nowrap">${esc(h.engine||'?')}</span>
       </div>`;
     }).join('')+
   '</div>';
@@ -3615,8 +3839,10 @@ function vdlRenderHistory(){
 (function initVdl(){
   function wire(){
     const fetchBtn=document.getElementById('vdlFetchBtn');
+    const cmdBtn=document.getElementById('vdlCmdBtn');
     const urlInp=document.getElementById('vdlUrl');
     if(fetchBtn) fetchBtn.onclick=vdlFetch;
+    if(cmdBtn) cmdBtn.onclick=vdlShowCmd;
     if(urlInp){
       urlInp.addEventListener('keydown',e=>{if(e.key==='Enter') vdlFetch();});
       urlInp.addEventListener('focus',async()=>{
@@ -3624,7 +3850,8 @@ function vdlRenderHistory(){
         try{const t=await navigator.clipboard.readText(); if(t&&t.startsWith('http')) urlInp.value=t;}catch(_){}
       });
     }
-    ytdlpRenderQuickRef();
+    // Init engine bar
+    vdlEngineBar({cobalt:'idle',proxy:'idle',extract:'idle'});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire);
   else wire();
