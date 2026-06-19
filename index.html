@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -546,12 +550,62 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .etl-search input:focus{border-color:var(--cyan-dim);box-shadow:0 0 10px rgba(129,140,248,.18);color:var(--cyan)}
 .etl-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
 @media(max-width:600px){.etl-kpis{grid-template-columns:repeat(2,1fr)}}
-.etl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.etl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(var(--etl-col-min,260px),1fr));gap:14px}
 @media(max-width:620px){.etl-grid{grid-template-columns:1fr}}
 .etl-empty{padding:70px 20px;text-align:center;color:var(--muted)}
 .etl-empty svg{width:46px;height:46px;color:var(--muted-2);margin-bottom:14px;filter:drop-shadow(0 0 8px rgba(129,140,248,.22))}
 .etl-empty h3{font-family:'Orbitron',monospace;font-weight:700;font-size:16px;color:var(--cyan);text-shadow:0 0 10px rgba(129,140,248,.5);margin-bottom:8px;letter-spacing:.08em}
 .etl-empty p{font-size:12px;max-width:360px;margin:0 auto 18px;font-family:'Share Tech Mono',monospace;color:var(--muted);letter-spacing:.04em}
+/* ===== ETALASE TOOLBAR ===== */
+.etl-vt{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:4px;width:fit-content;margin-bottom:14px}
+.etl-vt-sep{width:1px;height:20px;background:var(--line-soft);flex:none;margin:0 2px}
+
+/* thumbnail size buttons */
+.etl-size-row{display:flex;gap:6px;padding:0 14px 10px;border-bottom:1px solid rgba(255,255,255,.06)}
+.etl-size-btn{flex:1;padding:6px 4px;text-align:center;background:rgba(255,255,255,.04);border:1px solid var(--line-soft);border-radius:6px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:11px;font-weight:600;color:var(--muted);transition:all var(--ease)}
+.etl-size-btn:hover{border-color:rgba(129,140,248,.3);color:var(--text)}
+.etl-size-btn.active{background:rgba(129,140,248,.18);border-color:rgba(129,140,248,.45);color:var(--cyan)}
+.etl-size-preview{display:flex;align-items:flex-end;justify-content:center;gap:2px;height:22px;margin-bottom:4px}
+.etl-size-preview span{background:currentColor;border-radius:2px;opacity:.8}
+
+/* grid variable */
+.etl-grid{--etl-col-min:260px}
+
+/* ===== LIGHTBOX ===== */
+.etl-lightbox{position:fixed;inset:0;background:rgba(4,4,12,.92);backdrop-filter:blur(16px);z-index:9999;display:none;place-items:center;padding:20px}
+.etl-lightbox.open{display:grid;animation:lbFadeIn .18s ease}
+@keyframes lbFadeIn{from{opacity:0}to{opacity:1}}
+.etl-lb-inner{position:relative;max-width:min(92vw,1100px);max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:14px}
+.etl-lb-img-wrap{max-width:100%;max-height:80vh;position:relative;border-radius:var(--r-lg);overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.7)}
+.etl-lb-img-wrap img{display:block;max-width:min(90vw,1100px);max-height:80vh;width:auto;height:auto;object-fit:contain;border-radius:var(--r-lg)}
+.etl-lb-meta{color:#fff;text-align:center}
+.etl-lb-name{font-size:15px;font-weight:700;letter-spacing:-.01em;margin-bottom:3px}
+.etl-lb-cat{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.etl-lb-close{position:fixed;top:20px;right:22px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;cursor:pointer;font-size:18px;transition:all var(--spring);backdrop-filter:blur(8px)}
+.etl-lb-close:hover{background:rgba(248,113,113,.25);border-color:rgba(248,113,113,.5);transform:scale(1.1) rotate(90deg)}
+.etl-lb-nav{position:fixed;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);color:#fff;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;cursor:pointer;font-size:20px;transition:all var(--spring);backdrop-filter:blur(8px);z-index:1}
+.etl-lb-nav:hover{background:rgba(129,140,248,.3);border-color:rgba(129,140,248,.5);transform:translateY(-50%) scale(1.08)}
+.etl-lb-prev{left:16px}
+.etl-lb-next{right:16px}
+.etl-lb-counter{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:600;color:rgba(255,255,255,.5);font-family:'Inter',system-ui,sans-serif;background:rgba(0,0,0,.4);padding:4px 12px;border-radius:20px;backdrop-filter:blur(8px)}
+
+/* card image hover overlay */
+.etl-img-wrap{position:relative;cursor:pointer}
+.etl-img-zoom{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);transition:background var(--ease);border-radius:inherit;pointer-events:none}
+.etl-img-wrap:hover .etl-img-zoom{background:rgba(0,0,0,.35)}
+.etl-img-zoom svg{opacity:0;transform:scale(.7);transition:all var(--spring);color:#fff;width:28px;height:28px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+.etl-img-wrap:hover .etl-img-zoom svg{opacity:1;transform:scale(1)}
+
+/* list view mode */
+.etl-grid.etl-list-mode{grid-template-columns:1fr!important}
+.etl-grid.etl-list-mode .etl-card{flex-direction:row;height:80px}
+.etl-grid.etl-list-mode .etl-img-wrap{width:80px;height:80px;aspect-ratio:unset;flex:none;border-bottom:none;border-right:1px solid var(--line-soft);border-radius:var(--r-xl) 0 0 var(--r-xl)}
+.etl-grid.etl-list-mode .etl-body{flex-direction:row;align-items:center;gap:16px;padding:10px 14px}
+.etl-grid.etl-list-mode .etl-title{-webkit-line-clamp:1;font-size:13px;min-width:140px}
+.etl-grid.etl-list-mode .etl-desc{display:none}
+.etl-grid.etl-list-mode .etl-footer{border-top:none;border-left:1px solid var(--line-soft);padding:10px 14px;flex:none;align-items:center}
+.etl-grid.etl-list-mode .etl-badge{top:6px;right:6px;font-size:8px}
+
 /* Product card */
 .etl-card{background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:var(--r-xl);overflow:hidden;position:relative;transition:transform var(--spring),box-shadow var(--ease),border-color var(--ease);display:flex;flex-direction:column;backdrop-filter:blur(8px)}
 .etl-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(129,140,248,.4),transparent);opacity:0;transition:opacity var(--ease)}
@@ -935,23 +989,203 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 
   <!-- TAB: ETALASE -->
   <div class="tab-pane" id="tab-etalase">
-    <div class="etl-toolbar">
-      <div class="etl-toolbar-left">
-        <button class="btn primary" id="addEtlBtn" style="padding:8px 14px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah Produk
-        </button>
-        <select id="etlCatFilter" style="background:rgba(255,255,255,.04);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--muted);padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none">
-          <option value="">Semua Kategori</option>
-        </select>
-      </div>
-      <div class="etl-search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        <input type="text" id="etlSearch" placeholder="Cari produk…">
-      </div>
-    </div>
+
+    <!-- KPI baris atas -->
     <div class="etl-kpis" id="etlKpis"></div>
+
+    <!-- TOOLBAR: Sort | View | Filter | ... -->
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+      <div class="etl-vt">
+
+        <!-- Sort -->
+        <div style="position:relative">
+          <button class="vt-btn" id="etlSortBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+            Urutan<span class="vt-chevron">▾</span>
+          </button>
+          <div class="view-dd" id="etlSortDd">
+            <div class="view-dd-section">
+              <div class="view-dd-label">Urutan produk</div>
+              <div class="view-dd-item etl-sort-item active" data-etlsort="">
+                <span class="vdi-check">●</span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg></span>
+                Bawaan
+              </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="name-asc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 6h16M4 12h10M4 18h6"/></svg></span>
+                Nama A → Z
+              </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="name-desc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M4 6h6M4 12h10M4 18h16"/></svg></span>
+                Nama Z → A
+              </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="price-asc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                Harga Terendah
+              </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="price-desc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
+                Harga Tertinggi
+              </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="cat-asc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
+                Kategori A → Z
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="etl-vt-sep"></div>
+
+        <!-- View -->
+        <div style="position:relative">
+          <button class="vt-btn" id="etlViewBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            Tampilan<span class="vt-chevron">▾</span>
+          </button>
+          <div class="view-dd" id="etlViewDd" style="min-width:240px">
+            <!-- Mode -->
+            <div class="view-dd-section">
+              <div class="view-dd-label">Mode tampilan</div>
+              <div class="view-dd-item etl-view-mode active" id="etlModeTiles" data-mode="tiles">
+                <span class="vdi-check">●</span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span>
+                Tiles (kartu grid)
+              </div>
+              <div class="view-dd-item etl-view-mode" id="etlModeList" data-mode="list">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+                Content (list)
+              </div>
+            </div>
+            <!-- Ukuran thumbnail -->
+            <div class="view-dd-section">
+              <div class="view-dd-label">Ukuran thumbnail</div>
+              <div style="padding:6px 14px 10px">
+                <div class="etl-size-row" style="padding:0;border:none;gap:6px;display:flex">
+                  <div class="etl-size-btn" data-sz="140" id="eszXS">
+                    <div class="etl-size-preview"><span style="width:8px;height:8px"></span><span style="width:8px;height:10px"></span><span style="width:8px;height:7px"></span></div>
+                    XS
+                  </div>
+                  <div class="etl-size-btn" data-sz="200" id="eszSM">
+                    <div class="etl-size-preview"><span style="width:10px;height:10px"></span><span style="width:10px;height:13px"></span><span style="width:10px;height:9px"></span></div>
+                    S
+                  </div>
+                  <div class="etl-size-btn active" data-sz="260" id="eszMD">
+                    <div class="etl-size-preview"><span style="width:13px;height:12px"></span><span style="width:13px;height:16px"></span><span style="width:13px;height:11px"></span></div>
+                    M
+                  </div>
+                  <div class="etl-size-btn" data-sz="340" id="eszLG">
+                    <div class="etl-size-preview"><span style="width:16px;height:15px"></span><span style="width:16px;height:19px"></span><span style="width:16px;height:13px"></span></div>
+                    L
+                  </div>
+                  <div class="etl-size-btn" data-sz="440" id="eszXL">
+                    <div class="etl-size-preview"><span style="width:20px;height:18px"></span><span style="width:20px;height:22px"></span><span style="width:20px;height:16px"></span></div>
+                    XL
+                  </div>
+                </div>
+                <div style="margin-top:10px">
+                  <input type="range" id="etlThumbSlider" min="120" max="500" value="260" step="20"
+                    style="width:100%;accent-color:var(--cyan);cursor:pointer">
+                  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);font-family:'Inter',sans-serif;margin-top:3px">
+                    <span>Kecil</span><span id="etlThumbVal">260px</span><span>Besar</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Info gambar -->
+            <div class="view-dd-section">
+              <div class="view-dd-label">Gambar</div>
+              <div class="view-dd-item" id="etlFitToggle">
+                <span class="vdi-check" id="etlFitCheck">✓</span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18"/></svg></span>
+                Potong (crop) gambar
+              </div>
+              <div class="view-dd-item" id="etlLbHint" style="cursor:default;pointer-events:none;opacity:.6">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+                Klik foto → gambar penuh
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="etl-vt-sep"></div>
+
+        <!-- Filter -->
+        <div style="position:relative">
+          <button class="vt-btn" id="etlFilterBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+            Filter<span class="vt-chevron">▾</span>
+          </button>
+          <div class="view-dd" id="etlFilterDd" style="min-width:220px">
+            <div class="view-dd-section">
+              <div class="view-dd-label">Kategori</div>
+              <div style="padding:4px 10px 8px">
+                <select id="etlCatFilter" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;outline:none">
+                  <option value="">Semua Kategori</option>
+                </select>
+              </div>
+            </div>
+            <div class="view-dd-section">
+              <div class="view-dd-label">Cari</div>
+              <div style="padding:4px 10px 8px;position:relative">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13" style="position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="etlSearch" placeholder="Cari produk…"
+                  style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px 7px 30px;font-family:'Inter',sans-serif;font-size:12px;outline:none">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="etl-vt-sep"></div>
+
+        <!-- More -->
+        <div style="position:relative">
+          <button class="vt-btn" id="etlMoreBtn" style="padding:6px 10px" title="Lainnya">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+          </button>
+          <div class="view-dd" id="etlMoreDd">
+            <div class="view-dd-section">
+              <div class="view-dd-item" id="etlAddBtn2">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                Tambah Produk
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <span style="font-size:12px;color:var(--muted);font-family:'Inter',sans-serif" id="etlCountInfo"></span>
+    </div>
+
+    <!-- Toolbar lama (tombol Tambah tetap tersembunyi untuk backup) -->
+    <button id="addEtlBtn" style="display:none"></button>
+
     <div id="etlGrid" class="etl-grid"></div>
   </div><!-- /tab-etalase -->
+
+  <!-- LIGHTBOX -->
+  <div class="etl-lightbox" id="etlLightbox">
+    <button class="etl-lb-close" id="etlLbClose">✕</button>
+    <button class="etl-lb-nav etl-lb-prev" id="etlLbPrev">‹</button>
+    <button class="etl-lb-nav etl-lb-next" id="etlLbNext">›</button>
+    <div class="etl-lb-inner">
+      <div class="etl-lb-img-wrap"><img id="etlLbImg" src="" alt=""></div>
+      <div class="etl-lb-meta">
+        <div class="etl-lb-name" id="etlLbName"></div>
+        <div class="etl-lb-cat" id="etlLbCat"></div>
+      </div>
+    </div>
+    <div class="etl-lb-counter" id="etlLbCounter"></div>
+  </div>
 
   <!-- TAB: HDD -->
   <div class="tab-pane" id="tab-hdd">
@@ -4447,6 +4681,194 @@ document.querySelectorAll('.tab-btn').forEach(btn=>{
 // ==================== ETALASE ====================
 let ETL_DATA=[];
 let etlEditId=null;
+let etlLbList=[];
+let etlLbIdx=0;
+
+// ---- Etalase view state ----
+const etlViewState={
+  sort:'',        // ''|name-asc|name-desc|price-asc|price-desc|cat-asc
+  mode:'tiles',   // 'tiles'|'list'
+  thumbPx:260,    // thumbnail min-width in px
+  cropImg:true    // true=cover(crop), false=contain(full)
+};
+
+// ---- Sort helper ----
+function etlSortedData(arr){
+  const a=[...arr];
+  switch(etlViewState.sort){
+    case 'name-asc':  return a.sort((x,y)=>(x.name||'').localeCompare(y.name||''));
+    case 'name-desc': return a.sort((x,y)=>(y.name||'').localeCompare(x.name||''));
+    case 'price-asc': return a.sort((x,y)=>parseNum(x.price)-parseNum(y.price));
+    case 'price-desc':return a.sort((x,y)=>parseNum(y.price)-parseNum(x.price));
+    case 'cat-asc':   return a.sort((x,y)=>(x.cat||'').localeCompare(y.cat||''));
+    default:          return a;
+  }
+}
+function parseNum(s){ return parseFloat(String(s||'').replace(/[^\d.]/g,''))||0; }
+
+// ---- Apply grid style ----
+function etlApplyGridStyle(){
+  const grid=document.getElementById('etlGrid'); if(!grid) return;
+  grid.style.setProperty('--etl-col-min', etlViewState.thumbPx+'px');
+  grid.classList.toggle('etl-list-mode', etlViewState.mode==='list');
+}
+
+// ---- Toolbar UI sync ----
+function etlSyncToolbar(){
+  // sort checks
+  document.querySelectorAll('.etl-sort-item').forEach(el=>{
+    const chk=el.querySelector('.vdi-check');
+    const on = el.dataset.etlsort===etlViewState.sort;
+    el.classList.toggle('active',on);
+    if(chk) chk.textContent=on?'●':'';
+  });
+  // mode checks
+  document.querySelectorAll('.etl-view-mode').forEach(el=>{
+    const chk=el.querySelector('.vdi-check');
+    const on = el.dataset.mode===etlViewState.mode;
+    el.classList.toggle('active',on);
+    if(chk) chk.textContent=on?'●':'';
+  });
+  // size buttons
+  document.querySelectorAll('.etl-size-btn').forEach(el=>{
+    el.classList.toggle('active', +el.dataset.sz===etlViewState.thumbPx);
+  });
+  // slider
+  const sl=document.getElementById('etlThumbSlider');
+  const tv=document.getElementById('etlThumbVal');
+  if(sl) sl.value=etlViewState.thumbPx;
+  if(tv) tv.textContent=etlViewState.thumbPx+'px';
+  // crop toggle
+  const fc=document.getElementById('etlFitCheck');
+  if(fc) fc.textContent=etlViewState.cropImg?'✓':'';
+}
+
+// ---- Lightbox ----
+function etlLbOpen(idx){
+  const list=etlLbList; if(!list||!list.length) return;
+  etlLbIdx=((idx%list.length)+list.length)%list.length;
+  const p=list[etlLbIdx];
+  if(!p||!p.img){ toast('Produk ini tidak memiliki foto'); return; }
+  const lb=document.getElementById('etlLightbox'); if(!lb) return;
+  const img=document.getElementById('etlLbImg');
+  const name=document.getElementById('etlLbName');
+  const cat=document.getElementById('etlLbCat');
+  const counter=document.getElementById('etlLbCounter');
+  if(img){ img.src=p.img; img.alt=p.name||''; }
+  if(name) name.textContent=p.name||'';
+  if(cat) cat.textContent=p.cat||'';
+  // count only items with image
+  const withImg=list.filter(x=>x.img);
+  const imgIdx=withImg.findIndex(x=>x.id===p.id);
+  if(counter) counter.textContent=(imgIdx>=0?`${imgIdx+1} / ${withImg.length}`:'');
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function etlLbClose(){
+  const lb=document.getElementById('etlLightbox'); if(!lb) return;
+  lb.classList.remove('open');
+  document.body.style.overflow='';
+  const img=document.getElementById('etlLbImg'); if(img) img.src='';
+}
+function etlLbNavigate(dir){
+  const list=etlLbList; if(!list.length) return;
+  // skip items without image
+  let next=etlLbIdx;
+  for(let i=0;i<list.length;i++){
+    next=((next+dir)+list.length)%list.length;
+    if(list[next]&&list[next].img) break;
+  }
+  etlLbOpen(next);
+}
+
+// ---- Wire etalase toolbar ----
+function wireEtlToolbar(){
+  // close all etalase dropdowns on outside click
+  const etlDds=['etlSortDd','etlViewDd','etlFilterDd','etlMoreDd'];
+  const etlBtns=['etlSortBtn','etlViewBtn','etlFilterBtn','etlMoreBtn'];
+  function closeEtlDds(){
+    etlDds.forEach(id=>{ const d=document.getElementById(id); if(d) d.classList.remove('open'); });
+    etlBtns.forEach(id=>{ const b=document.getElementById(id); if(b) b.classList.remove('active'); });
+  }
+  function openEtlDd(ddId, btnId){
+    closeEtlDds();
+    const d=document.getElementById(ddId); const b=document.getElementById(btnId);
+    if(d) d.classList.add('open');
+    if(b) b.classList.add('active');
+  }
+  document.addEventListener('click', closeEtlDds);
+  etlDds.forEach(id=>{ const d=document.getElementById(id); if(d) d.addEventListener('click',e=>e.stopPropagation()); });
+  etlBtns.forEach((btnId,i)=>{
+    const btn=document.getElementById(btnId);
+    if(btn) btn.onclick=e=>{ e.stopPropagation();
+      const d=document.getElementById(etlDds[i]);
+      d&&d.classList.contains('open')?closeEtlDds():openEtlDd(etlDds[i],btnId);
+    };
+  });
+
+  // Sort items
+  document.querySelectorAll('.etl-sort-item').forEach(el=>{
+    el.onclick=()=>{ etlViewState.sort=el.dataset.etlsort; etlSyncToolbar(); etlRenderGrid(); };
+  });
+
+  // View mode
+  document.querySelectorAll('.etl-view-mode').forEach(el=>{
+    el.onclick=()=>{ etlViewState.mode=el.dataset.mode; etlSyncToolbar(); etlApplyGridStyle(); };
+  });
+
+  // Thumbnail size presets
+  document.querySelectorAll('.etl-size-btn').forEach(el=>{
+    el.onclick=()=>{
+      etlViewState.thumbPx=+el.dataset.sz;
+      etlSyncToolbar(); etlApplyGridStyle();
+    };
+  });
+
+  // Slider
+  const sl=document.getElementById('etlThumbSlider');
+  if(sl) sl.oninput=()=>{
+    etlViewState.thumbPx=+sl.value;
+    const tv=document.getElementById('etlThumbVal'); if(tv) tv.textContent=sl.value+'px';
+    etlApplyGridStyle();
+    // sync size buttons
+    document.querySelectorAll('.etl-size-btn').forEach(b=>b.classList.toggle('active',+b.dataset.sz===etlViewState.thumbPx));
+  };
+
+  // Crop toggle
+  const fitTgl=document.getElementById('etlFitToggle');
+  if(fitTgl) fitTgl.onclick=()=>{ etlViewState.cropImg=!etlViewState.cropImg; etlSyncToolbar(); etlRenderGrid(); };
+
+  // More → Add
+  const addBtn2=document.getElementById('etlAddBtn2');
+  if(addBtn2) addBtn2.onclick=()=>{ closeEtlDds(); etlOpenAdd(); };
+
+  // Search & category (inside filter dropdown — keep open while typing)
+  const srch=document.getElementById('etlSearch');
+  if(srch){ srch.oninput=()=>etlRenderGrid(); srch.onclick=e=>e.stopPropagation(); }
+  const cat=document.getElementById('etlCatFilter');
+  if(cat){ cat.onchange=()=>etlRenderGrid(); cat.onclick=e=>e.stopPropagation(); }
+
+  // Lightbox wiring
+  const lb=document.getElementById('etlLightbox');
+  const lbClose=document.getElementById('etlLbClose');
+  const lbPrev=document.getElementById('etlLbPrev');
+  const lbNext=document.getElementById('etlLbNext');
+  if(lbClose) lbClose.onclick=etlLbClose;
+  if(lbPrev)  lbPrev.onclick=()=>etlLbNavigate(-1);
+  if(lbNext)  lbNext.onclick=()=>etlLbNavigate(1);
+  if(lb) lb.addEventListener('click',e=>{ if(e.target===lb) etlLbClose(); });
+  // keyboard for lightbox
+  document.addEventListener('keydown',e=>{
+    if(!lb||!lb.classList.contains('open')) return;
+    if(e.key==='Escape') etlLbClose();
+    if(e.key==='ArrowLeft') etlLbNavigate(-1);
+    if(e.key==='ArrowRight') etlLbNavigate(1);
+  });
+
+  // init state
+  etlSyncToolbar();
+  etlApplyGridStyle();
+}
 
 async function etlLoad(){
   try{ const r=await store.get('etalase:data'); if(r) ETL_DATA=JSON.parse(r.value)||[]; }catch(_){}
@@ -4486,11 +4908,11 @@ function etlRenderGrid(){
   const el=$('#etlGrid'); if(!el) return;
   const q=($('#etlSearch')||{value:''}).value.trim().toLowerCase();
   const cat=($('#etlCatFilter')||{value:''}).value;
-  let filtered=ETL_DATA.filter(p=>{
+  let filtered=etlSortedData(ETL_DATA.filter(p=>{
     if(cat && p.cat!==cat) return false;
     if(q && !((p.name||'').toLowerCase().includes(q)||(p.desc||'').toLowerCase().includes(q)||(p.cat||'').toLowerCase().includes(q))) return false;
     return true;
-  });
+  }));
   if(!filtered.length){
     el.innerHTML=`<div class="etl-empty" style="grid-column:1/-1">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -4499,29 +4921,42 @@ function etlRenderGrid(){
     </div>`;
     return;
   }
-  el.innerHTML=filtered.map(p=>`
-    <div class="etl-card">
-      <div class="etl-img-wrap">
+  // update count info
+  const ci=document.getElementById('etlCountInfo');
+  if(ci) ci.textContent=filtered.length+' produk';
+
+  const isCrop = etlViewState.cropImg;
+  const imgStyle = isCrop ? 'width:100%;height:100%;object-fit:cover' : 'width:100%;height:100%;object-fit:contain;padding:4px';
+
+  el.innerHTML=filtered.map((p,idx)=>`
+    <div class="etl-card" data-etlid="${p.id}">
+      <div class="etl-img-wrap" onclick="etlLbOpen(${idx})" title="Klik untuk gambar penuh">
         ${p.img
-          ? `<img src="${p.img}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=\\'etl-img-placeholder\\'><svg viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'/><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'/><polyline points=\\'21 15 16 10 5 21\\'/></svg></div>'">`
+          ? `<img src="${p.img}" alt="${esc(p.name||'')}" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='')">
+             <div class="etl-img-placeholder" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
           : `<div class="etl-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
-        ${p.cat?`<span class="etl-badge">${p.cat}</span>`:''}
+        <div class="etl-img-zoom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </div>
+        ${p.cat?`<span class="etl-badge">${esc(p.cat)}</span>`:''}
       </div>
       <div class="etl-body">
-        <div class="etl-title">${p.name||'(Tanpa Nama)'}</div>
-        ${p.desc?`<div class="etl-desc">${p.desc}</div>`:''}
-        ${p.price?`<div style="font-family:'Orbitron',monospace;font-size:13px;font-weight:700;color:var(--green);text-shadow:0 0 8px rgba(57,255,20,.4)">${p.price}</div>`:''}
+        <div class="etl-title">${esc(p.name||'(Tanpa Nama)')}</div>
+        ${p.desc?`<div class="etl-desc">${esc(p.desc)}</div>`:''}
+        ${p.price?`<div style="font-size:14px;font-weight:800;color:var(--green);letter-spacing:-.01em">${esc(p.price)}</div>`:''}
       </div>
       <div class="etl-footer">
-        <a href="${p.link||'#'}" target="_blank" rel="noopener" class="etl-link-btn" ${!p.link?'onclick="return false" style="opacity:.4;cursor:not-allowed"':''}>
+        <a href="${esc(p.link||'#')}" target="_blank" rel="noopener" class="etl-link-btn" ${!p.link?'onclick="return false" style="opacity:.4;cursor:not-allowed"':''}>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
           Beli
         </a>
         <div class="etl-actions">
-          <button class="iconbtn edit" onclick="etlOpenEdit('${p.id}')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></button>
+          <button class="iconbtn edit" onclick="etlOpenEdit('${esc(p.id)}')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></button>
         </div>
       </div>
     </div>`).join('');
+  // store filtered for lightbox navigation
+  etlLbList = filtered;
 }
 
 function etlRender(){
@@ -4659,16 +5094,16 @@ async function etlDeleteProduct(){
 async function etlInit(){
   await etlLoad();
   etlRender();
-  // wiring
-  $('#addEtlBtn').onclick=etlOpenAdd;
+  // wiring — modal
+  const addBtn=$('#addEtlBtn'); if(addBtn) addBtn.onclick=etlOpenAdd;
   $('#etlClose').onclick=$('#etlCancel').onclick=()=>{ $('#etlOverlay').classList.remove('show'); };
   $('#etlOverlay').onclick=e=>{ if(e.target===$('#etlOverlay')) $('#etlOverlay').classList.remove('show'); };
   $('#etlSave').onclick=etlSaveProduct;
   $('#etlDelete').onclick=etlDeleteProduct;
-  $('#etlSearch').oninput=()=>etlRenderGrid();
-  $('#etlCatFilter').onchange=()=>etlRenderGrid();
   $('#etlImgUrl').onblur=etlPreviewImg;
   $('#etlImgUrl').addEventListener('keydown',e=>{ if(e.key==='Enter') etlPreviewImg(); });
+  // wiring — toolbar & lightbox
+  wireEtlToolbar();
 }
 
 </script>
