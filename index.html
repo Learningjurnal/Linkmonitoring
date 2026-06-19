@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -79,6 +75,49 @@ body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 }
 /* top glow bar */
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(129,140,248,.5) 40%,rgba(192,132,252,.4) 60%,transparent 100%);z-index:9999;pointer-events:none}
+/* ===== VIEW TOOLBAR ===== */
+.view-toolbar{display:flex;align-items:center;gap:2px;margin-bottom:10px;background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:4px;width:fit-content}
+.vt-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border:none;background:transparent;color:var(--muted);font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all var(--ease);white-space:nowrap;position:relative}
+.vt-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+.vt-btn.active{background:rgba(129,140,248,.15);color:var(--cyan)}
+.vt-btn svg{width:14px;height:14px;flex:none}
+.vt-sep{width:1px;height:20px;background:var(--line-soft);flex:none;margin:0 2px}
+.vt-chevron{font-size:9px;opacity:.6;margin-left:1px}
+
+/* View dropdown */
+.view-dd{position:absolute;top:calc(100% + 6px);left:0;min-width:220px;background:rgba(22,22,36,.97);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);box-shadow:0 8px 40px rgba(0,0,0,.6),0 0 0 1px rgba(129,140,248,.08);z-index:9998;overflow:hidden;animation:ddFadeIn .14s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(20px);display:none}
+.view-dd.open{display:block}
+.view-dd-section{padding:6px 0}
+.view-dd-section+.view-dd-section{border-top:1px solid rgba(255,255,255,.06)}
+.view-dd-label{padding:5px 14px 3px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);font-family:'Inter',system-ui,sans-serif}
+.view-dd-item{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;transition:background var(--ease);font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:500;color:var(--text);user-select:none}
+.view-dd-item:hover{background:rgba(129,140,248,.1)}
+.view-dd-item.active{color:#fff}
+.vdi-check{width:16px;height:16px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--cyan);font-size:12px}
+.vdi-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;flex:none;color:var(--muted);opacity:.7}
+.vdi-icon svg{width:14px;height:14px}
+.view-dd-item.active .vdi-icon{color:var(--cyan);opacity:1}
+
+/* density modes */
+.tbl-compact tbody td{padding:5px 14px!important;font-size:12px}
+.tbl-comfortable tbody td{padding:16px 14px!important}
+
+/* column visibility — col indices match thead order */
+/* col: 1=chk 2=no 3=link 4=status 5=output 6=region 7=date 8=perubahan 9=lastpage 10=aksi */
+.hide-col-output thead th:nth-child(5),
+.hide-col-output tbody td:nth-child(5){display:none}
+.hide-col-region thead th:nth-child(6),
+.hide-col-region tbody td:nth-child(6){display:none}
+.hide-col-date thead th:nth-child(7),
+.hide-col-date tbody td:nth-child(7){display:none}
+.hide-col-perubahan thead th:nth-child(8),
+.hide-col-perubahan tbody td:nth-child(8){display:none}
+.hide-col-lastpage thead th:nth-child(9),
+.hide-col-lastpage tbody td:nth-child(9){display:none}
+
+/* hide chart panel */
+.chart-hidden .chartpanel{display:none}
+
 /* Scrollbar */
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -688,10 +727,170 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <button class="btn" id="addLinkBtn" style="padding:8px 12px;border-color:var(--cyan);color:var(--cyan)" title="Tambah link baru secara manual"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah</button>
     <button class="btn ghost" id="clearFiltersBtn" style="padding:8px 12px" title="Hapus semua filter aktif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reset <span class="flt-badge" id="filterCount" style="display:none">0</span></button>
     <button class="btn" id="openAllResultsBtn" style="padding:8px 12px;border-color:var(--green);color:var(--green)" title="Buka semua link hasil filter di tab baru sekaligus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Semua</button>
-    <span class="count-info" id="countInfo"></span>
   </div>
 
   <div class="savebanner" id="saveBanner"></div>
+
+  <!-- VIEW TOOLBAR -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+    <div class="view-toolbar">
+      <!-- Sort -->
+      <div style="position:relative">
+        <button class="vt-btn" id="vtSortBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+          Urutan
+          <span class="vt-chevron">▾</span>
+        </button>
+        <div class="view-dd" id="vtSortDd">
+          <div class="view-dd-section">
+            <div class="view-dd-label">Urutan baris</div>
+            <div class="view-dd-item" data-sort="" id="vsDefault">
+              <span class="vdi-check" id="vc-default">●</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+              Bawaan (urutan input)
+            </div>
+            <div class="view-dd-item" data-sort="link-asc">
+              <span class="vdi-check" id="vc-link-asc"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg></span>
+              Link A → Z
+            </div>
+            <div class="view-dd-item" data-sort="link-desc">
+              <span class="vdi-check" id="vc-link-desc"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h6M3 12h12M3 18h18"/></svg></span>
+              Link Z → A
+            </div>
+            <div class="view-dd-item" data-sort="date-desc">
+              <span class="vdi-check" id="vc-date-desc"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+              Terbaru
+            </div>
+            <div class="view-dd-item" data-sort="date-asc">
+              <span class="vdi-check" id="vc-date-asc"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+              Terlama
+            </div>
+            <div class="view-dd-item" data-sort="status-asc">
+              <span class="vdi-check" id="vc-status-asc"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+              Status A → Z
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vt-sep"></div>
+
+      <!-- View -->
+      <div style="position:relative">
+        <button class="vt-btn" id="vtViewBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Tampilan
+          <span class="vt-chevron">▾</span>
+        </button>
+        <div class="view-dd" id="vtViewDd">
+          <!-- Density -->
+          <div class="view-dd-section">
+            <div class="view-dd-label">Kerapatan baris</div>
+            <div class="view-dd-item vd-density active" data-density="normal" id="vdNormal">
+              <span class="vdi-check">●</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+              Normal
+            </div>
+            <div class="view-dd-item vd-density" data-density="compact" id="vdCompact">
+              <span class="vdi-check"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="5" x2="21" y2="5"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="13" x2="21" y2="13"/><line x1="3" y1="17" x2="21" y2="17"/><line x1="3" y1="21" x2="21" y2="21"/></svg></span>
+              Kompak
+            </div>
+            <div class="view-dd-item vd-density" data-density="comfortable" id="vdComfortable">
+              <span class="vdi-check"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></span>
+              Nyaman
+            </div>
+          </div>
+          <!-- Panel -->
+          <div class="view-dd-section">
+            <div class="view-dd-label">Panel</div>
+            <div class="view-dd-item" id="vdChartToggle">
+              <span class="vdi-check" id="vdChartCheck">✓</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
+              Chart distribusi
+            </div>
+          </div>
+          <!-- Kolom -->
+          <div class="view-dd-section">
+            <div class="view-dd-label">Tampilkan kolom</div>
+            <div class="view-dd-item vd-col" data-col="output" id="vdColOutput">
+              <span class="vdi-check">✓</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></span>
+              Output
+            </div>
+            <div class="view-dd-item vd-col" data-col="region" id="vdColRegion">
+              <span class="vdi-check">✓</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+              Region
+            </div>
+            <div class="view-dd-item vd-col" data-col="date" id="vdColDate">
+              <span class="vdi-check">✓</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+              Update (tanggal)
+            </div>
+            <div class="view-dd-item vd-col" data-col="perubahan" id="vdColPerubahan">
+              <span class="vdi-check">✓</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+              Perubahan (NEW/UPD)
+            </div>
+            <div class="view-dd-item vd-col" data-col="lastpage" id="vdColLastpage">
+              <span class="vdi-check">✓</span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span>
+              Last Page
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vt-sep"></div>
+
+      <!-- Filter -->
+      <button class="vt-btn" id="vtFilterBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+        Filter
+        <span class="flt-badge" id="filterCount2" style="display:none;margin-left:2px">0</span>
+      </button>
+
+      <div class="vt-sep"></div>
+
+      <!-- More (...) -->
+      <div style="position:relative">
+        <button class="vt-btn" id="vtMoreBtn" style="padding:6px 10px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>
+        </button>
+        <div class="view-dd" id="vtMoreDd">
+          <div class="view-dd-section">
+            <div class="view-dd-item" id="vtDupCheck">
+              <span class="vdi-check"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>
+              Cek &amp; pilih duplikat
+            </div>
+            <div class="view-dd-item" id="vtOpenAll">
+              <span class="vdi-check"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+              Buka semua link
+            </div>
+          </div>
+          <div class="view-dd-section">
+            <div class="view-dd-item" id="vtExport">
+              <span class="vdi-check"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
+              Export XLSX
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- kanan: jumlah hasil -->
+    <span class="count-info" id="countInfo" style="font-size:12px"></span>
+  </div>
 
   <div class="selbar" id="selbar">
     <span class="cnt"><b id="selCount">0</b> dipilih</span>
@@ -2724,6 +2923,11 @@ function updateFilterBadge(){
     .filter(Boolean).length+(filters.updated?1:0)+(filters.dups?1:0)+(filters.sort?1:0);
   const el=$('#filterCount');
   if(el){ el.textContent=count; el.style.display=count?'':'none'; }
+  // sync toolbar badges
+  const el2=document.getElementById('filterCount2');
+  if(el2){ el2.textContent=count; el2.style.display=count?'':'none'; }
+  const fb=document.getElementById('vtFilterBtn');
+  if(fb) fb.classList.toggle('active',count>0);
 }
 function updateSortArrows(){
   const cols=['link','status','part','region','date','test'];
@@ -2967,6 +3171,171 @@ function wireAddLink(){
   document.getElementById('addLinkOverlay').onclick = e=>{ if(e.target===document.getElementById('addLinkOverlay')) document.getElementById('addLinkOverlay').classList.remove('show'); };
   document.getElementById('saveAddLink').onclick = saveAddLink;
   document.getElementById('alLink').onkeydown = e=>{ if(e.key==='Enter') document.getElementById('saveAddLink').click(); };
+}
+
+// ==================== VIEW TOOLBAR ====================
+const viewState = {
+  density: 'normal',   // 'compact' | 'normal' | 'comfortable'
+  chart: true,
+  cols: { output:true, region:true, date:true, perubahan:true, lastpage:true },
+  sort: ''
+};
+
+function vt_applyAll(){
+  const tbl = document.querySelector('#tab-monitor table');
+  const monitor = document.getElementById('tab-monitor');
+  if(!tbl || !monitor) return;
+
+  // density
+  tbl.classList.remove('tbl-compact','tbl-comfortable');
+  if(viewState.density==='compact') tbl.classList.add('tbl-compact');
+  if(viewState.density==='comfortable') tbl.classList.add('tbl-comfortable');
+
+  // chart
+  monitor.classList.toggle('chart-hidden', !viewState.chart);
+
+  // columns
+  Object.entries(viewState.cols).forEach(([col, show])=>{
+    tbl.classList.toggle('hide-col-'+col, !show);
+  });
+}
+
+function vt_updateSortChecks(){
+  ['','link-asc','link-desc','date-desc','date-asc','status-asc'].forEach(s=>{
+    const id = 'vc-'+(s||'default');
+    const el = document.getElementById(id);
+    if(el) el.textContent = (viewState.sort===s) ? '●' : '';
+  });
+  // update fSort select in sync
+  const fs = $('#fSort'); if(fs) fs.value = viewState.sort||'';
+}
+
+function vt_updateViewChecks(){
+  // density
+  document.querySelectorAll('.vd-density').forEach(el=>{
+    const dot = el.querySelector('.vdi-check');
+    if(dot) dot.textContent = el.dataset.density===viewState.density ? '●' : '';
+    el.classList.toggle('active', el.dataset.density===viewState.density);
+  });
+  // chart
+  const cc = document.getElementById('vdChartCheck');
+  if(cc) cc.textContent = viewState.chart ? '✓' : '';
+  const ci = document.getElementById('vdChartToggle');
+  if(ci) ci.classList.toggle('active', viewState.chart);
+  // columns
+  document.querySelectorAll('.vd-col').forEach(el=>{
+    const col = el.dataset.col;
+    const dot = el.querySelector('.vdi-check');
+    if(dot) dot.textContent = viewState.cols[col] ? '✓' : '';
+    el.classList.toggle('active', !!viewState.cols[col]);
+  });
+}
+
+function vt_openDd(id, btnId){
+  // close all first
+  document.querySelectorAll('.view-dd').forEach(d=>d.classList.remove('open'));
+  const dd = document.getElementById(id);
+  const btn = document.getElementById(btnId);
+  if(!dd || !btn) return;
+  dd.classList.add('open');
+  btn.classList.add('active');
+  // position: flip if off-screen
+  setTimeout(()=>{
+    const r = dd.getBoundingClientRect();
+    if(r.right > window.innerWidth) dd.style.left = 'auto', dd.style.right = '0';
+  },0);
+}
+
+function vt_closeAll(){
+  document.querySelectorAll('.view-dd').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('active'));
+}
+
+
+function wireViewToolbar(){
+  // Sort dropdown
+  const sortBtn = document.getElementById('vtSortBtn');
+  const sortDd  = document.getElementById('vtSortDd');
+  if(sortBtn) sortBtn.onclick = e=>{ e.stopPropagation(); sortDd&&sortDd.classList.contains('open')?vt_closeAll():vt_openDd('vtSortDd','vtSortBtn'); };
+  if(sortDd) sortDd.querySelectorAll('.view-dd-item[data-sort]').forEach(item=>{
+    item.onclick = ()=>{
+      viewState.sort = item.dataset.sort;
+      filters.sort = viewState.sort;
+      vt_updateSortChecks();
+      vt_closeAll();
+      applyFilters();
+    };
+  });
+
+  // View dropdown
+  const viewBtn = document.getElementById('vtViewBtn');
+  const viewDd  = document.getElementById('vtViewDd');
+  if(viewBtn) viewBtn.onclick = e=>{ e.stopPropagation(); viewDd&&viewDd.classList.contains('open')?vt_closeAll():vt_openDd('vtViewDd','vtViewBtn'); };
+
+  // density
+  if(viewDd) viewDd.querySelectorAll('.vd-density').forEach(item=>{
+    item.onclick = ()=>{
+      viewState.density = item.dataset.density;
+      vt_updateViewChecks();
+      vt_applyAll();
+      // keep dropdown open
+    };
+  });
+
+  // chart toggle
+  const chartToggle = document.getElementById('vdChartToggle');
+  if(chartToggle) chartToggle.onclick = ()=>{
+    viewState.chart = !viewState.chart;
+    vt_updateViewChecks();
+    vt_applyAll();
+  };
+
+  // column toggles
+  if(viewDd) viewDd.querySelectorAll('.vd-col').forEach(item=>{
+    item.onclick = ()=>{
+      const col = item.dataset.col;
+      viewState.cols[col] = !viewState.cols[col];
+      vt_updateViewChecks();
+      vt_applyAll();
+    };
+  });
+
+  // Filter button — toggle filter controls visibility
+  const filterBtn = document.getElementById('vtFilterBtn');
+  const controls = document.querySelector('.controls');
+  let filtersVisible = true;
+  if(filterBtn) filterBtn.onclick = ()=>{
+    filtersVisible = !filtersVisible;
+    if(controls){
+      controls.style.display = filtersVisible ? '' : 'none';
+    }
+    filterBtn.classList.toggle('active', !filtersVisible || (filters.q||filters.status||filters.region||filters.part||filters.from||filters.to||filters.updated||filters.dups));
+    updateFilterBadge();
+  };
+
+  // More dropdown
+  const moreBtn = document.getElementById('vtMoreBtn');
+  const moreDd  = document.getElementById('vtMoreDd');
+  if(moreBtn) moreBtn.onclick = e=>{ e.stopPropagation(); moreDd&&moreDd.classList.contains('open')?vt_closeAll():vt_openDd('vtMoreDd','vtMoreBtn'); };
+  const dupCheck = document.getElementById('vtDupCheck');
+  if(dupCheck) dupCheck.onclick = ()=>{ vt_closeAll(); selectDuplicates(); };
+  const openAllItem = document.getElementById('vtOpenAll');
+  if(openAllItem) openAllItem.onclick = ()=>{ vt_closeAll(); openAllLinks(view.map(r=>r.link).filter(Boolean)); };
+  const exportItem = document.getElementById('vtExport');
+  if(exportItem) exportItem.onclick = ()=>{ vt_closeAll(); exportXlsx(); };
+
+  // close on outside click
+  document.addEventListener('click', ()=>vt_closeAll());
+  document.querySelectorAll('.view-dd').forEach(dd=>dd.addEventListener('click',e=>e.stopPropagation()));
+
+  // hide old countInfo in controls bar (moved to toolbar)
+  const oldCount = document.querySelector('.controls .count-info');
+  if(oldCount) oldCount.style.display='none';
+
+  // init
+  vt_updateSortChecks();
+  vt_updateViewChecks();
+  vt_applyAll();
 }
 
 // ---------- events ----------
@@ -4059,6 +4428,7 @@ function vdlRenderHistory(){
   etlInit();
   wireSettings();
   wireAddLink();
+  wireViewToolbar();
 })();
 
 // ==================== TAB NAVIGATION ====================
@@ -4194,12 +4564,57 @@ function etlOpenEdit(id){
 }
 
 function etlPreviewImg(){
-  const url=$('#etlImgUrl').value.trim();
-  if(!url){ $('#etlImgPreview').innerHTML='<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Pratinjau foto</span></div>'; return; }
+  const raw=$('#etlImgUrl').value.trim();
+  const prev=$('#etlImgPreview');
+  const placeholderSvg='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>';
+  if(!raw){ prev.innerHTML='<div class="placeholder">'+placeholderSvg+'<span>Pratinjau foto</span></div>'; return; }
+
+  // --- deteksi: apakah URL mengarah ke file gambar? ---
+  const isDirectImg = /\.(jpe?g|png|gif|webp|bmp|svg|avif)(\?.*)?$/i.test(raw);
+  // layanan hosting gambar yang diketahui menggunakan hotlink-protection
+  const isPageUrl = /\/(view|image|photo|post|img)\//i.test(raw) && !isDirectImg;
+
+  // konversi otomatis URL halaman → URL gambar untuk layanan terkenal
+  let url = raw;
+  // ImageBam: /view/XXXXX → coba ambil direct link dari pola URL-nya
+  // (tidak bisa tanpa fetch, tapi kita beri petunjuk)
+
+  if(isPageUrl){
+    prev.innerHTML=`<div class="placeholder" style="flex-direction:column;gap:6px;padding:10px;text-align:center">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="1"/></svg>
+      <span style="font-size:11px;color:var(--amber);font-family:'Inter',sans-serif;font-weight:600">URL halaman, bukan link gambar langsung</span>
+      <span style="font-size:10px;color:var(--muted);font-family:'Inter',sans-serif;line-height:1.5">Klik kanan foto di halaman tersebut → "Salin alamat gambar"<br>lalu tempel URL .jpg / .png di sini</span>
+    </div>`;
+    return;
+  }
+
+  // coba load gambar dengan referrerPolicy no-referrer (bypass hotlink ringan)
+  prev.innerHTML='<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg><span style="font-size:10px">Memuat…</span></div>';
   const img=document.createElement('img');
-  img.src=url; img.alt='preview';
-  img.onerror=()=>{ $('#etlImgPreview').innerHTML='<div class="placeholder" style="color:var(--red)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><span>URL gambar tidak valid</span></div>'; };
-  img.onload=()=>{ $('#etlImgPreview').innerHTML=''; $('#etlImgPreview').appendChild(img); };
+  img.referrerPolicy='no-referrer';
+  img.crossOrigin='anonymous';
+  img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+  img.alt='preview';
+
+  let tried=0;
+  function tryLoad(src){
+    img.src=src;
+  }
+  img.onerror=()=>{
+    tried++;
+    // fallback: coba lewat proxy cors publik
+    if(tried===1){
+      tryLoad('https://images.weserv.nl/?url='+encodeURIComponent(url)+'&w=600&output=jpg');
+      return;
+    }
+    prev.innerHTML=`<div class="placeholder" style="flex-direction:column;gap:6px;padding:10px;text-align:center">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      <span style="font-size:11px;color:var(--red);font-family:'Inter',sans-serif;font-weight:600">Gambar tidak bisa dimuat</span>
+      <span style="font-size:10px;color:var(--muted);font-family:'Inter',sans-serif;line-height:1.5">Kemungkinan: hotlink diblokir, URL salah,<br>atau hosting tidak izinkan embed dari luar.<br>Coba upload ke <b style="color:var(--cyan)">imgur.com</b> atau <b style="color:var(--cyan)">imgbb.com</b></span>
+    </div>`;
+  };
+  img.onload=()=>{ prev.innerHTML=''; prev.appendChild(img); };
+  tryLoad(url);
 }
 
 async function etlSaveProduct(){
