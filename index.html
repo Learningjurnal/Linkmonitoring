@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -614,6 +618,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <label class="toggle"><input type="checkbox" id="fDups"> Hanya duplikat</label>
     <button class="btn ghost" id="dupBtn" style="padding:8px 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Cek &amp; pilih duplikat</button>
     <button class="btn ghost" id="clearFiltersBtn" style="padding:8px 12px" title="Hapus semua filter aktif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reset <span class="flt-badge" id="filterCount" style="display:none">0</span></button>
+    <button class="btn" id="openAllResultsBtn" style="padding:8px 12px;border-color:var(--green);color:var(--green)" title="Buka semua link hasil filter di tab baru sekaligus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Semua</button>
     <span class="count-info" id="countInfo"></span>
   </div>
 
@@ -633,6 +638,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         <option value="blank">Blank</option>
       </select>
       <button class="btn" id="bulkStatusApply">Terapkan</button>
+      <button class="btn" id="selOpenAll" style="border-color:var(--green);color:var(--green)" title="Buka semua link terpilih di tab baru sekaligus"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Terpilih</button>
       <button class="linkbtn" id="selClear">Bersihkan pilihan</button>
       <button class="btn danger" id="selDelete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>Hapus terpilih</button>
     </div>
@@ -1726,6 +1732,101 @@ function undo(){
   toast('↶ Tindakan diurungkan');
 }
 
+// ---------- buka semua link ----------
+function openAllLinks(links){
+  links=links.filter(l=>l&&l.trim());
+  if(!links.length){toast('⚠ Tidak ada link untuk dibuka');return;}
+  const MAX_WARN=100;
+  if(links.length>MAX_WARN&&!confirm(`Akan membuka ${links.length} link sekaligus.\nPastikan browser Anda mengizinkan popup dari halaman ini.\n\nLanjutkan?`)) return;
+
+  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const rows=links.map((url,i)=>`<div class="lr" id="r${i}">
+    <span class="li">#${i+1}</span>
+    <span class="lu" title="${esc(url)}" onclick="window.open(${JSON.stringify(url)},'_blank');mark(${i})">${esc(url)}</span>
+    <span class="ls" id="s${i}"></span>
+  </div>`).join('');
+
+  const html=`<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8">
+<title>Link Launcher — ${links.length} link</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020408;color:#c8f0ff;font-family:'Courier New',monospace;padding:28px 32px;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.07) 2px,rgba(0,0,0,.07) 4px)}
+h1{font-size:16px;letter-spacing:.14em;text-transform:uppercase;color:#00f5ff;text-shadow:0 0 12px rgba(0,245,255,.6);margin-bottom:4px}
+.sub{font-size:11px;color:#4a8099;letter-spacing:.06em;margin-bottom:22px}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.btn{font-family:'Courier New',monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;border:1px solid;padding:10px 20px;border-radius:2px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:7px}
+.btn-go{background:rgba(57,255,20,.12);border-color:#39ff14;color:#39ff14;font-size:13px;font-weight:700}
+.btn-go:hover{box-shadow:0 0 20px rgba(57,255,20,.4);background:rgba(57,255,20,.2)}
+.btn-go:disabled{opacity:.4;cursor:not-allowed}
+.btn-exp{background:rgba(0,245,255,.08);border-color:#00bcd4;color:#00bcd4}
+.btn-exp:hover{box-shadow:0 0 14px rgba(0,245,255,.3)}
+.prog{font-size:11px;color:#4a8099;font-family:'Courier New',monospace;letter-spacing:.04em}
+#progTxt{color:#39ff14;font-size:12px;min-height:18px;margin-bottom:14px;letter-spacing:.04em}
+.note{font-size:10px;color:#2a5060;line-height:1.7;margin-bottom:16px;padding:10px 12px;border:1px solid #0d2a3f;border-left:2px solid #00bcd4}
+.list{border:1px solid #0d2a3f;border-radius:2px;max-height:62vh;overflow-y:auto}
+.lr{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid #0d2a3f;transition:.1s}
+.lr:last-child{border-bottom:none}
+.lr:hover{background:rgba(0,245,255,.04)}
+.lr.done{opacity:.5}
+.li{color:#2a5060;font-size:10px;min-width:36px;flex:none}
+.lu{flex:1;color:#00bcd4;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;transition:.12s}
+.lu:hover{color:#00f5ff;text-shadow:0 0 6px rgba(0,245,255,.5)}
+.ls{font-size:10px;color:#39ff14;flex:none;min-width:18px;text-align:center}
+</style></head><body>
+<h1>⚡ Link Launcher</h1>
+<div class="sub">Siap membuka <b style="color:#00f5ff">${links.length}</b> link sekaligus di tab baru</div>
+<div class="note">
+  ▸ Klik <b style="color:#39ff14">BUKA SEMUA</b> untuk membuka sekaligus — izinkan popup jika browser meminta.<br>
+  ▸ Atau klik masing-masing link di daftar untuk membuka satu per satu.<br>
+  ▸ Tombol <b>Export Bookmark</b> untuk import ke Chrome lalu klik kanan folder → "Open all in new tabs".
+</div>
+<div class="bar">
+  <button class="btn btn-go" id="btnGo" onclick="openAll()">▶ Buka Semua ${links.length} Link</button>
+  <button class="btn btn-exp" onclick="exportBmk()">⬇ Export Bookmark (.html)</button>
+  <span class="prog" id="progTxt"></span>
+</div>
+<div id="progTxt"></div>
+<div class="list">${rows}</div>
+<script>
+const LINKS=${JSON.stringify(links)};
+let opened=0;
+function mark(i){
+  const r=document.getElementById('r'+i);
+  const s=document.getElementById('s'+i);
+  if(r) r.classList.add('done');
+  if(s) s.textContent='✓';
+  opened++;
+  document.getElementById('progTxt').textContent='✓ Dibuka: '+opened+' / '+LINKS.length;
+}
+function openAll(){
+  const btn=document.getElementById('btnGo');
+  btn.disabled=true;
+  btn.textContent='Membuka '+LINKS.length+' link…';
+  LINKS.forEach((url,i)=>{ window.open(url,'_blank'); mark(i); });
+  btn.textContent='✓ Selesai — '+LINKS.length+' link dibuka';
+}
+function exportBmk(){
+  const inner=LINKS.map(u=>'    <DT><A HREF="'+u.replace(/"/g,'&quot;')+'">'+u.replace(/</g,'&lt;')+'</A>').join('\\n');
+  const html='<!DOCTYPE NETSCAPE-Bookmark-file-1>\\n<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">\\n<TITLE>Bookmarks</TITLE>\\n<H1>Bookmarks</H1>\\n<DL><p>\\n  <DT><H3>Link Monitor Export ('+LINKS.length+')</H3>\\n  <DL><p>\\n'+inner+'\\n  </DL><p>\\n</DL>';
+  const a=document.createElement('a');
+  a.href='data:text/html;charset=utf-8,'+encodeURIComponent(html);
+  a.download='link-monitor-bookmark.html';
+  a.click();
+}
+<\/script></body></html>`;
+
+  const blob=new Blob([html],{type:'text/html'});
+  const blobUrl=URL.createObjectURL(blob);
+  const w=window.open(blobUrl,'_blank');
+  setTimeout(()=>URL.revokeObjectURL(blobUrl),120000);
+  if(!w){
+    toast('⚠ Popup diblokir browser — izinkan popup untuk site ini, lalu coba lagi');
+    return;
+  }
+  toast('✓ Launcher dibuka — klik "Buka Semua" di tab baru');
+}
+
 // ---------- deteksi duplikat ----------
 function normalizeLink(l){
   let s=String(l||'').trim();
@@ -2525,6 +2626,8 @@ $('#chkAll').onchange=e=>selectPage(e.target.checked);
 $('#selClear').onclick=clearSelection;
 $('#selDelete').onclick=askBulkDelete;
 $('#selAllFiltered').onclick=selectAllFiltered;
+$('#selOpenAll').onclick=()=>openAllLinks([...selected].map(id=>{const r=DATA.find(x=>x._id===id);return r?r.link:'';}).filter(Boolean));
+$('#openAllResultsBtn').onclick=()=>openAllLinks(view.map(r=>r.link).filter(Boolean));
 
 $('#search').oninput=debounce(e=>{filters.q=e.target.value;applyFilters();},220);
 $('#fStatus').onchange=e=>{filters.status=e.target.value;applyFilters();};
