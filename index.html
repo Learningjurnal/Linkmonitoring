@@ -510,6 +510,48 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .etl-img-preview img{width:100%;height:100%;object-fit:cover}
 .etl-img-preview .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.06em}
 .etl-img-preview .placeholder svg{width:28px;height:28px;color:var(--muted-2)}
+
+/* ===== SETTINGS MODAL ===== */
+.cfg-tabs{display:flex;gap:0;border-bottom:1px solid var(--line-soft);margin-bottom:16px;overflow:hidden}
+.cfg-tab{flex:1;padding:10px 8px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:.15s;text-align:center;border-bottom:2px solid transparent}
+.cfg-tab.active{color:var(--cyan);border-bottom-color:var(--cyan);background:rgba(0,245,255,.05)}
+.cfg-tab:hover{color:var(--text)}
+.cfg-pane{display:none}.cfg-pane.active{display:block}
+.cfg-list{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;max-height:240px;overflow-y:auto}
+.cfg-item{display:flex;align-items:center;gap:8px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;padding:7px 10px;transition:.12s}
+.cfg-item:hover{border-color:var(--cyan-deep)}
+.cfg-item-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.cfg-item-label{flex:1;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--text)}
+.cfg-item-sub{font-size:10px;color:var(--muted-2);font-family:'Share Tech Mono',monospace}
+.cfg-item-del{background:none;border:none;color:var(--muted-2);cursor:pointer;font-size:14px;line-height:1;padding:2px 5px;border-radius:2px;transition:.12s}
+.cfg-item-del:hover{color:var(--red);background:rgba(255,34,68,.1)}
+.cfg-add-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.cfg-inp{flex:1;min-width:100px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:8px 10px;font-family:'Share Tech Mono',monospace;font-size:12px;outline:none;transition:.18s}
+.cfg-inp:focus{border-color:var(--cyan-dim);box-shadow:0 0 8px rgba(0,245,255,.12)}
+.cfg-color-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.cfg-color-btn{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:.12s;flex:none}
+.cfg-color-btn.sel{border-color:var(--text);transform:scale(1.2)}
+.cfg-note{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);line-height:1.6;margin-bottom:10px;background:rgba(0,245,255,.03);border-left:2px solid var(--cyan-deep);padding:6px 10px;border-radius:0 2px 2px 0}
+/* status locked badge */
+.cfg-locked{font-size:9px;font-family:'Share Tech Mono',monospace;color:var(--amber);letter-spacing:.04em;padding:1px 5px;border:1px solid rgba(255,204,0,.3);border-radius:1px}
+
+/* ===== ADD LINK MODAL ===== */
+.add-link-modal{width:min(520px,100%)}
+
+/* ===== INLINE CELL DROPDOWN (Google Sheets style) ===== */
+.cell-dd{position:fixed;background:var(--panel-2);border:1px solid var(--cyan-deep);border-radius:2px;min-width:150px;z-index:9999;box-shadow:0 8px 28px rgba(0,0,0,.75);overflow:hidden;animation:ddFadeIn .1s ease}
+@keyframes ddFadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.cell-dd-head{padding:5px 10px 4px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted-2);letter-spacing:.12em;text-transform:uppercase;border-bottom:1px solid var(--line-soft)}
+.cell-dd-item{padding:7px 12px;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px;transition:.1s;letter-spacing:.04em;white-space:nowrap}
+.cell-dd-item:hover{background:rgba(0,245,255,.08);color:var(--text)}
+.cell-dd-item.active{color:var(--cyan);background:rgba(0,245,255,.06)}
+.cell-dd-dot{width:6px;height:6px;border-radius:50%;flex:none}
+.cell-dd-inp{width:calc(100% - 16px);margin:6px 8px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:2px;color:var(--text);padding:5px 8px;font-family:'Share Tech Mono',monospace;font-size:11px;outline:none;transition:.15s}
+.cell-dd-inp:focus{border-color:var(--cyan-dim)}
+.cell-dd-add{padding:6px 12px;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--cyan-dim);cursor:pointer;border-top:1px solid var(--line-soft);transition:.1s;letter-spacing:.04em}
+.cell-dd-add:hover{background:rgba(0,245,255,.06);color:var(--cyan)}
+.cell-editable{cursor:pointer;transition:.1s}
+.cell-editable:hover{background:rgba(0,245,255,.05)}
 </style>
 </head>
 <body>
@@ -550,6 +592,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     </div>
     <div class="head-actions">
       <button class="btn ghost" id="logoutBtn" title="Kunci dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>
+      <button class="btn ghost" id="settingsBtn" title="Pengaturan Status / Region / Output"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Pengaturan</button>
       <button class="btn ghost" id="undoBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>Urungkan</button>
       <button class="btn ghost" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export</button>
       <button class="btn primary" id="importBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Update Link</button>
@@ -600,7 +643,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     </div>
     <select id="fStatus"><option value="">Semua Status</option></select>
     <select id="fRegion"><option value="">Semua Region</option></select>
-    <select id="fPart"><option value="">Semua Link Part</option></select>
+    <select id="fPart"><option value="">Semua Output</option></select>
     <select id="fSort">
       <option value="">Urutan: bawaan</option>
       <option value="link-asc">Link A→Z</option>
@@ -613,6 +656,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <label class="toggle"><input type="checkbox" id="fUpdated"> Hanya yang baru di-update</label>
     <label class="toggle"><input type="checkbox" id="fDups"> Hanya duplikat</label>
     <button class="btn ghost" id="dupBtn" style="padding:8px 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Cek &amp; pilih duplikat</button>
+    <button class="btn" id="addLinkBtn" style="padding:8px 12px;border-color:var(--cyan);color:var(--cyan)" title="Tambah link baru secara manual"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah</button>
     <button class="btn ghost" id="clearFiltersBtn" style="padding:8px 12px" title="Hapus semua filter aktif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reset <span class="flt-badge" id="filterCount" style="display:none">0</span></button>
     <button class="btn" id="openAllResultsBtn" style="padding:8px 12px;border-color:var(--green);color:var(--green)" title="Buka semua link hasil filter di tab baru sekaligus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Semua</button>
     <span class="count-info" id="countInfo"></span>
@@ -647,9 +691,8 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
           <th class="c-chk"><input type="checkbox" class="cb" id="chkAll" title="Pilih semua di halaman ini"></th>
           <th>No</th>
           <th class="th-sort" data-col="link" title="Sort by Link">Link <span class="sort-arrow" id="srt-link"></span></th>
-          <th class="th-sort" data-col="test" title="Sort by Test">Test <span class="sort-arrow" id="srt-test"></span></th>
           <th class="th-sort" data-col="status" title="Sort by Status">Status <span class="sort-arrow" id="srt-status"></span></th>
-          <th class="th-sort" data-col="part" title="Sort by Part">Link Part <span class="sort-arrow" id="srt-part"></span></th>
+          <th class="th-sort" data-col="part" title="Sort by Output">Output <span class="sort-arrow" id="srt-part"></span></th>
           <th class="th-sort" data-col="region" title="Sort by Region">Region <span class="sort-arrow" id="srt-region"></span></th>
           <th class="th-sort" data-col="date" title="Sort by Tanggal">Update <span class="sort-arrow" id="srt-date"></span></th>
           <th>Perubahan</th><th>Last Page</th><th>Aksi</th>
@@ -977,6 +1020,114 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
 
 </div><!-- /wrap -->
 
+<!-- ===== SETTINGS MODAL ===== -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal" style="width:min(540px,100%)">
+    <div class="modal-head">
+      <div>
+        <h2>Pengaturan</h2>
+        <p>Atur pilihan Status, Region, dan Output yang tersedia di dropdown tabel.</p>
+      </div>
+      <button class="x" id="closeSettings">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="cfg-tabs">
+        <button class="cfg-tab active" data-cfg="status">Status</button>
+        <button class="cfg-tab" data-cfg="region">Region</button>
+        <button class="cfg-tab" data-cfg="output">Output</button>
+      </div>
+
+      <!-- Status Tab -->
+      <div class="cfg-pane active" id="cfgPaneStatus">
+        <p class="cfg-note">Status bawaan tidak bisa dihapus. Anda bisa menambah status kustom dengan warna pilihan. Klik status untuk ubah label tampilan.</p>
+        <div class="cfg-list" id="cfgStatusList"></div>
+        <div class="cfg-add-row">
+          <input class="cfg-inp" id="cfgStatusName" placeholder="Nama status baru…" maxlength="32">
+          <div style="display:flex;gap:5px;align-items:center">
+            <span style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--muted)">Warna:</span>
+            <div id="cfgStatusColors" class="cfg-color-row" style="margin:0"></div>
+          </div>
+          <button class="btn primary" id="cfgStatusAddBtn" style="padding:7px 13px;font-size:11px;white-space:nowrap">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah
+          </button>
+        </div>
+      </div>
+
+      <!-- Region Tab -->
+      <div class="cfg-pane" id="cfgPaneRegion">
+        <p class="cfg-note">Daftar region yang selalu tampil di dropdown. Region dari data yang sudah diimport juga otomatis tersedia.</p>
+        <div class="cfg-list" id="cfgRegionList"></div>
+        <div class="cfg-add-row">
+          <input class="cfg-inp" id="cfgRegionInp" placeholder="Nama region baru… (mis. ID, MY, SG)" maxlength="40" style="text-transform:uppercase">
+          <button class="btn primary" id="cfgRegionAddBtn" style="padding:7px 13px;font-size:11px;white-space:nowrap">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah
+          </button>
+        </div>
+      </div>
+
+      <!-- Output Tab -->
+      <div class="cfg-pane" id="cfgPaneOutput">
+        <p class="cfg-note">Daftar nilai Output yang selalu tersedia di dropdown. Nilai dari data yang sudah ada juga otomatis muncul.</p>
+        <div class="cfg-list" id="cfgOutputList"></div>
+        <div class="cfg-add-row">
+          <input class="cfg-inp" id="cfgOutputInp" placeholder="Nama output baru… (mis. Part 1, BD-1080p)" maxlength="60">
+          <button class="btn primary" id="cfgOutputAddBtn" style="padding:7px 13px;font-size:11px;white-space:nowrap">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ADD LINK MODAL ===== -->
+<div class="overlay" id="addLinkOverlay">
+  <div class="modal add-link-modal">
+    <div class="modal-head">
+      <div><h2>Tambah Link</h2><p>Isi detail link baru. Kolom Link wajib diisi.</p></div>
+      <button class="x" id="closeAddLink">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fg full">
+          <label>Link *</label>
+          <input id="alLink" type="text" placeholder="https://… atau dl.surf/file/…">
+          <span class="hint">URL langsung — teks + link otomatis diekstrak.</span>
+        </div>
+        <div class="fg">
+          <label>Status</label>
+          <select id="alStatus"></select>
+        </div>
+        <div class="fg">
+          <label>Region</label>
+          <input id="alRegion" type="text" placeholder="ID, MY, SG…" list="alRegionList" style="text-transform:uppercase">
+          <datalist id="alRegionList"></datalist>
+        </div>
+        <div class="fg">
+          <label>Output</label>
+          <input id="alOutput" type="text" placeholder="Part 1, BD-1080p…" list="alOutputList">
+          <datalist id="alOutputList"></datalist>
+        </div>
+        <div class="fg">
+          <label>Update / Tanggal</label>
+          <input id="alUpdate" type="text" placeholder="opsional">
+        </div>
+        <div class="fg">
+          <label>Last Page</label>
+          <input id="alLastpage" type="text" placeholder="opsional">
+        </div>
+      </div>
+      <div id="alErr" style="color:var(--red);font-size:11px;font-family:'Share Tech Mono',monospace;min-height:16px;margin-top:8px"></div>
+      <div class="modal-foot" style="margin-top:14px">
+        <button class="btn ghost" id="cancelAddLink">Batal</button>
+        <button class="btn primary" id="saveAddLink">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah Link
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Etalase: Add/Edit Product Modal -->
 <div class="overlay" id="etlOverlay">
   <div class="modal etl-modal">
@@ -1056,7 +1207,7 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
         <div class="mode" data-mode="replace"><b>Replace</b><span>Hapus semua, ganti dgn file ini</span></div>
       </div>
 
-      <div class="note-box">Kunci pencocokan = kolom <b>Link</b>. Header dideteksi otomatis (Name, Link, Status, Region, Link Part, Test, Update, Last Page). Pastikan nama header file Anda sesuai agar pemetaan akurat.</div>
+      <div class="note-box">Kunci pencocokan = kolom <b>Link</b>. Header dideteksi otomatis (Name, Link, Status, Region, Output/Part, Update, Last Page). Pastikan nama header file Anda sesuai agar pemetaan akurat.</div>
 
       <div class="modal-foot">
         <button class="btn ghost" id="cancelImport">Batal</button>
@@ -1078,7 +1229,7 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
           <span class="hint">Jika berisi teks + link, URL-nya otomatis diekstrak saat disimpan.</span></div>
         <div class="fg"><label>Status</label><select id="eStatus"></select></div>
         <div class="fg"><label>Region</label><input id="eRegion" type="text"></div>
-        <div class="fg"><label>Link Part</label><input id="ePart" type="text"></div>
+        <div class="fg"><label>Output</label><input id="ePart" type="text"></div>
         <div class="fg"><label>Test</label><input id="eTest" type="text"></div>
         <div class="fg"><label>Update</label><input id="eUpdate" type="text"></div>
         <div class="fg"><label>Last Page</label><input id="eLastpage" type="text"></div>
@@ -1272,6 +1423,7 @@ const STATUS = {
 function canonStatus(raw){
   const s = String(raw||'').toLowerCase().trim();
   if(!s) return 'blank';
+  if(STATUS[s]) return s; // already a valid key (includes custom statuses)
   if(s.includes('uncomplete')||s.includes('incomplete')||s.includes('belum')) return 'uncomplete';
   if(s.includes('lost')||s.includes('hilang')) return 'lost';
   if(s.includes('broken')||s.includes('rusak')||s.includes('mati')) return 'broken';
@@ -1534,10 +1686,10 @@ function renderChart(k){
 
 // ---------- filters / table ----------
 function refreshFilterOptions(){
-  const regs=[...new Set(DATA.map(r=>r.region).filter(Boolean))].sort();
-  const parts=[...new Set(DATA.map(r=>r.part).filter(Boolean))].sort();
+  const regs=[...new Set([...(typeof cfgPresetRegions==='function'?cfgPresetRegions():[]), ...DATA.map(r=>r.region).filter(Boolean)])].sort();
+  const parts=[...new Set([...(typeof cfgPresetOutputs==='function'?cfgPresetOutputs():[]), ...DATA.map(r=>r.part).filter(Boolean)])].sort();
   fill('#fRegion','Semua Region',regs);
-  fill('#fPart','Semua Link Part',parts);
+  fill('#fPart','Semua Output',parts);
   fill('#fStatus','Semua Status',Object.keys(STATUS).map(k=>STATUS[k].label));
 }
 function fill(sel,allLabel,items){
@@ -1577,9 +1729,10 @@ function applyFilters(){
   page=1; renderTable(); updateSortArrows(); updateFilterBadge();
 }
 function renderTable(){
+  closeCellDD();
   const tb=$('#tbody');
   if(!DATA.length){
-    tb.innerHTML=`<tr><td colspan="11"><div class="empty">
+    tb.innerHTML=`<tr><td colspan="10"><div class="empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6M9 15h6"/></svg>
       <h3>Belum ada data</h3>
       <p>Klik <b>Update Link</b> untuk upload Excel/CSV atau tempel daftar link Anda.</p>
@@ -1593,19 +1746,19 @@ function renderTable(){
   const slice=view.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE);
   tb.innerHTML=slice.map((r,i)=>{
     const idx=(page-1)*PAGE_SIZE+i+1;
+    const viewIdx=(page-1)*PAGE_SIZE+i;
     const s=STATUS[r.status];
+    const dupBadge = r._dup ? '<span class="flag dup" style="margin-left:4px;font-size:9px">DOBEL</span>' : (r._dupKeep ? '<span style="font-size:9px;color:var(--green);margin-left:4px">asli</span>' : '');
     const partPill=r.part?`<span class="pill" style="background:var(--purple-bg);color:var(--purple)"><span class="dot" style="background:var(--purple)"></span>${esc(r.part)}</span>`:'<span class="mono">—</span>';
     const regPill=r.region?`<span class="pill" style="background:var(--red-bg);color:var(--red)"><span class="dot" style="background:var(--red)"></span>${esc(r.region)}</span>`:'<span class="mono">—</span>';
     const flag=r._flag==='new'?'<span class="flag new">NEW</span>':r._flag==='upd'?'<span class="flag upd">UPDATED</span>':'<span class="mono">—</span>';
-    const testCell = r._dup ? '<span class="flag dup">DOBEL</span>' : (r._dupKeep ? '<span class="mono" style="color:var(--green)">asli</span>' : (esc(r.test)||'<span class="mono">—</span>'));
     return `<tr>
-      <td class="c-chk"><input type="checkbox" class="cb rowchk" data-id="${r._id}" ${selected.has(r._id)?'checked':''}></td>
+      <td class="c-chk"><input type="checkbox" class="cb rowchk" data-id="${r._id}" data-vidx="${viewIdx}" ${selected.has(r._id)?'checked':''}></td>
       <td class="c-idx">${idx}</td>
-      <td class="c-link" title="${esc(r.link)}">${linkCell(r.link)}</td>
-      <td>${testCell}</td>
-      <td><span class="pill" style="background:var(${COLORBG[s.color]});color:var(${COLOR[s.color]})"><span class="dot" style="background:var(${COLOR[s.color]})"></span>${s.label}</span>${r._statusLocked?'<span class="lock-icon" title="Status dikunci — tidak akan ditimpa sync">🔒</span>':''}</td>
-      <td>${partPill}</td>
-      <td>${regPill}</td>
+      <td class="c-link" title="${esc(r.link)}">${linkCell(r.link)}${dupBadge}</td>
+      <td class="cell-editable" onclick="showStatusDD('${r._id}',this)" title="Klik untuk ubah status"><span class="pill" style="background:var(${COLORBG[s.color]});color:var(${COLOR[s.color]})"><span class="dot" style="background:var(${COLOR[s.color]})"></span>${s.label}</span>${r._statusLocked?'<span class="lock-icon" title="Status dikunci — tidak akan ditimpa sync">🔒</span>':''}</td>
+      <td class="cell-editable" onclick="showOutputDD('${r._id}',this)" title="Klik untuk ubah output">${partPill}</td>
+      <td class="cell-editable" onclick="showRegionDD('${r._id}',this)" title="Klik untuk ubah region">${regPill}</td>
       <td class="mono">${fmtDate(r.inputAt)}</td>
       <td>${flag}</td>
       <td><input class="lpedit" data-id="${r._id}" value="${esc(r.lastpage)}" placeholder="ketik…"></td>
@@ -1664,13 +1817,106 @@ function renderPager(pages,total){
   const pss=$('#pageSizeSel'); if(pss) pss.onchange=e=>{PAGE_SIZE=+e.target.value;page=1;renderTable();};
 }
 
+// ---------- inline cell dropdown ----------
+let _cellDD=null;
+function closeCellDD(){ if(_cellDD){ _cellDD.remove(); _cellDD=null; } }
+function showCellDropdown(id, field, anchorEl, items, heading){
+  closeCellDD();
+  const r=DATA.find(x=>x._id===id); if(!r) return;
+  const box=anchorEl.getBoundingClientRect();
+  const dd=document.createElement('div');
+  dd.className='cell-dd';
+  // position below cell, flip up if off-screen
+  const estH=items.length*32+60;
+  const top = box.bottom+2+estH>window.innerHeight ? box.top-estH-2 : box.bottom+2;
+  dd.style.cssText=`left:${Math.min(box.left,window.innerWidth-180)}px;top:${top}px`;
+  if(heading) dd.innerHTML=`<div class="cell-dd-head">${heading}</div>`;
+
+  // search input for long lists
+  let filterQ='';
+  let inputEl=null;
+  if(items.length>5){
+    inputEl=document.createElement('input');
+    inputEl.className='cell-dd-inp'; inputEl.placeholder='Cari…';
+    dd.appendChild(inputEl);
+  }
+
+  const listDiv=document.createElement('div');
+  dd.appendChild(listDiv);
+
+  function renderItems(q){
+    const fi=q?items.filter(x=>(x.label||x.val).toLowerCase().includes(q.toLowerCase())):items;
+    listDiv.innerHTML='';
+    fi.forEach(({val,label,color})=>{
+      const item=document.createElement('div');
+      item.className='cell-dd-item'+(r[field]===val?' active':'');
+      const dot=color?`<span class="cell-dd-dot" style="background:var(${color})"></span>`:'';
+      item.innerHTML=dot+esc(label||val);
+      item.onmousedown=ev=>{ ev.preventDefault(); // prevent blur from closing first
+        pushUndo({kind:'fields',items:[{id,prev:{[field]:r[field],_flag:r._flag,updatedAt:r.updatedAt,...(field==='status'?{_statusLocked:r._statusLocked}:{})}}]});
+        r[field]=val;
+        if(field==='status'){ r._statusLocked=true; r._flag='upd'; r.updatedAt=Date.now(); }
+        else if(field==='region'){ r.region=val.toUpperCase(); }
+        closeCellDD();
+        markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); scheduleSave();
+      };
+      listDiv.appendChild(item);
+    });
+    // add new value option for region/part
+    if(q && !fi.find(x=>x.val===q) && (field==='region'||field==='part')){
+      const add=document.createElement('div');
+      add.className='cell-dd-add';
+      add.textContent='+ Tambah "'+q+'"';
+      add.onmousedown=ev=>{ ev.preventDefault();
+        pushUndo({kind:'fields',items:[{id,prev:{[field]:r[field]}}]});
+        r[field]=field==='region'?q.toUpperCase():q;
+        closeCellDD();
+        markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); scheduleSave();
+      };
+      listDiv.appendChild(add);
+    }
+  }
+  renderItems('');
+  if(inputEl){ inputEl.oninput=()=>{ filterQ=inputEl.value; renderItems(filterQ); }; }
+  document.body.appendChild(dd);
+  _cellDD=dd;
+  if(inputEl) setTimeout(()=>inputEl.focus(),20);
+  setTimeout(()=>document.addEventListener('mousedown',function h(e){ if(!dd.contains(e.target)){closeCellDD();document.removeEventListener('mousedown',h);} }),10);
+}
+function showStatusDD(id, el){
+  showCellDropdown(id,'status',el,Object.entries(STATUS).map(([k,v])=>({val:k,label:v.label,color:COLOR[v.color]})),'Status');
+}
+function showRegionDD(id, el){
+  const regs=[...new Set([...(typeof cfgPresetRegions==='function'?cfgPresetRegions():[]), ...DATA.map(r=>r.region).filter(Boolean)])].sort();
+  showCellDropdown(id,'region',el,regs.map(r=>({val:r,label:r,color:'--red'})),'Region');
+}
+function showOutputDD(id, el){
+  const parts=[...new Set([...(typeof cfgPresetOutputs==='function'?cfgPresetOutputs():[]), ...DATA.map(r=>r.part).filter(Boolean)])].sort();
+  showCellDropdown(id,'part',el,parts.map(p=>({val:p,label:p,color:'--purple'})),'Output');
+}
+
 // ---------- edit / delete ----------
 let editId=null, deleteId=null, deleteMode='single';
 const selected=new Set();
+let lastChkIdx=-1;
 function bindRowActions(){
   document.querySelectorAll('.iconbtn.edit').forEach(b=>b.onclick=()=>openEdit(b.dataset.id));
   document.querySelectorAll('.iconbtn.del').forEach(b=>b.onclick=()=>askDelete(b.dataset.id));
-  document.querySelectorAll('.rowchk').forEach(c=>c.onchange=()=>toggleSelect(c.dataset.id,c.checked));
+  document.querySelectorAll('.rowchk').forEach(c=>{
+    c.onclick=ev=>{
+      const curIdx=+c.dataset.vidx;
+      if(ev.ctrlKey && ev.shiftKey && lastChkIdx>=0){
+        const from=Math.min(lastChkIdx,curIdx);
+        const to=Math.max(lastChkIdx,curIdx);
+        const on=c.checked;
+        view.slice(from,to+1).forEach(r=>{ on?selected.add(r._id):selected.delete(r._id); });
+        renderTable();
+        return;
+      }
+      toggleSelect(c.dataset.id,c.checked);
+      lastChkIdx=curIdx;
+    };
+  });
   document.querySelectorAll('.lpedit').forEach(inp=>{
     inp.onchange=()=>commitLastPage(inp.dataset.id,inp.value);
     inp.onkeydown=ev=>{ if(ev.key==='Enter') inp.blur(); };
@@ -1701,6 +1947,13 @@ function renderSelectionBar(){
   const n=selected.size;
   $('#selbar').classList.toggle('show',n>0);
   $('#selCount').textContent=fmt(n);
+  // refresh bulk status options to include custom statuses
+  const bs=$('#bulkStatus');
+  if(bs){
+    const cur=bs.value;
+    bs.innerHTML='<option value="">Ubah status…</option>'+(typeof cfgAllStatuses==='function'?cfgAllStatuses():Object.entries(STATUS).map(([k,v])=>({key:k,label:v.label}))).map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
+    if(cur) bs.value=cur;
+  }
   const fb=$('#selAllFiltered');
   if(n>0 && view.length>n){ fb.style.display=''; fb.textContent='Pilih semua '+fmt(view.length)+' hasil terfilter'; }
   else { fb.style.display='none'; }
@@ -1798,7 +2051,7 @@ function selectDuplicates(){
 function openEdit(id){
   const r=DATA.find(x=>x._id===id); if(!r) return;
   editId=id;
-  $('#eStatus').innerHTML=Object.keys(STATUS).map(k=>`<option value="${k}" ${k===r.status?'selected':''}>${STATUS[k].label}</option>`).join('');
+  $('#eStatus').innerHTML=(typeof cfgAllStatuses==='function'?cfgAllStatuses():Object.entries(STATUS).map(([k,v])=>({key:k,label:v.label}))).map(s=>`<option value="${s.key}" ${s.key===r.status?'selected':''}>${s.label}</option>`).join('');
   $('#eLink').value=r.link; $('#eRegion').value=r.region; $('#ePart').value=r.part;
   $('#eTest').value=r.test; $('#eUpdate').value=r.update; $('#eLastpage').value=r.lastpage;
   $('#editOverlay').classList.add('show');
@@ -1978,8 +2231,8 @@ function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show'
 function exportXlsx(){
   if(!DATA.length){toast('Tidak ada data untuk di-export');return;}
   logActivity('export',fmt(DATA.length)+' link ke Excel','export');
-  const aoa=[['Name','Link','Test','Status','Link Part','Date','Region','Update','Last Page','Active']];
-  DATA.forEach((r,i)=>aoa.push([i+1,r.link,r.test,STATUS[r.status].label,r.part,r.date,r.region,r.inputAt?new Date(r.inputAt).toLocaleDateString('id-ID'):'',r.lastpage,r.active]));
+  const aoa=[['Name','Link','Status','Output','Date','Region','Update','Last Page','Active']];
+  DATA.forEach((r,i)=>aoa.push([i+1,r.link,STATUS[r.status].label,r.part,r.date,r.region,r.inputAt?new Date(r.inputAt).toLocaleDateString('id-ID'):'',r.lastpage,r.active]));
   const ws=XLSX.utils.aoa_to_sheet(aoa);
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Links');
   XLSX.writeFile(wb,'link-monitor-'+new Date().toISOString().slice(0,10)+'.xlsx');
@@ -2505,6 +2758,186 @@ function exportHDD(){
   const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'HDD Storage');
   XLSX.writeFile(wb,'hdd-storage-'+new Date().toISOString().slice(0,10)+'.xlsx');
   toast('✓ HDD data diekspor ke XLSX');
+}
+
+// ==================== SETTINGS ====================
+const CFG_STATUS_COLORS = [
+  {key:'green', css:'var(--green)'}, {key:'amber', css:'var(--amber)'},
+  {key:'orange', css:'var(--orange)'}, {key:'red', css:'var(--red)'},
+  {key:'gray', css:'var(--gray)'}, {key:'blank', css:'var(--blank)'},
+  {key:'purple', css:'var(--purple)'}, {key:'magenta', css:'var(--magenta)'},
+  {key:'cyan', css:'var(--cyan)'}
+];
+let cfgSelColor = 'cyan';
+
+// SETTINGS persisted separately
+let SETTINGS = { regions:[], outputs:[], customStatuses:[] };
+
+async function loadSettings(){
+  try{
+    const d = await store.get('cfg:settings');
+    if(d && d.value){ const p=JSON.parse(d.value); Object.assign(SETTINGS, p); }
+  }catch(_){}
+}
+async function saveSettings(){
+  try{ await store.set('cfg:settings', JSON.stringify(SETTINGS)); }catch(_){}
+}
+
+function cfgPresetRegions(){ return [...new Set([...SETTINGS.regions, ...DATA.map(r=>r.region).filter(Boolean)])].sort(); }
+function cfgPresetOutputs(){ return [...new Set([...SETTINGS.outputs, ...DATA.map(r=>r.part).filter(Boolean)])].sort(); }
+function cfgAllStatuses(){
+  const base = Object.entries(STATUS).map(([k,v])=>({key:k, label:v.label, color:v.color, locked:true}));
+  const custom = (SETTINGS.customStatuses||[]);
+  return [...base, ...custom];
+}
+
+// ---- render settings tabs ----
+function renderCfgStatus(){
+  const list = document.getElementById('cfgStatusList'); if(!list) return;
+  const all = cfgAllStatuses();
+  list.innerHTML = all.map(s=>{
+    const col = COLOR[s.color]||'--cyan';
+    const lock = s.locked ? '<span class="cfg-locked">bawaan</span>' : '';
+    const del = s.locked ? '' : `<button class="cfg-item-del" data-cfgdelstatus="${s.key}" title="Hapus">×</button>`;
+    return `<div class="cfg-item">
+      <span class="cfg-item-dot" style="background:var(${col})"></span>
+      <span class="cfg-item-label">${esc(s.label)}</span>
+      ${lock}${del}
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-cfgdelstatus]').forEach(b=>{
+    b.onclick=()=>{
+      const key=b.dataset.cfgdelstatus;
+      SETTINGS.customStatuses=(SETTINGS.customStatuses||[]).filter(x=>x.key!==key);
+      saveSettings(); renderCfgStatus();
+    };
+  });
+}
+
+function renderCfgList(containerId, items, onDelete){
+  const el=document.getElementById(containerId); if(!el) return;
+  if(!items.length){ el.innerHTML='<div style="color:var(--muted);font-family:\'Share Tech Mono\',monospace;font-size:11px;padding:8px 0;text-align:center">Belum ada — tambah di bawah.</div>'; return; }
+  el.innerHTML = items.map((v,i)=>`<div class="cfg-item">
+    <span class="cfg-item-label">${esc(v)}</span>
+    <button class="cfg-item-del" data-cfgdelidx="${i}" title="Hapus">×</button>
+  </div>`).join('');
+  el.querySelectorAll('[data-cfgdelidx]').forEach(b=>{
+    b.onclick=()=>{ onDelete(+b.dataset.cfgdelidx); };
+  });
+}
+
+function renderCfgRegion(){ renderCfgList('cfgRegionList', SETTINGS.regions, i=>{ SETTINGS.regions.splice(i,1); saveSettings(); renderCfgRegion(); refreshFilterOptions(); }); }
+function renderCfgOutput(){ renderCfgList('cfgOutputList', SETTINGS.outputs, i=>{ SETTINGS.outputs.splice(i,1); saveSettings(); renderCfgOutput(); refreshFilterOptions(); }); }
+
+function renderCfgColorPicker(){
+  const el=document.getElementById('cfgStatusColors'); if(!el) return;
+  el.innerHTML=CFG_STATUS_COLORS.map(c=>`<span class="cfg-color-btn${c.key===cfgSelColor?' sel':''}" data-color="${c.key}" style="background:${c.css}" title="${c.key}"></span>`).join('');
+  el.querySelectorAll('.cfg-color-btn').forEach(b=>{ b.onclick=()=>{ cfgSelColor=b.dataset.color; renderCfgColorPicker(); }; });
+}
+
+function openSettings(){
+  renderCfgStatus(); renderCfgRegion(); renderCfgOutput(); renderCfgColorPicker();
+  // activate first tab
+  document.querySelectorAll('.cfg-tab').forEach(t=>t.classList.toggle('active',t.dataset.cfg==='status'));
+  document.querySelectorAll('.cfg-pane').forEach(p=>p.classList.toggle('active',p.id==='cfgPaneStatus'));
+  document.getElementById('settingsOverlay').classList.add('show');
+}
+
+// ---- wire settings events (called once after DOM ready) ----
+function wireSettings(){
+  const overlay = document.getElementById('settingsOverlay');
+  document.getElementById('settingsBtn').onclick = openSettings;
+  document.getElementById('closeSettings').onclick = ()=>overlay.classList.remove('show');
+  overlay.onclick = e=>{ if(e.target===overlay) overlay.classList.remove('show'); };
+
+  // tab switching
+  document.querySelectorAll('.cfg-tab').forEach(tab=>{
+    tab.onclick=()=>{
+      document.querySelectorAll('.cfg-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.cfg-pane').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('cfgPane'+tab.dataset.cfg.charAt(0).toUpperCase()+tab.dataset.cfg.slice(1)).classList.add('active');
+    };
+  });
+
+  // add status
+  document.getElementById('cfgStatusAddBtn').onclick=()=>{
+    const name=document.getElementById('cfgStatusName').value.trim(); if(!name){toast('⚠ Isi nama status');return;}
+    const key='custom_'+name.toLowerCase().replace(/[^a-z0-9]/g,'_').slice(0,20)+'_'+Date.now().toString(36).slice(-4);
+    if(!SETTINGS.customStatuses) SETTINGS.customStatuses=[];
+    SETTINGS.customStatuses.push({key,label:name,color:cfgSelColor,locked:false});
+    // also register in STATUS & COLOR so canonicalization works
+    STATUS[key]={label:name,color:cfgSelColor};
+    document.getElementById('cfgStatusName').value='';
+    saveSettings(); renderCfgStatus(); refreshFilterOptions();
+    toast('✓ Status "'+name+'" ditambahkan');
+  };
+  document.getElementById('cfgStatusName').onkeydown=e=>{ if(e.key==='Enter') document.getElementById('cfgStatusAddBtn').click(); };
+
+  // add region
+  document.getElementById('cfgRegionAddBtn').onclick=()=>{
+    const val=document.getElementById('cfgRegionInp').value.trim().toUpperCase(); if(!val){toast('⚠ Isi nama region');return;}
+    if(!SETTINGS.regions.includes(val)) SETTINGS.regions.push(val);
+    document.getElementById('cfgRegionInp').value='';
+    saveSettings(); renderCfgRegion(); refreshFilterOptions(); toast('✓ Region "'+val+'" ditambahkan');
+  };
+  document.getElementById('cfgRegionInp').onkeydown=e=>{ if(e.key==='Enter') document.getElementById('cfgRegionAddBtn').click(); };
+
+  // add output
+  document.getElementById('cfgOutputAddBtn').onclick=()=>{
+    const val=document.getElementById('cfgOutputInp').value.trim(); if(!val){toast('⚠ Isi nama output');return;}
+    if(!SETTINGS.outputs.includes(val)) SETTINGS.outputs.push(val);
+    document.getElementById('cfgOutputInp').value='';
+    saveSettings(); renderCfgOutput(); refreshFilterOptions(); toast('✓ Output "'+val+'" ditambahkan');
+  };
+  document.getElementById('cfgOutputInp').onkeydown=e=>{ if(e.key==='Enter') document.getElementById('cfgOutputAddBtn').click(); };
+}
+
+// ==================== ADD LINK MANUAL ====================
+function openAddLink(){
+  // populate status select
+  const sel=document.getElementById('alStatus');
+  sel.innerHTML = cfgAllStatuses().map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
+  sel.value='blank';
+  // populate datalists
+  const regs=cfgPresetRegions();
+  document.getElementById('alRegionList').innerHTML=regs.map(r=>`<option value="${r}">`).join('');
+  const outs=cfgPresetOutputs();
+  document.getElementById('alOutputList').innerHTML=outs.map(o=>`<option value="${o}">`).join('');
+  // clear fields
+  ['alLink','alRegion','alOutput','alUpdate','alLastpage'].forEach(id=>{ document.getElementById(id).value=''; });
+  document.getElementById('alErr').textContent='';
+  document.getElementById('addLinkOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('alLink').focus(),80);
+}
+
+function saveAddLink(){
+  const rawLink = document.getElementById('alLink').value.trim();
+  if(!rawLink){ document.getElementById('alErr').textContent='⚠ Link wajib diisi.'; return; }
+  const url = extractUrl(rawLink) || rawLink;
+  const rec = buildRecord({
+    link: url,
+    status: document.getElementById('alStatus').value,
+    region: document.getElementById('alRegion').value.trim().toUpperCase(),
+    part: document.getElementById('alOutput').value.trim(),
+    update: document.getElementById('alUpdate').value.trim(),
+    lastpage: document.getElementById('alLastpage').value.trim(),
+  });
+  rec._flag = 'new';
+  DATA.push(rec);
+  logActivity('add_link_manual', url.slice(0,80), 'data');
+  document.getElementById('addLinkOverlay').classList.remove('show');
+  markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); scheduleSave();
+  toast('✓ Link ditambahkan');
+}
+
+function wireAddLink(){
+  document.getElementById('addLinkBtn').onclick = openAddLink;
+  document.getElementById('closeAddLink').onclick = ()=>document.getElementById('addLinkOverlay').classList.remove('show');
+  document.getElementById('cancelAddLink').onclick = ()=>document.getElementById('addLinkOverlay').classList.remove('show');
+  document.getElementById('addLinkOverlay').onclick = e=>{ if(e.target===document.getElementById('addLinkOverlay')) document.getElementById('addLinkOverlay').classList.remove('show'); };
+  document.getElementById('saveAddLink').onclick = saveAddLink;
+  document.getElementById('alLink').onkeydown = e=>{ if(e.key==='Enter') document.getElementById('saveAddLink').click(); };
 }
 
 // ---------- events ----------
@@ -3587,11 +4020,16 @@ function vdlRenderHistory(){
 (async function(){
   sbLoadConfig();
   await usersLoad(); await activityLogLoad(); showAuth();
+  await loadSettings();
+  // restore custom statuses into STATUS object
+  (SETTINGS.customStatuses||[]).forEach(s=>{ if(s.key && s.label) STATUS[s.key]={label:s.label,color:s.color||'cyan'}; });
   await loadData();
   markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog();
   updateUndoBtn(); updateSaveState();
   await loadHDD(); renderHDD();
   etlInit();
+  wireSettings();
+  wireAddLink();
 })();
 
 // ==================== TAB NAVIGATION ====================
