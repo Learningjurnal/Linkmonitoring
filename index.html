@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://accounts.google.com/gsi/client" async defer onload="window.__gsiReady=true" onerror="window.__gsiBlocked=true"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap');
 :root{
@@ -554,7 +551,6 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <div class="head-actions">
       <button class="btn ghost" id="logoutBtn" title="Kunci dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>
       <button class="btn ghost" id="undoBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>Urungkan</button>
-      <button class="btn ghost" id="driveBtn"><span class="ddot" id="driveDot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.71 3.5 1.15 15l3.43 6 6.56-11.5z"/><path d="M22.85 15 16.29 3.5H9.43l6.56 11.5z"/><path d="M4.58 21h13.27l3.43-6H8.01z"/></svg>Google</button>
       <button class="btn ghost" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export</button>
       <button class="btn primary" id="importBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Update Link</button>
     </div>
@@ -890,25 +886,41 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
       <div id="adminRegionChart"></div>
     </div>
 
-    <!-- Stream Aktivitas – full width -->
-    <div class="admin-panel">
+    <!-- Supabase Config -->
+    <div class="admin-panel" style="margin-bottom:16px">
       <div class="admin-panel-title">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        Stream Aktivitas Real-Time
-        <span class="tag" id="actLogBadge" style="font-weight:400;text-transform:none;letter-spacing:.04em"></span>
-        <button class="btn ghost" id="clearActLogBtn" style="margin-left:auto;padding:3px 9px;font-size:10px">Bersihkan</button>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+        Konfigurasi Supabase
+        <span class="tag" id="sbStatusBadge">— belum terhubung</span>
       </div>
-      <div class="act-filter-bar">
-        <input class="act-search-inp" id="actSearch" placeholder="Cari aksi / user / detail…">
-        <button class="act-cat-btn active" data-cat="">Semua</button>
-        <button class="act-cat-btn" data-cat="auth">Auth</button>
-        <button class="act-cat-btn" data-cat="data">Data</button>
-        <button class="act-cat-btn" data-cat="sync">Sync</button>
-        <button class="act-cat-btn" data-cat="export">Export</button>
-        <button class="act-cat-btn" data-cat="ui">UI</button>
-        <button class="act-cat-btn" data-cat="etl">ETL</button>
+      <div class="form-grid">
+        <div class="fg full">
+          <label>Supabase Project URL</label>
+          <input id="sbUrl" type="text" placeholder="https://xxxxxxxxxxxx.supabase.co">
+        </div>
+        <div class="fg full">
+          <label>Supabase Anon Key (Public)</label>
+          <input id="sbKey" type="text" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+          <span class="hint">Anon/public key aman digunakan di frontend.</span>
+        </div>
+        <div class="fg">
+          <label>Nama Tabel</label>
+          <input id="sbTable" type="text" placeholder="linkmon_kv" value="linkmon_kv">
+          <span class="hint">Ganti nama tabel agar tidak bentrok dengan data lain di project yang sama.</span>
+        </div>
       </div>
-      <div id="adminActivityLog" style="max-height:420px;overflow-y:auto"></div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn primary" id="sbSaveBtn">Hubungkan Supabase</button>
+        <button class="btn ghost" id="sbMigrateBtn">Migrasi Data Lokal → Supabase</button>
+        <span id="sbConnStatus" style="font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted)"></span>
+      </div>
+      <div class="note-box" style="margin-top:12px">
+        Jalankan SQL ini di <b>Supabase → SQL Editor</b> (ganti <code style="color:var(--cyan)">linkmon_kv</code> jika Anda ubah nama tabel di atas):<br>
+        <code id="sbSqlHint" style="display:block;margin-top:6px;padding:8px;background:var(--bg-2);border-radius:2px;font-size:10px;color:var(--green);word-break:break-all;border:1px solid var(--line-soft);white-space:pre-line">CREATE TABLE linkmon_kv (key TEXT PRIMARY KEY, value TEXT, updated_at TIMESTAMPTZ DEFAULT NOW());
+ALTER TABLE linkmon_kv ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</code>
+        Tabel ini <b>terpisah</b> dari data lain di project Anda — aman dipakai bersama project yang sudah ada. Mendukung 30.000+ link.
+      </div>
     </div>
 
     <!-- Grid: User Mgmt | Breakdown + Storage + Auth Log -->
@@ -1089,86 +1101,6 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         <button class="btn ghost" id="cancelDelete">Batal</button>
         <button class="btn primary" id="confirmDeleteBtn" style="background:linear-gradient(135deg,#d6473f,#a8283a);border-color:#d6473f">Hapus</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="overlay" id="driveOverlay">
-  <div class="modal" style="width:min(540px,100%)">
-    <div class="modal-head">
-      <div><h2>Google Drive &amp; Sheets</h2><p>Simpan/muat data ke Drive, atau impor langsung dari Google Sheets (baca-saja).</p></div>
-      <button class="x" id="closeDrive">&times;</button>
-    </div>
-    <div class="modal-body">
-      <div class="divider" style="margin-top:0"><span class="ddot" id="autoDot"></span> Sinkron otomatis dari Sheet publik</div>
-      <input id="autoUrl" type="text" placeholder="Tempel link Google Sheets publik di sini" style="width:100%;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:9px;color:var(--text);padding:10px 11px;font-family:'JetBrains Mono';font-size:12.5px;outline:none">
-      <div style="display:flex;gap:9px;margin-top:9px;flex-wrap:wrap;align-items:center">
-        <select id="autoInterval" title="Seberapa sering cek perubahan">
-          <option value="30000">Cek tiap 30 detik</option>
-          <option value="60000" selected>Cek tiap 1 menit</option>
-          <option value="300000">Cek tiap 5 menit</option>
-        </select>
-        <label class="toggle"><input type="checkbox" id="autoUpdateExisting"> Perbarui baris lama</label>
-        <button class="btn" id="autoSyncNow">Sinkron sekarang</button>
-        <label class="toggle" style="margin-left:auto"><input type="checkbox" id="autoSyncToggle"> <b>Aktifkan</b></label>
-      </div>
-      <div class="dstatus" id="autoStatus" style="margin-top:10px">Belum aktif. Tempel link sheet publik lalu nyalakan "Aktifkan".</div>
-      <div class="note-box">Isi data di Google Sheets → dashboard menarik baris <b>baru</b> otomatis tiap interval. Sheet wajib dibagikan <b>"Siapa saja dengan link → Pelihat"</b>. Centang <b>"Perbarui baris lama"</b> hanya jika Sheet adalah sumber kebenaran — sel kosong di Sheet tidak akan menimpa data lama. Edit status di aplikasi sebaiknya dilakukan bila <b>tidak</b> mencentang opsi itu.</div>
-
-      <div class="divider">Cara cepat — tempel link (tanpa login)</div>
-      <input id="pubUrl" type="text" placeholder="Tempel link Google Sheets di sini" style="width:100%;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:9px;color:var(--text);padding:10px 11px;font-family:'JetBrains Mono';font-size:12.5px;outline:none">
-      <div style="display:flex;gap:9px;margin-top:9px;flex-wrap:wrap;align-items:center">
-        <select id="pubMode">
-          <option value="merge">Merge</option>
-          <option value="append">Append</option>
-          <option value="replace">Replace</option>
-        </select>
-        <button class="btn primary" id="pubImport">Impor dari link</button>
-      </div>
-      <div class="note-box">Sheet harus dibagikan <b>"Siapa saja dengan link → Pelihat"</b> (atau dipublikasikan). Tanpa itu, impor tanpa login tidak bisa — pakai opsi "login" di bawah untuk sheet privat. Baris pertama = header.</div>
-
-      <div class="divider">Untuk sheet privat — perlu login Google</div>
-      <div class="dstatus" id="driveStatus">Memeriksa…</div>
-
-      <div class="field-lab" style="margin-top:16px">OAuth Client ID (dari Google Cloud Console)</div>
-      <input id="driveClientId" type="text" placeholder="xxxxxxxx.apps.googleusercontent.com" style="width:100%;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:9px;color:var(--text);padding:10px 11px;font-family:'JetBrains Mono';font-size:12.5px;outline:none">
-      <div style="display:flex;gap:9px;margin-top:10px;flex-wrap:wrap">
-        <button class="btn" id="driveSaveCfg">Simpan Client ID</button>
-        <button class="btn primary" id="driveConnect">Hubungkan</button>
-      </div>
-
-      <div class="drow" style="margin-top:14px">
-        <button class="btn ghost" id="driveSaveNow" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Simpan ke Drive</button>
-        <button class="btn ghost" id="driveLoadNow" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Muat dari Drive</button>
-        <label class="toggle" style="margin-left:auto"><input type="checkbox" id="driveAutosync"> Sinkron otomatis</label>
-      </div>
-
-      <div class="note-box">Penyimpanan Drive berupa <b>satu file JSON</b> (bukan database). Untuk data sangat besar, sinkron otomatis dimatikan demi keamanan — gunakan tombol manual. Fitur ini hanya aktif saat dashboard dijalankan di <b>origin/hosting Anda sendiri</b>.</div>
-
-      <div class="divider">Impor dari Google Sheets (baca-saja)</div>
-      <input id="sheetUrl" type="text" placeholder="Tempel URL Google Sheets atau ID-nya" style="width:100%;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:9px;color:var(--text);padding:10px 11px;font-family:'JetBrains Mono';font-size:12.5px;outline:none">
-      <div style="display:flex;gap:9px;margin-top:9px;flex-wrap:wrap;align-items:center">
-        <input id="sheetTab" type="text" placeholder="Nama tab (opsional)" style="flex:1;min-width:120px;background:var(--bg-2);border:1px solid var(--line-soft);border-radius:9px;color:var(--text);padding:9px 11px;font-family:'JetBrains Mono';font-size:12.5px;outline:none">
-        <select id="sheetMode">
-          <option value="merge">Merge</option>
-          <option value="append">Append</option>
-          <option value="replace">Replace</option>
-        </select>
-        <button class="btn primary" id="sheetImport" disabled>Impor dari Sheet</button>
-      </div>
-      <div class="note-box">Hanya membaca — sheet asli Anda tidak diubah. Baris pertama dianggap header (Link, Status, Region, dst. dipetakan otomatis). Sheet harus dapat Anda akses dengan akun Google yang sama.</div>
-
-      <details style="margin-top:12px">
-        <summary style="cursor:pointer;color:var(--muted);font-size:12.5px">Cara mendapatkan Client ID</summary>
-        <div class="dsteps">
-          1. Buka console.cloud.google.com → buat / pilih project.<br>
-          2. APIs &amp; Services → Library → aktifkan <code>Google Drive API</code> dan <code>Google Sheets API</code>.<br>
-          3. OAuth consent screen → isi & tambahkan email Anda sebagai test user.<br>
-          4. Credentials → Create Credentials → <b>OAuth client ID</b> → tipe <b>Web application</b>.<br>
-          5. Di <b>Authorized JavaScript origins</b> tambahkan origin hosting Anda (mis. <code>https://domainanda.com</code> atau <code>http://localhost:8080</code>).<br>
-          6. Salin Client ID, tempel di atas.
-        </div>
-      </details>
     </div>
   </div>
 </div>
@@ -1428,8 +1360,30 @@ let pendingRows=null;
 const filters={q:'',status:'',region:'',part:'',updated:false,dups:false,sort:'',from:'',to:''};
 let LOG=[];
 
+// ---------- Supabase backend ----------
+let _SB=null;
+let _SB_TABLE='linkmon_kv';
+function sbInit(url,key){ if(!url||!key){_SB=null;return false;} try{ _SB=window.supabase.createClient(url,key); return true; }catch(_){ _SB=null; return false; } }
+async function sbGet(k){ try{ const {data,error}=await _SB.from(_SB_TABLE).select('value').eq('key',k).maybeSingle(); if(error) return null; return data?{value:data.value}:null; }catch(_){ return null; } }
+async function sbSet(k,v){ try{ await _SB.from(_SB_TABLE).upsert({key:k,value:String(v)},{onConflict:'key'}); }catch(_){} }
+async function sbDel(k){ try{ await _SB.from(_SB_TABLE).delete().eq('key',k); }catch(_){} }
+function sbLoadConfig(){
+  const u=localStorage.getItem('sb:url')||'';
+  const k=localStorage.getItem('sb:key')||'';
+  const t=localStorage.getItem('sb:table')||'linkmon_kv';
+  _SB_TABLE=t;
+  if(u&&k) sbInit(u,k);
+}
+function sbSaveConfig(url,key,table){
+  _SB_TABLE=table||'linkmon_kv';
+  localStorage.setItem('sb:url',url);
+  localStorage.setItem('sb:key',key);
+  localStorage.setItem('sb:table',_SB_TABLE);
+  return sbInit(url,key);
+}
+
 // ---------- storage backend terpadu ----------
-// Urutan: window.storage (lingkungan artifact) -> IndexedDB (hosting sendiri, kapasitas besar) -> localStorage (cadangan, ~5MB).
+// Urutan: Supabase (cloud, kapasitas besar) -> window.storage -> IndexedDB -> localStorage.
 const IDB={db:null,
   open(){ return new Promise((res,rej)=>{ if(IDB.db)return res(IDB.db);
     let r; try{ r=indexedDB.open('linkmon',1); }catch(e){ return rej(e); }
@@ -1442,21 +1396,25 @@ const IDB={db:null,
 const store=(function(){
   const hasWS=(typeof window!=='undefined'&&window.storage&&typeof window.storage.get==='function');
   const hasIDB=(typeof indexedDB!=='undefined'&&indexedDB);
-  const backend=hasWS?'ws':(hasIDB?'idb':'ls');
-  return { backend,
+  const _ls=hasWS?'ws':(hasIDB?'idb':'ls');
+  return {
+    get backend(){ return _SB?'supabase':_ls; },
     async get(k){
-      if(backend==='ws'){ try{ return await window.storage.get(k,false); }catch(_){ return null; } }
-      if(backend==='idb'){ try{ const v=await IDB.get(k); return v==null?null:{value:v}; }catch(_){ return null; } }
+      if(_SB) return sbGet(k);
+      if(_ls==='ws'){ try{ return await window.storage.get(k,false); }catch(_){ return null; } }
+      if(_ls==='idb'){ try{ const v=await IDB.get(k); return v==null?null:{value:v}; }catch(_){ return null; } }
       try{ const v=localStorage.getItem(k); return v==null?null:{value:v}; }catch(_){ return null; }
     },
     async set(k,v){
-      if(backend==='ws') return window.storage.set(k,v,false);
-      if(backend==='idb') return IDB.set(k,v);
+      if(_SB){ await sbSet(k,v); return; }
+      if(_ls==='ws') return window.storage.set(k,v,false);
+      if(_ls==='idb') return IDB.set(k,v);
       localStorage.setItem(k,v);
     },
     async del(k){
-      if(backend==='ws'){ try{ await window.storage.delete(k,false); }catch(_){} return; }
-      if(backend==='idb'){ try{ await IDB.del(k); }catch(_){} return; }
+      if(_SB){ await sbDel(k); return; }
+      if(_ls==='ws'){ try{ await window.storage.delete(k,false); }catch(_){} return; }
+      if(_ls==='idb'){ try{ await IDB.del(k); }catch(_){} return; }
       try{ localStorage.removeItem(k); }catch(_){}
     }
   };
@@ -1480,8 +1438,7 @@ function buildChunks(){
 function scheduleSave(){
   dirty=true; updateSaveState();
   clearTimeout(saveTimer);
-  if(typeof gdScheduleSync==='function') gdScheduleSync();
-  saveTimer=setTimeout(saveData,SAVE_DEBOUNCE);   // selalu jadwalkan simpan, berapa pun ukuran data
+  saveTimer=setTimeout(saveData,SAVE_DEBOUNCE);
 }
 async function saveData(){
   try{
@@ -1518,268 +1475,6 @@ async function loadData(){
     const lg=await store.get('links:log'); if(lg) LOG=JSON.parse(lg.value);
   }catch(e){ /* belum ada data tersimpan */ }
 }
-
-// ---------- google drive ----------
-const GD={clientId:'',token:null,expiry:0,tokenClient:null,fileId:null,fileName:'link-monitor-data.json',autosync:false,consented:false,syncTimer:null,_resolve:null,_reject:null};
-function gsiAvailable(){ return !!(window.google && google.accounts && google.accounts.oauth2); }
-function gdValid(){ return !!(GD.token && Date.now() < GD.expiry-60000); }
-function gdInitClient(){
-  if(GD.tokenClient) return true;
-  if(!gsiAvailable() || !GD.clientId) return false;
-  GD.tokenClient=google.accounts.oauth2.initTokenClient({
-    client_id:GD.clientId,
-    scope:'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets.readonly',
-    callback:(resp)=>{
-      if(resp && resp.access_token){
-        GD.token=resp.access_token; GD.expiry=Date.now()+((resp.expires_in||3600)*1000); GD.consented=true;
-        gdUpdateStatus(); if(GD._resolve){GD._resolve(GD.token);GD._resolve=null;GD._reject=null;}
-      } else if(GD._reject){ GD._reject(new Error('Otorisasi dibatalkan/gagal')); GD._resolve=null;GD._reject=null; }
-    }
-  });
-  return true;
-}
-function gdEnsureToken(){
-  return new Promise((resolve,reject)=>{
-    if(gdValid()) return resolve(GD.token);
-    if(!gdInitClient()) return reject(new Error('Drive belum siap — isi Client ID & jalankan di hosting Anda.'));
-    GD._resolve=resolve; GD._reject=reject;
-    try{ GD.tokenClient.requestAccessToken({prompt: GD.consented?'':'consent'}); }catch(e){ reject(e); }
-  });
-}
-async function gdFetch(url,opts={}){
-  await gdEnsureToken();
-  opts.headers=Object.assign({},opts.headers,{Authorization:'Bearer '+GD.token});
-  let r=await fetch(url,opts);
-  if(r.status===401||r.status===403){ GD.token=null; await gdEnsureToken(); opts.headers.Authorization='Bearer '+GD.token; r=await fetch(url,opts); }
-  if(!r.ok) throw new Error('Drive '+r.status);
-  return r;
-}
-async function gdFind(){
-  const q=encodeURIComponent("name='"+GD.fileName+"' and trashed=false");
-  const r=await gdFetch('https://www.googleapis.com/drive/v3/files?q='+q+'&spaces=drive&fields=files(id,name,modifiedTime)');
-  const j=await r.json();
-  GD.fileId=(j.files&&j.files[0])?j.files[0].id:null;
-  return GD.fileId;
-}
-async function gdSave(){
-  if(!GD.fileId) await gdFind();
-  const payload=JSON.stringify({version:1,savedAt:Date.now(),count:DATA.length,rows:DATA});
-  const boundary='gdb'+Date.now();
-  const meta={name:GD.fileName,mimeType:'application/json'};
-  const body='--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)
-    +'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n'+payload+'\r\n--'+boundary+'--';
-  const url = GD.fileId
-    ? 'https://www.googleapis.com/upload/drive/v3/files/'+GD.fileId+'?uploadType=multipart&fields=id'
-    : 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id';
-  const r=await gdFetch(url,{method:GD.fileId?'PATCH':'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body});
-  const j=await r.json(); if(j.id) GD.fileId=j.id;
-  logActivity('gd_save',fmt(DATA.length)+' link','sync');
-}
-async function gdLoad(){
-  if(!GD.fileId) await gdFind();
-  if(!GD.fileId) throw new Error('Belum ada file di Drive');
-  const r=await gdFetch('https://www.googleapis.com/drive/v3/files/'+GD.fileId+'?alt=media');
-  const j=await r.json();
-  DATA=(j.rows||[]).map(x=>({...x,_id:x._id||'r'+Math.random().toString(36).slice(2,10),inputAt:x.inputAt||x.updatedAt||Date.now()}));
-  markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); updateSaveState();
-}
-function gdScheduleSync(){
-  if(!GD.autosync || !gdValid()) return;
-  if(tooBig()) return;                 // dataset besar: jangan auto-push file utuh
-  clearTimeout(GD.syncTimer);
-  GD.syncTimer=setTimeout(()=>{ gdSave().then(gdUpdateStatus).catch(e=>console.warn('drive sync',e)); }, 4000);
-}
-function gdUpdateStatus(){
-  const dot=$('#driveDot'); const st=$('#driveStatus');
-  const connected=gdValid();
-  if(dot) dot.className='ddot'+(connected?' on':'');
-  const can = $('#driveSaveNow'); const cl=$('#driveLoadNow'); const si=$('#sheetImport');
-  if(can) can.disabled=!connected; if(cl) cl.disabled=!connected; if(si) si.disabled=!connected;
-  if(!st) return;
-  if(window.__gsiBlocked || !gsiAvailable()){
-    st.innerHTML='⚠ Skrip Google tidak termuat. Drive hanya bekerja saat dijalankan di hosting/origin Anda (bukan di dalam pratinjau).';
-    if(dot) dot.className='ddot err';
-  } else if(!GD.clientId){ st.textContent='Belum dikonfigurasi. Tempel OAuth Client ID lalu Hubungkan.'; }
-  else if(connected){ st.innerHTML='✓ Terhubung. File: <b>'+GD.fileName+'</b>'+(GD.fileId?' (tersimpan)':' (belum dibuat)')+'.'; }
-  else { st.textContent='Client ID tersimpan. Klik Hubungkan untuk login Google.'; }
-}
-function gsExtractId(s){ s=String(s||'').trim(); const m=s.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/); if(m) return m[1]; if(/^[a-zA-Z0-9_-]{20,}$/.test(s)) return s; return ''; }
-function gsExtractGid(s){ const m=String(s||'').match(/[#&?]gid=(\d+)/); return m?m[1]:''; }
-
-// ---------- CSV parser (untuk sheet publik tanpa login, semua baris, plain-text URL) ----------
-function parseCSVLine(line){
-  const cells=[]; let cur='',inQ=false;
-  for(let i=0;i<line.length;i++){
-    const ch=line[i];
-    if(ch==='"'){ if(inQ&&line[i+1]==='"'){cur+='"';i++;}else inQ=!inQ; }
-    else if(ch===','&&!inQ){ cells.push(cur); cur=''; }
-    else cur+=ch;
-  }
-  cells.push(cur);
-  return cells.map(c=>c.trim());
-}
-function parseCSVText(text){
-  const lines=text.split(/\r?\n/);
-  const mat=[]; let prev='';
-  for(const line of lines){
-    const full=prev?prev+'\n'+line:line;
-    // hitung quote ganjil = baris berlanjut
-    const qCount=(full.match(/"/g)||[]).length;
-    if(qCount%2!==0){ prev=full; continue; }
-    if(full.trim()) mat.push(parseCSVLine(full));
-    prev='';
-  }
-  return mat;
-}
-// Ambil CSV dari Google Sheets publik — mengembalikan semua baris, termasuk plain-text URL
-async function csvFetch(id,gid){
-  const url='https://docs.google.com/spreadsheets/d/'+id+'/export?format=csv'+(gid?'&gid='+gid:'');
-  const r=await fetch(url,{mode:'cors',credentials:'omit'});
-  if(!r.ok) throw new Error('CSV fetch gagal ('+r.status+') — pastikan sheet dibagikan publik');
-  const text=await r.text();
-  if(!text.trim()) throw new Error('CSV kosong — cek akses sheet');
-  return parseCSVText(text);
-}
-// Fallback gviz (JSONP) — untuk sheet yang hanya "link viewer" tapi belum dipublikasikan
-function gvizFetch(id,gid){
-  return new Promise((resolve,reject)=>{
-    const cb='__gviz_'+Date.now()+Math.floor(Math.random()*1e4);
-    const s=document.createElement('script'); let done=false;
-    const to=setTimeout(()=>{ if(!done){ cleanup(); reject(new Error('Timeout gviz')); } },12000);
-    function cleanup(){ try{ delete window[cb]; }catch(_){ window[cb]=undefined; } if(s.parentNode) s.parentNode.removeChild(s); clearTimeout(to); }
-    window[cb]=(resp)=>{ done=true; cleanup(); resolve(resp); };
-    s.onerror=()=>{ if(!done){ cleanup(); reject(new Error('gviz script error')); } };
-    s.src='https://docs.google.com/spreadsheets/d/'+id+'/gviz/tq?headers=1&tqx=responseHandler:'+cb+(gid?('&gid='+gid):'');
-    document.head.appendChild(s);
-  });
-}
-function gvizToMatrix(resp){
-  const t=resp&&resp.table; if(!t) return [];
-  const header=(t.cols||[]).map(c=>(c.label||c.id||'').toString());
-  const rows=(t.rows||[]).map(r=>(r.c||[]).map(cell=>cell?(cell.f!=null?cell.f:(cell.v!=null?cell.v:'')):''));
-  return header.some(h=>h) ? [header,...rows] : rows;
-}
-// Ambil matrix dari sheet publik: coba CSV dulu, lalu gviz
-async function fetchPublicMatrix(id,gid){
-  try{ return await csvFetch(id,gid); }
-  catch(e1){
-    try{ return gvizToMatrix(await gvizFetch(id,gid)); }
-    catch(e2){ throw new Error('CSV: '+e1.message+' | gviz: '+e2.message); }
-  }
-}
-async function gsImportPublic(){
-  const url=$('#pubUrl').value;
-  const id=gsExtractId(url); if(!id) throw new Error('Link/ID Google Sheets tidak valid');
-  const matrix=await fetchPublicMatrix(id,gsExtractGid(url));
-  const rows=rowsFromMatrix(matrix);
-  if(!rows.length) throw new Error('Tidak ada baris terbaca — cek nama kolom header (Link, Status, Region, dst.) & akses publik');
-  importRows(rows, $('#pubMode').value||'merge');
-  return rows.length;
-}
-
-async function gsFirstTab(id){
-  const r=await gdFetch('https://sheets.googleapis.com/v4/spreadsheets/'+id+'?fields=sheets.properties.title');
-  const j=await r.json();
-  return (j.sheets && j.sheets[0] && j.sheets[0].properties && j.sheets[0].properties.title) || 'Sheet1';
-}
-async function gsImport(){
-  const id=gsExtractId($('#sheetUrl').value);
-  if(!id) throw new Error('URL/ID Google Sheets tidak valid');
-  await gdEnsureToken();
-  let tab=$('#sheetTab').value.trim();
-  if(!tab) tab=await gsFirstTab(id);
-  const r=await gdFetch('https://sheets.googleapis.com/v4/spreadsheets/'+id+'/values/'+encodeURIComponent(tab)+'?majorDimension=ROWS&valueRenderOption=FORMULA&dateTimeRenderOption=FORMATTED_STRING');
-  const j=await r.json();
-  const matrix=j.values||[];
-  if(!matrix.length) throw new Error('Sheet/tab kosong atau tidak ditemukan');
-  const rows=rowsFromMatrix(matrix);
-  if(!rows.length) throw new Error('Tidak ada baris terbaca — cek header & kolom Link');
-  importRows(rows, $('#sheetMode').value||'merge');
-  return rows.length;
-}
-async function gdConfigLoad(){
-  try{ const c=await store.get('gdrive:clientid'); if(c) GD.clientId=c.value; }catch(_){}
-  try{ const a=await store.get('gdrive:autosync'); if(a) GD.autosync=a.value==='1'; }catch(_){}
-  const ci=$('#driveClientId'); if(ci&&GD.clientId) ci.value=GD.clientId;
-  const as=$('#driveAutosync'); if(as) as.checked=GD.autosync;
-}
-
-// ---------- auto-sync dari Sheet publik (tanpa login, polling) ----------
-const AS={url:'',on:false,interval:60000,updateExisting:false,timer:null,busy:false,lastAt:0};
-// Tambah baris baru saja (default). Bila updateExisting: perbarui field yang TIDAK kosong di Sheet
-// sehingga sel kosong tidak menimpa data lama, dan edit lokal tetap aman.
-function asMerge(rows,updateExisting){
-  let added=0,updated=0;
-  const map=new Map(); DATA.forEach((r,i)=>{ const k=normalizeLink(r.link); if(k) map.set(k,i); });
-  const FIELDS=['link','test','part','date','region','update','lastpage','active'];
-  rows.forEach(r=>{
-    const k=normalizeLink(r.link); if(!k) return;
-    if(map.has(k)){
-      if(!updateExisting) return;
-      const cur=DATA[map.get(k)]; let touched=false;
-      // Jangan timpa link asli (key field), dan jangan timpa field yang kosong di sumber
-      FIELDS.forEach(f=>{ if(f==='link') return; if(String(r[f]||'').trim()!=='' && r[f]!==cur[f]){ cur[f]=r[f]; touched=true; } });
-      // jangan timpa jadi 'blank', dan jangan timpa status yang sudah diedit manual di aplikasi (_statusLocked)
-      if(r.status && r.status!=='blank' && r.status!==cur.status && !cur._statusLocked){ cur.status=r.status; touched=true; }
-      if(touched){ cur._flag='upd'; cur.updatedAt=Date.now(); updated++; }
-    }else{
-      DATA.push({...r,_flag:'new'}); map.set(k,DATA.length-1); added++;
-    }
-  });
-  if(added||updated){
-    LOG.unshift({ts:Date.now(),added,updated,mode:'auto-sync',total:DATA.length});
-    markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog(); scheduleSave();
-  }
-  return {added,updated};
-}
-async function asTick(manual){
-  if(AS.busy) return;
-  const id=gsExtractId(AS.url);
-  if(!id){ asStatus('⚠ Link/ID sheet tidak valid.','err'); return; }
-  AS.busy=true; asStatus('Mengecek sheet…');
-  try{
-    let rows, via;
-    if(gdValid()){
-      const tab=await gsFirstTab(id);
-      const r=await gdFetch('https://sheets.googleapis.com/v4/spreadsheets/'+id+'/values/'+encodeURIComponent(tab)+'?majorDimension=ROWS&valueRenderOption=FORMATTED_VALUE&dateTimeRenderOption=FORMATTED_STRING');
-      const j=await r.json(); rows=rowsFromMatrix(j.values||[]); via='API login';
-    }else{
-      const matrix=await fetchPublicMatrix(id,gsExtractGid(AS.url));
-      rows=rowsFromMatrix(matrix); via='CSV publik';
-    }
-    AS.lastAt=Date.now();
-    if(!rows.length){ asStatus('Terhubung ('+via+'), tapi belum ada baris terbaca. Cek header (kolom Link) & akses. · '+asClock(),'on'); return; }
-    const {added,updated}=asMerge(rows,AS.updateExisting);
-    if(added||updated){ toast(`✓ Sinkron: +${fmt(added)} baru${updated?' · '+fmt(updated)+' diperbarui':''}`); }
-    asStatus(`✓ Sinkron OK (${via}) — ${fmt(rows.length)} baris · +${fmt(added)} baru${updated?', '+fmt(updated)+' diperbarui':''} · ${asClock()}`,'on');
-  }catch(e){
-    asStatus('⚠ '+e.message+(gdValid()?'':' — pastikan sheet dibagikan "Siapa saja dengan link → Pelihat", atau Hubungkan akun untuk sheet privat.'),'err');
-  }finally{ AS.busy=false; }
-}
-function asClock(){ return new Date(AS.lastAt||Date.now()).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
-function asStatus(msg,state){ const s=$('#autoStatus'); if(s) s.textContent=msg; const d=$('#autoDot'); if(d) d.className='ddot'+(state==='on'?' on':state==='err'?' err':''); }
-function asStart(){ clearInterval(AS.timer); if(!AS.on) return; asTick(); AS.timer=setInterval(()=>asTick(),AS.interval); }
-function asStop(){ clearInterval(AS.timer); AS.timer=null; }
-async function asSaveCfg(){
-  try{
-    await store.set('autosync:url',AS.url);
-    await store.set('autosync:on',AS.on?'1':'0');
-    await store.set('autosync:interval',String(AS.interval));
-    await store.set('autosync:upd',AS.updateExisting?'1':'0');
-  }catch(_){}
-}
-async function asConfigLoad(){
-  try{ const u=await store.get('autosync:url'); if(u&&u.value) AS.url=u.value; }catch(_){}
-  try{ const o=await store.get('autosync:on'); if(o) AS.on=o.value==='1'; }catch(_){}
-  try{ const i=await store.get('autosync:interval'); if(i&&i.value) AS.interval=+i.value||60000; }catch(_){}
-  try{ const e=await store.get('autosync:upd'); if(e) AS.updateExisting=e.value==='1'; }catch(_){}
-  const au=$('#autoUrl'); if(au){ if(AS.url) au.value=AS.url; else AS.url=au.value.trim(); }
-  const ai=$('#autoInterval'); if(ai) ai.value=String(AS.interval);
-  const ax=$('#autoUpdateExisting'); if(ax) ax.checked=AS.updateExisting;
-  const at=$('#autoSyncToggle'); if(at) at.checked=AS.on;
-  if(AS.on){ asStatus('Sinkron otomatis aktif — memulai…','on'); asStart(); }
-}
-
 
 // ---------- KPI ----------
 function computeKPI(){
@@ -2844,38 +2539,6 @@ $('#bulkStatusApply').onclick=()=>{ const v=$('#bulkStatus').value; if(!v){toast
 $('#dupBtn').onclick=selectDuplicates;
 $('#undoBtn').onclick=undo;
 
-// google drive wiring
-$('#driveBtn').onclick=()=>{$('#driveOverlay').classList.add('show');gdUpdateStatus();};
-$('#closeDrive').onclick=()=>$('#driveOverlay').classList.remove('show');
-$('#driveOverlay').onclick=e=>{if(e.target===$('#driveOverlay'))$('#driveOverlay').classList.remove('show');};
-$('#driveSaveCfg').onclick=async()=>{
-  GD.clientId=$('#driveClientId').value.trim(); GD.tokenClient=null;
-  try{ await store.set('gdrive:clientid',GD.clientId); }catch(_){}
-  gdUpdateStatus(); toast('✓ Client ID disimpan');
-};
-$('#driveConnect').onclick=async()=>{
-  if(!GD.clientId){ GD.clientId=$('#driveClientId').value.trim(); }
-  if(!GD.clientId){ toast('⚠ Isi Client ID dulu'); return; }
-  try{ await gdEnsureToken(); await gdFind(); gdUpdateStatus(); toast('✓ Terhubung ke Google Drive'); }
-  catch(e){ toast('⚠ '+e.message); gdUpdateStatus(); }
-};
-$('#driveSaveNow').onclick=async()=>{ try{ await gdSave(); gdUpdateStatus(); toast('✓ Tersimpan ke Drive ('+fmt(DATA.length)+' baris)'); }catch(e){ toast('⚠ Gagal simpan: '+e.message); } };
-$('#driveLoadNow').onclick=async()=>{ try{ await gdLoad(); toast('✓ Dimuat dari Drive: '+fmt(DATA.length)+' baris'); }catch(e){ toast('⚠ Gagal muat: '+e.message); } };
-$('#sheetImport').onclick=async()=>{ try{ const n=await gsImport(); toast('✓ Impor dari Sheet: '+fmt(n)+' baris'); }catch(e){ toast('⚠ '+e.message); } };
-$('#pubImport').onclick=async()=>{ const b=$('#pubImport'); b.disabled=true; try{ const n=await gsImportPublic(); toast('✓ Impor dari link: '+fmt(n)+' baris'); }catch(e){ toast('⚠ '+e.message); } b.disabled=false; };
-$('#driveAutosync').onchange=async e=>{ GD.autosync=e.target.checked; try{ await store.set('gdrive:autosync',GD.autosync?'1':'0'); }catch(_){} toast(GD.autosync?'Sinkron otomatis aktif':'Sinkron otomatis nonaktif'); };
-
-// auto-sync (Sheet publik) wiring
-$('#autoUrl').oninput=e=>{ AS.url=e.target.value.trim(); asSaveCfg(); };
-$('#autoInterval').onchange=e=>{ AS.interval=+e.target.value||60000; asSaveCfg(); if(AS.on) asStart(); };
-$('#autoUpdateExisting').onchange=e=>{ AS.updateExisting=e.target.checked; asSaveCfg(); };
-$('#autoSyncNow').onclick=()=>{ AS.url=$('#autoUrl').value.trim(); asSaveCfg(); asTick(true); };
-$('#autoSyncToggle').onchange=async e=>{
-  AS.on=e.target.checked; AS.url=$('#autoUrl').value.trim(); await asSaveCfg();
-  if(AS.on){ asStatus('Sinkron otomatis aktif — mengecek…','on'); asStart(); toast('Sinkron otomatis aktif'); }
-  else{ asStop(); asStatus('Sinkron otomatis dimatikan.'); toast('Sinkron otomatis nonaktif'); }
-};
-
 // clear filters
 $('#clearFiltersBtn').onclick=()=>{
   filters.q='';filters.status='';filters.region='';filters.part='';
@@ -2997,7 +2660,7 @@ function logActivity(action,detail='',category='ui'){
   clearTimeout(_actSaveTimer);
   _actSaveTimer=setTimeout(activityLogSave,3000);
   if(document.getElementById('tab-admin')&&document.getElementById('tab-admin').classList.contains('active')){
-    renderAdminActivity(); renderAdminKPIs2(); renderAdminBreakdown();
+    renderAdminKPIs2(); renderAdminBreakdown();
   }
 }
 const ACT_META={
@@ -3097,13 +2760,67 @@ function renderAdmin(){
   renderAdminKPIs();
   renderAdminKPIs2();
   renderAdminRegionChart();
-  renderAdminActivity();
   renderAdminBreakdown();
   renderAdminStorage();
   renderAdminUserTable();
   renderAdminAccessLog();
+  updateSbStatusBadge();
+  // populate Supabase config inputs
+  const su=$('#sbUrl'); if(su&&!su.value) su.value=localStorage.getItem('sb:url')||'';
+  const sk=$('#sbKey'); if(sk&&!sk.value) sk.value=localStorage.getItem('sb:key')||'';
+  const stbl=$('#sbTable'); if(stbl&&!stbl.value) stbl.value=localStorage.getItem('sb:table')||'linkmon_kv';
+  sbUpdateSqlHint((stbl&&stbl.value)||'linkmon_kv');
   const lr=document.getElementById('adminLastRefresh');
   if(lr) lr.textContent='Refresh: '+new Date().toLocaleTimeString('id-ID');
+}
+
+function updateSbStatusBadge(){
+  const b=$('#sbStatusBadge'); if(!b) return;
+  b.textContent=_SB?'— ✓ terhubung ke Supabase':'— belum terhubung';
+  b.style.color=_SB?'var(--green)':'';
+}
+
+function sbUpdateSqlHint(tbl){
+  const el=$('#sbSqlHint'); if(!el) return;
+  const t=tbl||'linkmon_kv';
+  el.textContent=`CREATE TABLE ${t} (key TEXT PRIMARY KEY, value TEXT, updated_at TIMESTAMPTZ DEFAULT NOW());\nALTER TABLE ${t} ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "anon_all" ON ${t} FOR ALL USING (true) WITH CHECK (true);`;
+}
+
+async function sbConnectAdmin(){
+  const url=($('#sbUrl')||{}).value?.trim();
+  const key=($('#sbKey')||{}).value?.trim();
+  const tbl=(($('#sbTable')||{}).value?.trim()||'linkmon_kv').replace(/[^a-z0-9_]/gi,'_');
+  const st=$('#sbConnStatus');
+  if(!url||!key){ if(st) st.textContent='⚠ Isi URL dan Key terlebih dahulu'; return; }
+  if(st) st.textContent='Menghubungkan…';
+  const ok=sbSaveConfig(url,key,tbl);
+  if(!ok){ if(st) st.textContent='⚠ Gagal inisialisasi — cek URL dan Key'; return; }
+  try{
+    const {data,error}=await _SB.from(_SB_TABLE).select('key').limit(1);
+    if(error) throw error;
+    if(st) st.textContent='✓ Terhubung ke tabel "'+_SB_TABLE+'"!';
+    updateSbStatusBadge();
+    toast('✓ Supabase terhubung — data tersimpan ke cloud!');
+  }catch(e){
+    if(st) st.textContent='⚠ Koneksi gagal: '+e.message+' (pastikan tabel "'+_SB_TABLE+'" sudah dibuat)';
+    _SB=null;
+  }
+}
+
+async function sbMigrateLocal(){
+  if(!_SB){ toast('⚠ Hubungkan Supabase dulu'); return; }
+  const st=$('#sbConnStatus');
+  if(st) st.textContent='Migrasi data…';
+  try{
+    await saveData();
+    await usersSave();
+    await etlSave();
+    await saveAccessLog();
+    if(st) st.textContent='✓ Migrasi selesai: '+fmt(DATA.length)+' link';
+    toast('✓ Migrasi selesai: '+fmt(DATA.length)+' link dipindahkan ke Supabase');
+  }catch(e){
+    if(st) st.textContent='⚠ Migrasi gagal: '+e.message;
+  }
 }
 
 function renderAdminKPIs(){
@@ -3114,7 +2831,7 @@ function renderAdminKPIs(){
     return d.toDateString()===t.toDateString()&&l.status==='ok';
   }).length;
   const totalFail=ACCESS_LOG.filter(l=>l.status==='fail').length;
-  const storeLbl=store.backend==='idb'?'IndexedDB':store.backend==='ws'?'WindowStorage':'localStorage';
+  const storeLbl=store.backend==='supabase'?'Supabase':store.backend==='idb'?'IndexedDB':store.backend==='ws'?'WindowStorage':'localStorage';
   el.innerHTML=`
     <div class="kpi total"><span class="bar" style="background:var(--cyan)"></span>
       <div class="lab">Total Link</div><div class="num" style="color:var(--cyan)">${fmt(k.total)}</div>
@@ -3229,7 +2946,7 @@ function renderAdminKPIs2(){
   const el=document.getElementById('adminKpis2'); if(!el) return;
   const today=new Date().toDateString();
   const todayActs=ACTIVITY_LOG.filter(l=>new Date(l.ts).toDateString()===today).length;
-  const storeLbl=store.backend==='idb'?'IndexedDB':store.backend==='ws'?'WinStorage':'localStorage';
+  const storeLbl=store.backend==='supabase'?'Supabase':store.backend==='idb'?'IndexedDB':store.backend==='ws'?'WinStorage':'localStorage';
   const lastAct=ACTIVITY_LOG[0];
   const lastActStr=lastAct?((ACT_META[lastAct.action]||{}).label||lastAct.action)+' · '+lastAct.username:'—';
   const sessionMin=currentUser&&currentUser._sessionStart?Math.floor((Date.now()-currentUser._sessionStart)/60000):0;
@@ -3304,12 +3021,12 @@ function renderAdminBreakdown(){
 
 function renderAdminStorage(){
   const el=document.getElementById('adminStorage'); if(!el) return;
-  const backend=store.backend==='idb'?'IndexedDB':store.backend==='ws'?'WindowStorage':'localStorage';
+  const backend=store.backend==='supabase'?'Supabase':store.backend==='idb'?'IndexedDB':store.backend==='ws'?'WindowStorage':'localStorage';
   const dataKB=(JSON.stringify(DATA).length/1024).toFixed(1);
   const actKB=(JSON.stringify(ACTIVITY_LOG).length/1024).toFixed(1);
   const authKB=((JSON.stringify(USERS).length+JSON.stringify(ACCESS_LOG).length)/1024).toFixed(1);
   const totalKB=(parseFloat(dataKB)+parseFloat(actKB)+parseFloat(authKB)).toFixed(1);
-  const limitKB=store.backend==='idb'?50*1024:5*1024;
+  const limitKB=store.backend==='supabase'?500*1024:store.backend==='idb'?50*1024:5*1024;
   const pct=Math.min(totalKB/limitKB*100,100).toFixed(1);
   const fillCol=parseFloat(pct)>80?'var(--red)':parseFloat(pct)>50?'var(--amber)':'var(--cyan)';
   el.innerHTML=`
@@ -3408,21 +3125,10 @@ async function confirmDeleteUser(id){
         ACCESS_LOG=[]; await saveAccessLog(); renderAdminAccessLog(); toast('✓ Log akses dibersihkan');
       });
     };
-    if(b('clearActLogBtn')) b('clearActLogBtn').onclick=()=>{
-      showConfirm('Bersihkan Activity Log?','Semua '+ACTIVITY_LOG.length+' entri aktivitas akan dihapus.',async()=>{
-        ACTIVITY_LOG=[]; await activityLogSave(); renderAdmin(); toast('✓ Activity log dibersihkan');
-      });
-    };
-    if(b('actSearch')) b('actSearch').oninput=e=>{ adminActFilter.q=e.target.value; renderAdminActivity(); };
-    document.querySelectorAll('.act-cat-btn').forEach(btn=>{
-      btn.onclick=()=>{
-        document.querySelectorAll('.act-cat-btn').forEach(x=>x.classList.remove('active'));
-        btn.classList.add('active');
-        adminActFilter.cat=btn.dataset.cat||'';
-        renderAdminActivity();
-      };
-    });
     if(b('adminRegionStatusFilter')) b('adminRegionStatusFilter').onchange=renderAdminRegionChart;
+    if(b('sbSaveBtn')) b('sbSaveBtn').onclick=sbConnectAdmin;
+    if(b('sbMigrateBtn')) b('sbMigrateBtn').onclick=sbMigrateLocal;
+    if(b('sbTable')) b('sbTable').oninput=e=>sbUpdateSqlHint(e.target.value.trim()||'linkmon_kv');
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire);
   else wire();
@@ -3859,12 +3565,11 @@ function vdlRenderHistory(){
 
 // ---------- init ----------
 (async function(){
+  sbLoadConfig();
   await usersLoad(); await activityLogLoad(); showAuth();
   await loadData();
   markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); renderLog();
   updateUndoBtn(); updateSaveState();
-  await gdConfigLoad(); gdUpdateStatus();
-  await asConfigLoad();
   await loadHDD(); renderHDD();
   etlInit();
 })();
