@@ -11,6 +11,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script>
+// Apply theme immediately to prevent FOUC
+(function(){
+  var t=localStorage.getItem('app:theme');
+  if(!t) t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  if(t==='light') document.documentElement.classList.add('light');
+})();
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -2465,7 +2473,7 @@ function applyFilters(){
   const to   = filters.to   ? new Date(filters.to  +'T23:59:59').getTime() : null;
   view=DATA.filter(r=>{
     if(q && !([r.link,r.test,r.region,r.part,r.update,r.lastpage].some(f=>(f||'').toLowerCase().includes(q)))) return false;
-    if(filters.status && STATUS[r.status].label!==filters.status) return false;
+    if(filters.status && (STATUS[r.status]||STATUS.blank).label!==filters.status) return false;
     if(filters.region && r.region!==filters.region) return false;
     if(filters.part && r.part!==filters.part) return false;
     if(filters.updated && !r._flag) return false;
@@ -2509,7 +2517,7 @@ function renderTable(){
   tb.innerHTML=slice.map((r,i)=>{
     const idx=(page-1)*PAGE_SIZE+i+1;
     const viewIdx=(page-1)*PAGE_SIZE+i;
-    const s=STATUS[r.status];
+    const s=STATUS[r.status]||STATUS.blank;
     const dupBadge = r._dup ? '<span class="flag dup" style="margin-left:4px;font-size:9px">DOBEL</span>' : (r._dupKeep ? '<span style="font-size:9px;color:var(--green);margin-left:4px">asli</span>' : '');
     const partPill=r.part?`<span class="pill" style="background:var(--purple-bg);color:var(--purple)"><span class="dot" style="background:var(--purple)"></span>${esc(r.part)}</span>`:'<span class="mono">—</span>';
     const regPill=r.region?`<span class="pill" style="background:var(--red-bg);color:var(--red)"><span class="dot" style="background:var(--red)"></span>${esc(r.region)}</span>`:'<span class="mono">—</span>';
@@ -2667,12 +2675,20 @@ function bindRowActions(){
   document.querySelectorAll('.rowchk').forEach(c=>{
     c.onclick=ev=>{
       const curIdx=+c.dataset.vidx;
-      if(ev.ctrlKey && ev.shiftKey && lastChkIdx>=0){
+      // SHIFT+click OR CTRL+SHIFT+click → range select
+      if(ev.shiftKey && lastChkIdx>=0){
+        ev.preventDefault();
         const from=Math.min(lastChkIdx,curIdx);
         const to=Math.max(lastChkIdx,curIdx);
-        const on=c.checked;
+        const on=!selected.has(c.dataset.id); // toggle based on current state
         view.slice(from,to+1).forEach(r=>{ on?selected.add(r._id):selected.delete(r._id); });
         renderTable();
+        return;
+      }
+      // CTRL+click → add/remove individual (don't reset others)
+      if(ev.ctrlKey||ev.metaKey){
+        toggleSelect(c.dataset.id,!selected.has(c.dataset.id));
+        lastChkIdx=curIdx;
         return;
       }
       toggleSelect(c.dataset.id,c.checked);
@@ -4129,6 +4145,15 @@ $('#exportHDDBtn').onclick=exportHDD;
 document.addEventListener('keydown',e=>{
   const tag=(document.activeElement||{}).tagName||'';
   const inInput=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';
+  // CTRL+A → select all filtered rows (when on monitor tab)
+  if((e.ctrlKey||e.metaKey)&&e.key==='a'&&!inInput){
+    const monTab=document.querySelector('.tab-btn[data-tab="monitor"]');
+    if(monTab&&monTab.classList.contains('active')){
+      e.preventDefault();
+      selectAllFiltered(); renderTable();
+      return;
+    }
+  }
   // / → focus search (switch to monitor tab first)
   if(e.key==='/'&&!inInput&&!e.ctrlKey&&!e.metaKey){
     e.preventDefault();
@@ -5126,9 +5151,10 @@ function vdlShowPlayer(){
   let label=raw;
 
   // YouTube
-  const ytMatch=raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+  const ytMatch=raw.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]+)/);
   if(ytMatch){
-    embedUrl=`https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+    const origin=encodeURIComponent(location.origin||'');
+    embedUrl=`https://www.youtube-nocookie.com/embed/${ytMatch[1]}?autoplay=1&rel=0&modestbranding=1${origin?'&origin='+origin:''}`;
     label='YouTube — '+ytMatch[1];
   }
   // Vimeo
@@ -5154,6 +5180,20 @@ function vdlShowPlayer(){
   box.style.display='block';
   if(info) info.textContent=label;
   if(copyBtn) copyBtn.onclick=()=>copyLink(raw);
+  // Error recovery: if iframe fails to load, show fallback link
+  frame.onerror=()=>{
+    if(info) info.innerHTML=`⚠ Player gagal dimuat — <a href="${esc(raw)}" target="_blank" rel="noopener" style="color:var(--cyan)">Buka langsung di situs</a>`;
+  };
+  // Detect blank/error state after 4s (e.g. YouTube Error 153)
+  clearTimeout(frame._errTimer);
+  frame._errTimer=setTimeout(()=>{
+    try{
+      const fd=frame.contentDocument||frame.contentWindow?.document;
+      if(fd && fd.body && fd.body.innerHTML==='') throw new Error('empty');
+    }catch(_){
+      if(info) info.innerHTML=`⚠ Embed diblokir — <a href="${esc(raw)}" target="_blank" rel="noopener" style="color:var(--cyan)">Buka di tab baru</a>`;
+    }
+  },4000);
 
   // scroll into view
   setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);
@@ -5195,11 +5235,21 @@ function vdlShowPlayer(){
 
   // ---- Theme toggle ----
   const themeBtn=document.getElementById('themeBtn');
-  const savedTheme=localStorage.getItem('app:theme')||'dark';
-  if(savedTheme==='light'){ document.documentElement.classList.add('light'); if(themeBtn) themeBtn.textContent='☀️'; }
+  function applyTheme(t){
+    if(t==='light'){ document.documentElement.classList.add('light'); if(themeBtn) themeBtn.textContent='☀️'; }
+    else { document.documentElement.classList.remove('light'); if(themeBtn) themeBtn.textContent='🌙'; }
+  }
+  // Determine initial theme: localStorage → prefers-color-scheme → dark
+  const storedTheme=localStorage.getItem('app:theme');
+  const systemTheme=window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+  applyTheme(storedTheme||systemTheme);
+  // Listen for OS theme change (when no manual override)
+  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change',e=>{
+    if(!localStorage.getItem('app:theme')) applyTheme(e.matches?'light':'dark');
+  });
   if(themeBtn) themeBtn.onclick=()=>{
     const isLight=document.documentElement.classList.toggle('light');
-    themeBtn.textContent=isLight?'☀️':'🌙';
+    if(themeBtn) themeBtn.textContent=isLight?'☀️':'🌙';
     localStorage.setItem('app:theme', isLight?'light':'dark');
   };
 
