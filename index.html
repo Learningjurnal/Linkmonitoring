@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -4255,7 +4259,7 @@ function addAccessLog(username,status,note=''){
   const adminLog=$('#adminAccessLog');
   if(adminLog&&document.getElementById('tab-admin')?.classList.contains('active')) renderAdminAccessLog();
 }
-function usersConfigured(){ return USERS.some(u=>u.hash&&u.salt&&u._pw!=='(akun lama — ubah di Admin)'); }
+function usersConfigured(){ return USERS.some(u=>u.hash&&u.salt); }
 async function usersCreate(username,password,role){
   const salt=randSalt(); const hash=await sha256(salt+'|'+password);
   const u={_id:'u'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
@@ -4286,11 +4290,11 @@ function authReveal(user){
 }
 function showAuth(){
   const setup=!usersConfigured();
-  $('#authSetup').style.display=setup?'block':'none';
-  $('#authLogin').style.display=setup?'none':'block';
+  $('#authSetup').style.display=setup?'':'none';
+  $('#authLogin').style.display=setup?'none':'';
   $('#suErr').textContent=''; $('#liErr').textContent='';
   $('#authOverlay').classList.add('show');
-  setTimeout(()=>{ try{ (setup?$('#suUser'):$('#liUser')).focus(); }catch(_){} },50);
+  setTimeout(()=>{ (setup?$('#suUser'):$('#liUser')).focus(); },50);
 }
 // ── Wiring auth ──
 $('#suBtn').onclick=async()=>{
