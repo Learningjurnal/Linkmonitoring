@@ -4104,11 +4104,11 @@ $('#fTo').onchange=e=>{filters.to=e.target.value;applyFilters();};
 $('#fUpdated').onchange=e=>{filters.updated=e.target.checked;applyFilters();};
 $('#fDups').onchange=e=>{filters.dups=e.target.checked;applyFilters();};
 $('#bulkStatusApply').onclick=()=>{ const v=$('#bulkStatus').value; if(!v){toast('Pilih status dulu');return;} bulkSetStatus(v); $('#bulkStatus').value=''; };
-$('#dupBtn').onclick=selectDuplicates;
+const _dupBtn=$('#dupBtn'); if(_dupBtn) _dupBtn.onclick=selectDuplicates;
 $('#undoBtn').onclick=undo;
 
 // clear filters
-$('#clearFiltersBtn').onclick=()=>{
+const _clearFiltersBtn=$('#clearFiltersBtn'); if(_clearFiltersBtn) _clearFiltersBtn.onclick=()=>{
   filters.q='';filters.status='';filters.region='';filters.part='';
   filters.updated=false;filters.dups=false;filters.sort='';filters.from='';filters.to='';
   $('#search').value='';$('#fStatus').value='';$('#fRegion').value='';$('#fPart').value='';
