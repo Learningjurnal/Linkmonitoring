@@ -4092,7 +4092,7 @@ $('#selClear').onclick=clearSelection;
 $('#selDelete').onclick=askBulkDelete;
 $('#selAllFiltered').onclick=selectAllFiltered;
 $('#selOpenAll').onclick=()=>openAllLinks([...selected].map(id=>{const r=DATA.find(x=>x._id===id);return r?r.link:'';}).filter(Boolean));
-$('#openAllResultsBtn').onclick=()=>openAllLinks(view.map(r=>r.link).filter(Boolean));
+const _openAllResultsBtn=$('#openAllResultsBtn'); if(_openAllResultsBtn) _openAllResultsBtn.onclick=()=>openAllLinks(view.map(r=>r.link).filter(Boolean));
 
 $('#search').oninput=debounce(e=>{filters.q=e.target.value;applyFilters();},220);
 $('#fStatus').onchange=e=>{filters.status=e.target.value;applyFilters();};
