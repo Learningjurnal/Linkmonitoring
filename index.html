@@ -1,3 +1,7 @@
+
+
+
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -11,6 +15,50 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&display=swap');
+/* ===== LIGHT THEME ===== */
+html.light{
+  --bg:#f0f2f8;
+  --bg-2:#e8eaf2;
+  --panel:#ffffff;
+  --panel-2:#f5f6fb;
+  --line:rgba(0,0,0,.1);
+  --line-soft:rgba(0,0,0,.07);
+  --cyan:#5b6af0;
+  --cyan-dim:#4a58d0;
+  --cyan-deep:rgba(91,106,240,.15);
+  --cyan-bg:rgba(91,106,240,.08);
+  --text:#1a1a2e;
+  --muted:#5a5a7a;
+  --muted-2:#9090b0;
+  --green:#16a34a;--green-bg:rgba(22,163,74,.1);--green-dim:#15803d;
+  --amber:#d97706;--amber-bg:rgba(217,119,6,.1);--amber-dim:#b45309;
+  --orange:#ea580c;--orange-bg:rgba(234,88,12,.1);
+  --red:#dc2626;--red-bg:rgba(220,38,38,.1);--red-dim:#b91c1c;
+  --gray:#6b7280;--gray-bg:rgba(107,114,128,.1);
+  --magenta:#c026d3;--magenta-bg:rgba(192,38,211,.1);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,.1);
+  --blank:#94a3b8;--blank-bg:rgba(148,163,184,.1);
+  --glow-c:0 0 12px rgba(91,106,240,.25);
+  --glow-g:0 0 12px rgba(22,163,74,.25);
+  --glow-r:0 0 12px rgba(220,38,38,.25);
+  --glow-m:0 0 12px rgba(192,38,211,.25);
+}
+html.light body{background:var(--bg)}
+html.light body::before{background:linear-gradient(90deg,transparent,rgba(91,106,240,.3) 40%,rgba(124,58,237,.25) 60%,transparent)}
+html.light body::after{background-image:radial-gradient(rgba(0,0,0,.06) 1px, transparent 1px)}
+html.light .modal,html.light .view-dd,html.light .cell-dd{background:rgba(255,255,255,.97)}
+html.light thead th{background:rgba(240,242,248,.95)}
+html.light .tab-nav{background:rgba(255,255,255,.8)}
+html.light .controls{background:rgba(255,255,255,.8)}
+html.light .auth-overlay{background:var(--bg)}
+html.light select,html.light input,html.light textarea{background:rgba(0,0,0,.04);color:var(--text)}
+html.light .btn{color:var(--muted)}
+html.light .etl-lightbox{background:rgba(240,242,248,.95)}
+
+/* Theme toggle button */
+.theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.06);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--spring);font-size:16px;flex:none}
+.theme-btn:hover{background:rgba(129,140,248,.15);border-color:rgba(129,140,248,.3);transform:scale(1.08) rotate(20deg)}
+
 :root{
   /* Base */
   --bg:#08080f;
@@ -552,6 +600,24 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .etl-empty svg{width:46px;height:46px;color:var(--muted-2);margin-bottom:14px;filter:drop-shadow(0 0 8px rgba(129,140,248,.22))}
 .etl-empty h3{font-family:'Orbitron',monospace;font-weight:700;font-size:16px;color:var(--cyan);text-shadow:0 0 10px rgba(129,140,248,.5);margin-bottom:8px;letter-spacing:.08em}
 .etl-empty p{font-size:12px;max-width:360px;margin:0 auto 18px;font-family:'Share Tech Mono',monospace;color:var(--muted);letter-spacing:.04em}
+/* ===== ETALASE MULTI-SELECT ===== */
+.etl-card{position:relative}
+.etl-card-chk{position:absolute;top:10px;left:10px;z-index:4;width:22px;height:22px;border-radius:6px;border:2px solid rgba(255,255,255,.5);background:rgba(0,0,0,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--spring);opacity:0;backdrop-filter:blur(4px)}
+.etl-card:hover .etl-card-chk,
+.etl-card.selected .etl-card-chk,
+.etl-selmode .etl-card-chk{opacity:1}
+.etl-card-chk.checked{background:var(--cyan);border-color:var(--cyan);opacity:1}
+.etl-card-chk.checked::after{content:'✓';color:#fff;font-size:12px;font-weight:900;line-height:1}
+.etl-card.selected{border-color:rgba(129,140,248,.6)!important;box-shadow:0 0 0 2px rgba(129,140,248,.25),0 8px 32px rgba(129,140,248,.15)!important}
+.etl-card.selected .etl-img-wrap::after{content:'';position:absolute;inset:0;background:rgba(129,140,248,.12);pointer-events:none;z-index:3}
+
+/* Selection bar */
+.etl-selbar{display:none;align-items:center;gap:12px;background:rgba(129,140,248,.08);border:1px solid rgba(129,140,248,.25);border-radius:var(--r-md);padding:10px 16px;margin-bottom:12px;flex-wrap:wrap;backdrop-filter:blur(8px)}
+.etl-selbar.show{display:flex}
+.etl-selbar-cnt{font-family:'Inter',system-ui,sans-serif;font-weight:700;font-size:13px;color:var(--text)}
+.etl-selbar-cnt b{color:var(--cyan)}
+.etl-selbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
 /* ===== ETALASE — CONTENT TYPE & FILE INFO ===== */
 /* Chip toggle (Foto / Video) di form */
 .ctype-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
@@ -741,12 +807,13 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>
       </div>
       <div>
-        <h1>Link Monitor</h1>
-        <p>Pemantauan status &amp; pembaruan link unduhan</p>
+        <h1>Download Tracker</h1>
+        <p>Pantau & kelola koleksi link unduhan</p>
       </div>
     </div>
     <div class="head-actions">
       <button class="btn ghost" id="logoutBtn" title="Kunci dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>
+      <button class="theme-btn" id="themeBtn" title="Ganti tema terang/gelap">🌙</button>
       <button class="btn ghost" id="settingsBtn" title="Pengaturan Status / Region / Output"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Pengaturan</button>
       <button class="btn ghost" id="undoBtn" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg>Urungkan</button>
       <button class="btn ghost" id="exportBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export</button>
@@ -760,7 +827,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
   <div class="tab-nav">
     <button class="tab-btn active" data-tab="monitor">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.5 1.5"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7L12 19"/></svg>
-      Link Monitor
+      Download Tracker
     </button>
     <button class="tab-btn" data-tab="etalase">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -791,35 +858,30 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
     <div class="chartbars" id="chartBars"></div>
   </div>
 
-  <div class="controls">
-    <div class="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="search" placeholder="Cari link atau nama…">
-    </div>
-    <select id="fStatus"><option value="">Semua Status</option></select>
-    <select id="fRegion"><option value="">Semua Region</option></select>
-    <select id="fPart"><option value="">Semua Output</option></select>
-    <select id="fSort">
-      <option value="">Urutan: bawaan</option>
-      <option value="link-asc">Link A→Z</option>
-      <option value="link-desc">Link Z→A</option>
-      <option value="date-desc">Tanggal terbaru</option>
-      <option value="date-asc">Tanggal terlama</option>
-    </select>
-    <label class="datef">Dari<input type="date" id="fFrom"></label>
-    <label class="datef">Sampai<input type="date" id="fTo"></label>
-    <label class="toggle"><input type="checkbox" id="fUpdated"> Hanya yang baru di-update</label>
-    <label class="toggle"><input type="checkbox" id="fDups"> Hanya duplikat</label>
-    <button class="btn ghost" id="dupBtn" style="padding:8px 12px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Cek &amp; pilih duplikat</button>
-    <button class="btn" id="addLinkBtn" style="padding:8px 12px;border-color:var(--cyan);color:var(--cyan)" title="Tambah link baru secara manual"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah</button>
-    <button class="btn ghost" id="clearFiltersBtn" style="padding:8px 12px" title="Hapus semua filter aktif"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Reset <span class="flt-badge" id="filterCount" style="display:none">0</span></button>
-    <button class="btn" id="openAllResultsBtn" style="padding:8px 12px;border-color:var(--green);color:var(--green)" title="Buka semua link hasil filter di tab baru sekaligus"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Semua</button>
-  </div>
+  <!-- hidden selects untuk backward-compat JS -->
+  <select id="fStatus" style="display:none"><option value="">Semua Status</option></select>
+  <select id="fRegion" style="display:none"><option value="">Semua Region</option></select>
+  <select id="fPart"   style="display:none"><option value="">Semua Output</option></select>
+  <select id="fSort"   style="display:none">
+    <option value="">Urutan: bawaan</option><option value="link-asc">Link A→Z</option>
+    <option value="link-desc">Link Z→A</option><option value="date-desc">Tanggal terbaru</option>
+    <option value="date-asc">Tanggal terlama</option>
+  </select>
+  <input type="date" id="fFrom" style="display:none">
+  <input type="date" id="fTo"   style="display:none">
+  <input type="checkbox" id="fUpdated" style="display:none">
+  <input type="checkbox" id="fDups"    style="display:none">
 
   <div class="savebanner" id="saveBanner"></div>
 
   <!-- VIEW TOOLBAR -->
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <!-- Search inline -->
+    <div class="search" style="flex:1;min-width:180px;max-width:320px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="search" placeholder="Cari link atau nama…">
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:space-between;flex-wrap:wrap">
     <div class="view-toolbar">
       <!-- Sort -->
       <div style="position:relative">
@@ -937,12 +999,59 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 
       <div class="vt-sep"></div>
 
-      <!-- Filter -->
-      <button class="vt-btn" id="vtFilterBtn">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-        Filter
-        <span class="flt-badge" id="filterCount2" style="display:none;margin-left:2px">0</span>
-      </button>
+      <!-- Filter dropdown -->
+      <div style="position:relative">
+        <button class="vt-btn" id="vtFilterBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Filter
+          <span class="flt-badge" id="filterCount2" style="display:none;margin-left:2px">0</span>
+        </button>
+        <div class="view-dd" id="vtFilterDd" style="min-width:260px">
+          <div class="view-dd-section">
+            <div class="view-dd-label">Status</div>
+            <div style="padding:4px 10px 8px">
+              <select id="fStatusV" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;outline:none"><option value="">Semua Status</option></select>
+            </div>
+          </div>
+          <div class="view-dd-section">
+            <div class="view-dd-label">Region</div>
+            <div style="padding:4px 10px 8px">
+              <select id="fRegionV" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;outline:none"><option value="">Semua Region</option></select>
+            </div>
+          </div>
+          <div class="view-dd-section">
+            <div class="view-dd-label">Output</div>
+            <div style="padding:4px 10px 8px">
+              <select id="fPartV" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;outline:none"><option value="">Semua Output</option></select>
+            </div>
+          </div>
+          <div class="view-dd-section">
+            <div class="view-dd-label">Tanggal input</div>
+            <div style="padding:4px 10px 8px;display:flex;gap:8px;align-items:center">
+              <input type="date" id="fFromV" style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:6px 8px;font-size:11px;outline:none;color-scheme:dark">
+              <span style="color:var(--muted);font-size:11px">—</span>
+              <input type="date" id="fToV"   style="flex:1;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:6px 8px;font-size:11px;outline:none;color-scheme:dark">
+            </div>
+          </div>
+          <div class="view-dd-section" style="padding-bottom:6px">
+            <div class="view-dd-item" id="vtToggleUpdated">
+              <span class="vdi-check" id="vtCheckUpdated"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span>
+              Hanya baru di-update
+            </div>
+            <div class="view-dd-item" id="vtToggleDups">
+              <span class="vdi-check" id="vtCheckDups"></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>
+              Hanya duplikat
+            </div>
+            <div class="view-dd-item" id="vtClearFilters">
+              <span class="vdi-check" style="color:var(--red)">✕</span>
+              <span class="vdi-icon" style="color:var(--red)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
+              <span style="color:var(--red)">Reset semua filter</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="vt-sep"></div>
 
@@ -953,31 +1062,36 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         </button>
         <div class="view-dd" id="vtMoreDd">
           <div class="view-dd-section">
+            <div class="view-dd-item" id="vtAddLink">
+              <span class="vdi-check"></span>
+              <span class="vdi-icon" style="color:var(--cyan)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+              <span style="color:var(--cyan)">Tambah link manual</span>
+            </div>
             <div class="view-dd-item" id="vtDupCheck">
               <span class="vdi-check"></span>
-              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></span>
               Cek &amp; pilih duplikat
             </div>
             <div class="view-dd-item" id="vtOpenAll">
               <span class="vdi-check"></span>
-              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></span>
               Buka semua link
             </div>
           </div>
           <div class="view-dd-section">
             <div class="view-dd-item" id="vtExport">
               <span class="vdi-check"></span>
-              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
+              <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
               Export XLSX
             </div>
           </div>
         </div>
       </div>
     </div>
-
     <!-- kanan: jumlah hasil -->
     <span class="count-info" id="countInfo" style="font-size:12px"></span>
-  </div>
+    </div><!-- /flex wrapper -->
+  </div><!-- /VIEW TOOLBAR container -->
 
   <div class="selbar" id="selbar">
     <span class="cnt"><b id="selCount">0</b> dipilih</span>
@@ -1190,6 +1304,16 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
                 <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
                 Tambah Produk
               </div>
+              <div class="view-dd-item" id="etlMoreSelAll">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+                Pilih semua produk
+              </div>
+              <div class="view-dd-item" id="etlMoreSelDel" style="display:none">
+                <span class="vdi-check" style="color:var(--red)"></span>
+                <span class="vdi-icon" style="color:var(--red)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></span>
+                <span style="color:var(--red)">Hapus terpilih</span>
+              </div>
               <div class="view-dd-item" id="etlImportBtn">
                 <span class="vdi-check"></span>
                 <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
@@ -1225,6 +1349,19 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 
     <!-- Toolbar lama (tombol Tambah tetap tersembunyi untuk backup) -->
     <button id="addEtlBtn" style="display:none"></button>
+
+    <!-- ETL selection bar -->
+    <div class="etl-selbar" id="etlSelbar">
+      <span class="etl-selbar-cnt"><b id="etlSelCount">0</b> dipilih</span>
+      <button class="linkbtn" id="etlSelAll"></button>
+      <div class="etl-selbar-right">
+        <button class="btn danger" id="etlSelDelete">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Hapus terpilih
+        </button>
+        <button class="linkbtn" id="etlSelClear">Batalkan pilihan</button>
+      </div>
+    </div>
 
     <div id="etlGrid" class="etl-grid"></div>
   </div><!-- /tab-etalase -->
@@ -1348,72 +1485,39 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         <span class="vdl-platform">Dailymotion</span><span class="vdl-platform">Bilibili</span>
         <span class="vdl-platform">SoundCloud</span><span class="vdl-platform">+1000 situs</span>
       </div>
-      <div class="vdl-note">
-        &#9654; <b>Engine otomatis:</b> Cobalt → ytdl-proxy → ekstrak halaman → scan langsung. Jika satu gagal, lanjut ke engine berikutnya.<br>
-        &#9654; Paste URL → klik <b>Ambil Link</b>. Untuk situs yang butuh login, pakai tombol <b>yt-dlp CMD</b>.
+      <div class="vdl-note" style="border-color:rgba(129,140,248,.3);color:var(--cyan)">
+        ▶ Paste URL video → klik <b>Tampilkan Player</b> → tonton di player bawah → IDM otomatis mendeteksi dan mengunduh stream video.<br>
+        ▶ Pastikan ekstensi <b>IDM</b> aktif di browser. Untuk YouTube, akan muncul tombol IDM di sudut video.
       </div>
-
-      <!-- Engine status -->
-      <div id="vdlEngineBar" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px"></div>
 
       <div class="vdl-input-row">
-        <input class="vdl-url-inp" id="vdlUrl" placeholder="Paste URL video… (YouTube, TikTok, Vidara, Instagram, dll)">
+        <input class="vdl-url-inp" id="vdlUrl" placeholder="Paste URL video… (YouTube, TikTok, Vimeo, dll)">
         <button class="btn primary" id="vdlFetchBtn" style="padding:0 22px;font-size:11px;white-space:nowrap">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Ambil Link
-        </button>
-        <button class="btn ghost" id="vdlCmdBtn" style="padding:0 14px;font-size:11px;white-space:nowrap" title="Salin command yt-dlp untuk dijalankan di terminal">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-          yt-dlp CMD
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Tampilkan Player
         </button>
       </div>
-      <div class="vdl-opts">
-        <select class="vdl-select" id="vdlQuality">
-          <option value="max">Kualitas: Maksimal</option>
-          <option value="2160">4K — 2160p</option>
-          <option value="1440">2K — 1440p</option>
-          <option value="1080" selected>Full HD — 1080p</option>
-          <option value="720">HD — 720p</option>
-          <option value="480">SD — 480p</option>
-          <option value="360">360p</option>
-          <option value="240">240p</option>
-        </select>
-        <select class="vdl-select" id="vdlMode">
-          <option value="auto">Mode: Video + Audio</option>
-          <option value="audio">Hanya Audio (MP3)</option>
-          <option value="mute">Video Saja (bisu)</option>
-        </select>
-        <select class="vdl-select" id="vdlAudioFmt">
-          <option value="mp3">Audio: MP3</option>
-          <option value="ogg">OGG</option>
-          <option value="opus">OPUS</option>
-          <option value="wav">WAV</option>
-          <option value="best">Terbaik (auto)</option>
-        </select>
-        <select class="vdl-select" id="vdlEngine">
-          <option value="auto">Engine: Otomatis (semua)</option>
-          <option value="cobalt">Cobalt.tools saja</option>
-          <option value="proxy">ytdl-proxy saja</option>
-          <option value="extract">Page Extractor saja</option>
-          <option value="iframe">iFrame Viewer</option>
-        </select>
+
+      <!-- Player area -->
+      <div id="vdlPlayerBox" style="display:none;margin-top:16px">
+        <div style="position:relative;padding-bottom:56.25%;height:0;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--line-soft);background:#000">
+          <iframe id="vdlFrame" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allowfullscreen allow="autoplay; encrypted-media" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <div style="flex:1;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted)" id="vdlPlayerInfo">—</div>
+          <button class="btn ghost" onclick="document.getElementById('vdlPlayerBox').style.display='none';document.getElementById('vdlFrame').src=''" style="padding:6px 12px;font-size:11px">✕ Tutup Player</button>
+          <button class="btn" id="vdlCopyUrlBtn" style="padding:6px 12px;font-size:11px;border-color:var(--cyan);color:var(--cyan)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            Salin URL
+          </button>
+        </div>
+        <div class="note-box" style="margin-top:10px;font-size:11px">
+          💡 <b>IDM:</b> Tombol download IDM muncul otomatis di atas player saat video berjalan. Klik tombol tersebut untuk mulai download. Jika tidak muncul, aktifkan ekstensi IDM di browser settings.
+        </div>
       </div>
+
       <div id="vdlResult"></div>
       <div id="vdlHist"></div>
-
-      <!-- yt-dlp CMD panel -->
-      <div id="vdlCmdPanel" style="display:none;margin-top:14px;background:rgba(255,255,255,.02);border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:16px;position:relative;overflow:hidden">
-        <div style="position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan-dim),transparent)"></div>
-        <div style="font-family:'Orbitron',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--cyan);margin-bottom:10px">&#9670; yt-dlp Command Generator</div>
-        <code id="vdlCmdText" style="display:block;font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--green);background:rgba(255,255,255,.04);padding:10px 12px;border-radius:var(--r-sm);border:1px solid var(--line-soft);word-break:break-all;line-height:1.7;margin-bottom:10px;user-select:all"></code>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button class="vdl-dl-btn" onclick="copyLink(document.getElementById('vdlCmdText').textContent);this.textContent='✓ Disalin!';setTimeout(()=>this.textContent='Salin Command',1500)">Salin Command</button>
-          <button class="vdl-copy-btn" onclick="document.getElementById('vdlCmdPanel').style.display='none'">Tutup</button>
-        </div>
-        <div style="margin-top:10px;font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--muted);line-height:1.6">
-          Install: <code style="color:var(--cyan-dim)">pip install yt-dlp</code> &nbsp;|&nbsp; Download exe: <a href="https://github.com/yt-dlp/yt-dlp/releases/latest" target="_blank" style="color:var(--cyan)">github.com/yt-dlp</a>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -3195,6 +3299,27 @@ async function saveHDDFileEntry(){
   errEl.textContent='';
   const h=HDD_DATA.find(x=>x._id===hddFileEditHid); if(!h) return;
   if(!h.files) h.files=[];
+
+  // ---- CEK KAPASITAS ----
+  const totalGB = h.totalGB||0;
+  if(totalGB>0){
+    const usedNow = hddUsedGB(h);
+    // kalau edit, kurangi ukuran file lama dulu
+    const oldSize = hddFileEditFid ? ((h.files.find(x=>x._id===hddFileEditFid)||{}).sizeGB||0) : 0;
+    const projectedUsed = usedNow - oldSize + sizeGB;
+    const freeGB = totalGB - usedNow + oldSize;
+    if(projectedUsed > totalGB){
+      errEl.innerHTML=`⚠ <b>HDD penuh!</b> Sisa ruang: <b>${fmtGB(freeGB)}</b>, file ini: <b>${fmtGB(sizeGB)}</b>. Tidak bisa ditambahkan.`;
+      return;
+    }
+    // warning jika > 90%
+    const pct = (projectedUsed/totalGB)*100;
+    if(pct>=90 && pct<100){
+      errEl.innerHTML=`⚠ Peringatan: HDD akan <b>${pct.toFixed(1)}% penuh</b> setelah penambahan ini (${fmtGB(projectedUsed)} / ${fmtGB(totalGB)}).`;
+      // masih lanjutkan save — hanya warning
+    }
+  }
+
   if(hddFileEditFid){
     const f=h.files.find(x=>x._id===hddFileEditFid); if(!f) return;
     f.name=name; f.sizeGB=sizeGB; f.note=$('#hddFileNote').value.trim(); f.updatedAt=Date.now();
@@ -3203,7 +3328,7 @@ async function saveHDDFileEntry(){
       name,sizeGB,note:$('#hddFileNote').value.trim(),updatedAt:Date.now()});
   }
   h.updatedAt=Date.now();
-  hddOpenSet.add(hddFileEditHid); // tetap terbuka
+  hddOpenSet.add(hddFileEditHid);
   await saveHDD(); renderHDD();
   $('#hddFileOverlay').classList.remove('show');
   toast('✓ File '+(hddFileEditFid?'diperbarui':'ditambahkan')+' ke '+h.name);
@@ -3609,15 +3734,18 @@ function renderCfgColorPicker(){
 }
 
 function openSettings(tab){
-  renderCfgStatus(); renderCfgRegion(); renderCfgOutput(); renderCfgColorPicker();
-  renderCfgCatList(); renderCfgCatColorPicker(); updateCfgCatPreview();
+  try{ renderCfgStatus(); }catch(_){}
+  try{ renderCfgRegion(); }catch(_){}
+  try{ renderCfgOutput(); }catch(_){}
+  try{ renderCfgColorPicker(); }catch(_){}
+  try{ renderCfgCatList(); renderCfgCatColorPicker(); updateCfgCatPreview(); }catch(_){}
   const activeTab = tab||'status';
   document.querySelectorAll('.cfg-tab').forEach(t=>t.classList.toggle('active',t.dataset.cfg===activeTab));
   document.querySelectorAll('.cfg-pane').forEach(p=>{
-    const key='cfgPane'+p.id.replace('cfgPane','');
     p.classList.toggle('active', p.id==='cfgPane'+activeTab.charAt(0).toUpperCase()+activeTab.slice(1));
   });
-  document.getElementById('settingsOverlay').classList.add('show');
+  const ov=document.getElementById('settingsOverlay');
+  if(ov) ov.classList.add('show');
 }
 
 // ---- wire settings events (called once after DOM ready) ----
@@ -3812,84 +3940,114 @@ function vt_closeAll(){
 
 
 function wireViewToolbar(){
-  // Sort dropdown
-  const sortBtn = document.getElementById('vtSortBtn');
-  const sortDd  = document.getElementById('vtSortDd');
-  if(sortBtn) sortBtn.onclick = e=>{ e.stopPropagation(); sortDd&&sortDd.classList.contains('open')?vt_closeAll():vt_openDd('vtSortDd','vtSortBtn'); };
+  const g = id => document.getElementById(id);
+
+  // ---- Sort ----
+  const sortBtn=g('vtSortBtn'), sortDd=g('vtSortDd');
+  if(sortBtn) sortBtn.onclick=e=>{e.stopPropagation();sortDd?.classList.contains('open')?vt_closeAll():vt_openDd('vtSortDd','vtSortBtn');};
   if(sortDd) sortDd.querySelectorAll('.view-dd-item[data-sort]').forEach(item=>{
-    item.onclick = ()=>{
-      viewState.sort = item.dataset.sort;
-      filters.sort = viewState.sort;
-      vt_updateSortChecks();
-      vt_closeAll();
+    item.onclick=()=>{ viewState.sort=item.dataset.sort; filters.sort=viewState.sort; vt_updateSortChecks(); vt_closeAll(); applyFilters(); };
+  });
+
+  // ---- View ----
+  const viewBtn=g('vtViewBtn'), viewDd=g('vtViewDd');
+  if(viewBtn) viewBtn.onclick=e=>{e.stopPropagation();viewDd?.classList.contains('open')?vt_closeAll():vt_openDd('vtViewDd','vtViewBtn');};
+  if(viewDd){
+    viewDd.querySelectorAll('.vd-density').forEach(item=>{
+      item.onclick=()=>{ viewState.density=item.dataset.density; vt_updateViewChecks(); vt_applyAll(); };
+    });
+    const ct=g('vdChartToggle');
+    if(ct) ct.onclick=()=>{ viewState.chart=!viewState.chart; vt_updateViewChecks(); vt_applyAll(); };
+    viewDd.querySelectorAll('.vd-col').forEach(item=>{
+      item.onclick=()=>{ const c=item.dataset.col; viewState.cols[c]=!viewState.cols[c]; vt_updateViewChecks(); vt_applyAll(); };
+    });
+  }
+
+  // ---- Filter dropdown ----
+  const filterBtn=g('vtFilterBtn'), filterDd=g('vtFilterDd');
+  if(filterBtn) filterBtn.onclick=e=>{e.stopPropagation();filterDd?.classList.contains('open')?vt_closeAll():vt_openDd('vtFilterDd','vtFilterBtn');};
+
+  // sync visible selects → filters (and hidden legacy selects)
+  function syncSel(visId, hidId, filterKey){
+    const vis=g(visId), hid=g(hidId);
+    if(!vis) return;
+    vis.addEventListener('click',e=>e.stopPropagation());
+    vis.onchange=()=>{
+      filters[filterKey]=vis.value;
+      if(hid) hid.value=vis.value;
       applyFilters();
     };
-  });
+  }
+  syncSel('fStatusV','fStatus','status');
+  syncSel('fRegionV','fRegion','region');
+  syncSel('fPartV','fPart','part');
 
-  // View dropdown
-  const viewBtn = document.getElementById('vtViewBtn');
-  const viewDd  = document.getElementById('vtViewDd');
-  if(viewBtn) viewBtn.onclick = e=>{ e.stopPropagation(); viewDd&&viewDd.classList.contains('open')?vt_closeAll():vt_openDd('vtViewDd','vtViewBtn'); };
+  const fFromV=g('fFromV'), fToV=g('fToV');
+  if(fFromV){ fFromV.addEventListener('click',e=>e.stopPropagation()); fFromV.onchange=()=>{ filters.from=fFromV.value; const h=g('fFrom'); if(h)h.value=fFromV.value; applyFilters(); }; }
+  if(fToV)  { fToV.addEventListener('click',e=>e.stopPropagation()); fToV.onchange=()=>{ filters.to=fToV.value; const h=g('fTo'); if(h)h.value=fToV.value; applyFilters(); }; }
 
-  // density
-  if(viewDd) viewDd.querySelectorAll('.vd-density').forEach(item=>{
-    item.onclick = ()=>{
-      viewState.density = item.dataset.density;
-      vt_updateViewChecks();
-      vt_applyAll();
-      // keep dropdown open
-    };
-  });
-
-  // chart toggle
-  const chartToggle = document.getElementById('vdChartToggle');
-  if(chartToggle) chartToggle.onclick = ()=>{
-    viewState.chart = !viewState.chart;
-    vt_updateViewChecks();
-    vt_applyAll();
+  // toggle items
+  const togUpdated=g('vtToggleUpdated');
+  if(togUpdated) togUpdated.onclick=()=>{
+    filters.updated=!filters.updated;
+    const chk=g('vtCheckUpdated'); if(chk) chk.textContent=filters.updated?'✓':'';
+    const h=g('fUpdated'); if(h) h.checked=filters.updated;
+    togUpdated.classList.toggle('active',filters.updated);
+    applyFilters();
+  };
+  const togDups=g('vtToggleDups');
+  if(togDups) togDups.onclick=()=>{
+    filters.dups=!filters.dups;
+    const chk=g('vtCheckDups'); if(chk) chk.textContent=filters.dups?'✓':'';
+    const h=g('fDups'); if(h) h.checked=filters.dups;
+    togDups.classList.toggle('active',filters.dups);
+    applyFilters();
   };
 
-  // column toggles
-  if(viewDd) viewDd.querySelectorAll('.vd-col').forEach(item=>{
-    item.onclick = ()=>{
-      const col = item.dataset.col;
-      viewState.cols[col] = !viewState.cols[col];
-      vt_updateViewChecks();
-      vt_applyAll();
-    };
-  });
-
-  // Filter button — toggle filter controls visibility
-  const filterBtn = document.getElementById('vtFilterBtn');
-  const controls = document.querySelector('.controls');
-  let filtersVisible = true;
-  if(filterBtn) filterBtn.onclick = ()=>{
-    filtersVisible = !filtersVisible;
-    if(controls){
-      controls.style.display = filtersVisible ? '' : 'none';
-    }
-    filterBtn.classList.toggle('active', !filtersVisible || (filters.q||filters.status||filters.region||filters.part||filters.from||filters.to||filters.updated||filters.dups));
-    updateFilterBadge();
+  // reset filter (in filter dropdown)
+  const vtClr=g('vtClearFilters');
+  if(vtClr) vtClr.onclick=()=>{
+    filters.q='';filters.status='';filters.region='';filters.part='';
+    filters.updated=false;filters.dups=false;filters.sort='';filters.from='';filters.to='';
+    ['fStatus','fRegion','fPart','fSort','fFrom','fTo'].forEach(id=>{const e=g(id);if(e)e.value='';});
+    ['fStatusV','fRegionV','fPartV','fFromV','fToV'].forEach(id=>{const e=g(id);if(e)e.value='';});
+    ['fUpdated','fDups'].forEach(id=>{const e=g(id);if(e)e.checked=false;});
+    const cu=g('vtCheckUpdated'); if(cu) cu.textContent='';
+    const cd=g('vtCheckDups'); if(cd) cd.textContent='';
+    if(togUpdated) togUpdated.classList.remove('active');
+    if(togDups) togDups.classList.remove('active');
+    const srch=g('search'); if(srch) srch.value='';
+    renderKPI(); applyFilters(); vt_closeAll();
   };
 
-  // More dropdown
-  const moreBtn = document.getElementById('vtMoreBtn');
-  const moreDd  = document.getElementById('vtMoreDd');
-  if(moreBtn) moreBtn.onclick = e=>{ e.stopPropagation(); moreDd&&moreDd.classList.contains('open')?vt_closeAll():vt_openDd('vtMoreDd','vtMoreBtn'); };
-  const dupCheck = document.getElementById('vtDupCheck');
-  if(dupCheck) dupCheck.onclick = ()=>{ vt_closeAll(); selectDuplicates(); };
-  const openAllItem = document.getElementById('vtOpenAll');
-  if(openAllItem) openAllItem.onclick = ()=>{ vt_closeAll(); openAllLinks(view.map(r=>r.link).filter(Boolean)); };
-  const exportItem = document.getElementById('vtExport');
-  if(exportItem) exportItem.onclick = ()=>{ vt_closeAll(); exportXlsx(); };
+  // ---- More ----
+  const moreBtn=g('vtMoreBtn'), moreDd=g('vtMoreDd');
+  if(moreBtn) moreBtn.onclick=e=>{e.stopPropagation();moreDd?.classList.contains('open')?vt_closeAll():vt_openDd('vtMoreDd','vtMoreBtn');};
+  const vtAddLink=g('vtAddLink');
+  if(vtAddLink) vtAddLink.onclick=()=>{ vt_closeAll(); const al=g('addLinkBtn'); if(al) al.click(); else openAddLink(); };
+  const dupCheck=g('vtDupCheck');
+  if(dupCheck) dupCheck.onclick=()=>{ vt_closeAll(); selectDuplicates(); };
+  const openAllItem=g('vtOpenAll');
+  if(openAllItem) openAllItem.onclick=()=>{ vt_closeAll(); openAllLinks(view.map(r=>r.link).filter(Boolean)); };
+  const exportItem=g('vtExport');
+  if(exportItem) exportItem.onclick=()=>{ vt_closeAll(); exportXlsx(); };
 
-  // close on outside click
-  document.addEventListener('click', ()=>vt_closeAll());
+  // ---- Search (now inline above toolbar) ----
+  const srch=g('search');
+  if(srch) srch.oninput=debounce(e=>{filters.q=e.target.value; applyFilters();},220);
+
+  // close on outside click (single listener)
+  document.addEventListener('click',()=>vt_closeAll());
   document.querySelectorAll('.view-dd').forEach(dd=>dd.addEventListener('click',e=>e.stopPropagation()));
 
-  // hide old countInfo in controls bar (moved to toolbar)
-  const oldCount = document.querySelector('.controls .count-info');
-  if(oldCount) oldCount.style.display='none';
+  // patch fill() to also fill visible selects
+  const _origFill=fill;
+  window.fill=function(sel,allLabel,items){
+    _origFill(sel,allLabel,items);
+    const map={fStatus:'fStatusV',fRegion:'fRegionV',fPart:'fPartV'};
+    const vid=map[sel.replace('#','')];
+    if(vid){ const v=g(vid); if(v){ const cur=v.value; v.innerHTML=`<option value="">${allLabel}</option>`+items.map(i=>`<option>${i}</option>`).join(''); if([...v.options].some(o=>o.value===cur)) v.value=cur; } }
+  };
 
   // init
   vt_updateSortChecks();
@@ -4952,22 +5110,68 @@ function vdlRenderHistory(){
   '</div>';
 }
 
+// ======= DOWNLOADER: Player Mode for IDM =======
+function vdlShowPlayer(){
+  const urlInp=document.getElementById('vdlUrl');
+  const raw=(urlInp?.value||'').trim();
+  if(!raw){ toast('⚠ Paste URL video terlebih dahulu'); return; }
+
+  const frame=document.getElementById('vdlFrame');
+  const box=document.getElementById('vdlPlayerBox');
+  const info=document.getElementById('vdlPlayerInfo');
+  const copyBtn=document.getElementById('vdlCopyUrlBtn');
+  if(!frame||!box) return;
+
+  let embedUrl=raw;
+  let label=raw;
+
+  // YouTube
+  const ytMatch=raw.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+  if(ytMatch){
+    embedUrl=`https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+    label='YouTube — '+ytMatch[1];
+  }
+  // Vimeo
+  const vmMatch=raw.match(/vimeo\.com\/(\d+)/);
+  if(vmMatch){
+    embedUrl=`https://player.vimeo.com/video/${vmMatch[1]}?autoplay=1`;
+    label='Vimeo — '+vmMatch[1];
+  }
+  // Dailymotion
+  const dmMatch=raw.match(/dailymotion\.com\/video\/([\w]+)/);
+  if(dmMatch){
+    embedUrl=`https://www.dailymotion.com/embed/video/${dmMatch[1]}?autoplay=1`;
+    label='Dailymotion — '+dmMatch[1];
+  }
+  // Bilibili
+  const bbMatch=raw.match(/bilibili\.com\/video\/(BV[\w]+|av\d+)/i);
+  if(bbMatch){
+    embedUrl=`https://player.bilibili.com/player.html?bvid=${bbMatch[1]}&autoplay=1`;
+    label='Bilibili — '+bbMatch[1];
+  }
+
+  frame.src=embedUrl;
+  box.style.display='block';
+  if(info) info.textContent=label;
+  if(copyBtn) copyBtn.onclick=()=>copyLink(raw);
+
+  // scroll into view
+  setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
 (function initVdl(){
   function wire(){
     const fetchBtn=document.getElementById('vdlFetchBtn');
-    const cmdBtn=document.getElementById('vdlCmdBtn');
     const urlInp=document.getElementById('vdlUrl');
-    if(fetchBtn) fetchBtn.onclick=vdlFetch;
-    if(cmdBtn) cmdBtn.onclick=vdlShowCmd;
+    // Use player mode instead of download fetch
+    if(fetchBtn) fetchBtn.onclick=vdlShowPlayer;
     if(urlInp){
-      urlInp.addEventListener('keydown',e=>{if(e.key==='Enter') vdlFetch();});
+      urlInp.addEventListener('keydown',e=>{if(e.key==='Enter') vdlShowPlayer();});
       urlInp.addEventListener('focus',async()=>{
         if(urlInp.value) return;
         try{const t=await navigator.clipboard.readText(); if(t&&t.startsWith('http')) urlInp.value=t;}catch(_){}
       });
     }
-    // Init engine bar
-    vdlEngineBar({cobalt:'idle',proxy:'idle',extract:'idle'});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',wire);
   else wire();
@@ -4985,10 +5189,25 @@ function vdlRenderHistory(){
   updateUndoBtn(); updateSaveState();
   await loadHDD(); renderHDD();
   etlInit();
-  wireSettings();
+  try{ wireSettings(); }catch(e){ console.warn('wireSettings error:',e); }
   wireAddLink();
   wireViewToolbar();
+
+  // ---- Theme toggle ----
+  const themeBtn=document.getElementById('themeBtn');
+  const savedTheme=localStorage.getItem('app:theme')||'dark';
+  if(savedTheme==='light'){ document.documentElement.classList.add('light'); if(themeBtn) themeBtn.textContent='☀️'; }
+  if(themeBtn) themeBtn.onclick=()=>{
+    const isLight=document.documentElement.classList.toggle('light');
+    themeBtn.textContent=isLight?'☀️':'🌙';
+    localStorage.setItem('app:theme', isLight?'light':'dark');
+  };
+
+  // ---- Fix: addLinkBtn (now in More dropdown via vtAddLink) ----
+  const addLinkBtn=document.getElementById('addLinkBtn');
+  if(addLinkBtn) addLinkBtn.onclick=openAddLink;
 })();
+
 
 // ==================== TAB NAVIGATION ====================
 document.querySelectorAll('.tab-btn').forEach(btn=>{
@@ -5008,6 +5227,62 @@ let ETL_DATA=[];
 let etlEditId=null;
 let etlLbList=[];
 let etlLbIdx=0;
+const etlSelected=new Set();
+
+function etlRenderSelbar(){
+  const bar=document.getElementById('etlSelbar'); if(!bar) return;
+  const n=etlSelected.size;
+  bar.classList.toggle('show', n>0);
+  const cnt=document.getElementById('etlSelCount'); if(cnt) cnt.textContent=n;
+  const selAll=document.getElementById('etlSelAll');
+  if(selAll){
+    if(n>0 && etlLbList.length>n){
+      selAll.style.display='';
+      selAll.textContent='Pilih semua '+etlLbList.length+' produk';
+    } else { selAll.style.display='none'; }
+  }
+  // update card visual
+  document.querySelectorAll('.etl-card[data-etlid]').forEach(card=>{
+    const id=card.dataset.etlid;
+    const on=etlSelected.has(id);
+    card.classList.toggle('selected', on);
+    const chk=card.querySelector('.etl-card-chk');
+    if(chk) chk.classList.toggle('checked', on);
+  });
+}
+
+function etlToggleSelect(id, forceOn){
+  const on = forceOn!==undefined ? forceOn : !etlSelected.has(id);
+  on ? etlSelected.add(id) : etlSelected.delete(id);
+  etlRenderSelbar();
+}
+
+function etlSelectAll(){
+  etlLbList.forEach(p=>etlSelected.add(p.id));
+  etlRenderSelbar();
+}
+
+function etlClearSelection(){
+  etlSelected.clear();
+  etlRenderSelbar();
+}
+
+async function etlDeleteSelected(){
+  if(!etlSelected.size) return;
+  showConfirm(
+    'Hapus Produk?',
+    `${etlSelected.size} produk yang dipilih akan dihapus permanen dari etalase.`,
+    async()=>{
+      const n=etlSelected.size;
+      ETL_DATA=ETL_DATA.filter(p=>!etlSelected.has(p.id));
+      etlSelected.clear();
+      await etlSave();
+      etlRender();
+      toast(`✓ ${n} produk dihapus dari etalase`);
+      logActivity('etl_bulk_delete', n+' produk dihapus','etl');
+    }
+  );
+}
 
 // ---- Etalase view state ----
 const etlViewState={
@@ -5167,10 +5442,30 @@ function wireEtlToolbar(){
   const addBtn2=document.getElementById('etlAddBtn2');
   if(addBtn2) addBtn2.onclick=()=>{ closeEtlDds(); etlOpenAdd(); };
 
-  // ---- Event delegation pada grid (FIX bug edit button) ----
+  const moreSelAll=document.getElementById('etlMoreSelAll');
+  if(moreSelAll) moreSelAll.onclick=()=>{ closeEtlDds(); etlSelectAll(); };
+
+  const moreSelDel=document.getElementById('etlMoreSelDel');
+  if(moreSelDel) moreSelDel.onclick=()=>{ closeEtlDds(); etlDeleteSelected(); };
+
+  // Tampilkan/sembunyikan "Hapus terpilih" di More saat ada pilihan
+  const _origEtlRenderSelbar=etlRenderSelbar;
+  window.etlRenderSelbar=function(){
+    _origEtlRenderSelbar();
+    if(moreSelDel) moreSelDel.style.display=etlSelected.size>0?'':'none';
+  };
+
+  // ---- Event delegation pada grid ----
   const gridEl=document.getElementById('etlGrid');
   if(gridEl){
     gridEl.addEventListener('click',function(e){
+      // Checkbox select
+      const chk=e.target.closest('.etl-card-chk');
+      if(chk){
+        e.stopPropagation();
+        etlToggleSelect(chk.dataset.chkid);
+        return;
+      }
       // Edit button
       const editBtn=e.target.closest('.etl-edit-btn');
       if(editBtn){
@@ -5178,15 +5473,29 @@ function wireEtlToolbar(){
         etlOpenEdit(editBtn.dataset.etlid);
         return;
       }
-      // Lightbox trigger (img-wrap)
+      // Lightbox trigger (img-wrap) — jangan trigger jika ada item terpilih
       const lbTrig=e.target.closest('.etl-lb-trigger');
-      if(lbTrig && !e.target.closest('.etl-edit-btn')){
+      if(lbTrig){
+        // Jika mode seleksi aktif (ada yang terpilih), klik kartu = toggle select
+        if(etlSelected.size>0){
+          const card=e.target.closest('.etl-card');
+          if(card){ e.stopPropagation(); etlToggleSelect(card.dataset.etlid); }
+          return;
+        }
         const idx=+lbTrig.dataset.lbidx;
         etlLbOpen(idx);
         return;
       }
     });
   }
+
+  // ---- Wire selection bar ----
+  const selAllBtn=document.getElementById('etlSelAll');
+  const selDelBtn=document.getElementById('etlSelDelete');
+  const selClrBtn=document.getElementById('etlSelClear');
+  if(selAllBtn) selAllBtn.onclick=etlSelectAll;
+  if(selDelBtn) selDelBtn.onclick=etlDeleteSelected;
+  if(selClrBtn) selClrBtn.onclick=etlClearSelection;
 
   // Content type chip toggles
   ['foto','video'].forEach(type=>{
@@ -5307,8 +5616,10 @@ function etlRenderGrid(){
     const catBadge=p.cat
       ? `<span class="etl-badge" style="background:rgba(${cs.rgb},.16);border:1px solid rgba(${cs.rgb},.35);color:${cs.css};font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:10px;backdrop-filter:blur(4px)">${cs.tag?cs.tag+'&nbsp;':''}${esc(p.cat)}</span>`
       : '';
+    const isSel = etlSelected.has(p.id);
     return `
-    <div class="etl-card" data-etlid="${p.id}" data-lbidx="${idx}">
+    <div class="etl-card${isSel?' selected':''}" data-etlid="${p.id}" data-lbidx="${idx}">
+      <div class="etl-card-chk${isSel?' checked':''}" data-chkid="${p.id}" title="Pilih/Batal pilih"></div>
       <div class="etl-img-wrap etl-lb-trigger" data-lbidx="${idx}" title="Klik untuk gambar penuh">
         ${p.img
           ? `<img src="${p.img}" alt="${esc(p.name||'')}" style="${imgStyle}" onerror="this.style.display='none';this.nextSibling&&(this.nextSibling.style.display='flex')">
@@ -5345,6 +5656,8 @@ function etlRenderGrid(){
   }).join('');
   // store filtered for lightbox navigation
   etlLbList = filtered;
+  // sinkronisasi selbar setelah render
+  etlRenderSelbar();
 }
 
 function etlRender(){
@@ -5827,3 +6140,4 @@ async function etlInit(){
 </script>
 </body>
 </html>
+
