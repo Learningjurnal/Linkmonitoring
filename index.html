@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -659,6 +655,17 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .etl-img-preview .placeholder{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.06em}
 .etl-img-preview .placeholder svg{width:28px;height:28px;color:var(--muted-2)}
 
+/* ===== CATEGORY COLOR BADGES ===== */
+.etl-cat-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;border:1px solid;white-space:nowrap}
+.cfg-cat-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:var(--r-sm);padding:7px 11px;transition:border-color var(--ease)}
+.cfg-cat-item:hover{border-color:rgba(129,140,248,.2)}
+.cfg-cat-swatch{width:12px;height:12px;border-radius:50%;flex:none;border:2px solid rgba(255,255,255,.15)}
+.cfg-cat-name{flex:1;font-family:'Inter',system-ui,sans-serif;font-size:13px;font-weight:500;color:var(--text)}
+.cfg-cat-tag{font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:4px;min-width:28px;text-align:center}
+.cfg-color-pick-row{display:flex;gap:5px;flex-wrap:wrap}
+.cfg-color-pick{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all var(--spring);flex:none}
+.cfg-color-pick.sel,.cfg-color-pick:hover{border-color:#fff;transform:scale(1.2)}
+
 /* ===== SETTINGS MODAL ===== */
 .cfg-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-soft);margin-bottom:16px;padding-bottom:0}
 .cfg-tab{flex:1;padding:9px 8px;font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all var(--ease);text-align:center;border-bottom:2px solid transparent}
@@ -1201,6 +1208,13 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
                 Unduh Template Excel
               </div>
             </div>
+            <div class="view-dd-section">
+              <div class="view-dd-item" id="etlCatSettingsBtn">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
+                ⚙ Pengaturan Kategori
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1540,6 +1554,7 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
         <button class="cfg-tab active" data-cfg="status">Status</button>
         <button class="cfg-tab" data-cfg="region">Region</button>
         <button class="cfg-tab" data-cfg="output">Output</button>
+        <button class="cfg-tab" data-cfg="etalase">🏪 Etalase</button>
       </div>
 
       <!-- Status Tab -->
@@ -1580,6 +1595,31 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah
           </button>
         </div>
+      <!-- Etalase Tab -->
+      <div class="cfg-pane" id="cfgPaneEtalase">
+        <p class="cfg-note">Kelola daftar kategori etalase dengan warna & tag singkat. Kategori muncul sebagai badge berwarna di setiap kartu produk.</p>
+
+        <div class="cfg-list" id="cfgCatList" style="max-height:260px"></div>
+
+        <!-- Add category form -->
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:12px;margin-top:2px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Tambah Kategori Baru</div>
+          <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+            <input class="cfg-inp" id="cfgCatName" placeholder="Nama kategori… (mis. Pack Foto)" maxlength="40" style="flex:2;min-width:120px">
+            <input class="cfg-inp" id="cfgCatTag" placeholder="Tag (mis. PF)" maxlength="5"
+              style="width:72px;flex:none;text-transform:uppercase;font-family:'Share Tech Mono',monospace;font-weight:700;text-align:center">
+          </div>
+          <div style="font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--muted);margin-bottom:7px">Warna badge:</div>
+          <div class="cfg-color-pick-row" id="cfgCatColorPick"></div>
+          <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+            <div style="flex:1;font-size:11px;color:var(--muted)">Pratinjau: <span id="cfgCatPreview" style="font-size:10px;font-weight:800;padding:2px 9px;border-radius:20px;border:1px solid;margin-left:4px">PF · Pack Foto</span></div>
+            <button class="btn primary" id="cfgCatAddBtn" style="padding:7px 14px;font-size:11px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Tambah
+            </button>
+          </div>
+        </div>
+      </div>
+
       </div>
     </div>
   </div>
@@ -1660,7 +1700,8 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
         </div>
         <div class="fg">
           <label>Kategori</label>
-          <input id="etlCat" type="text" placeholder="Pack Foto, Video, dll…">
+          <input id="etlCat" type="text" placeholder="Pack Foto, Video, dll…" list="etlCatList" autocomplete="off">
+          <datalist id="etlCatList"></datalist>
         </div>
         <div class="fg">
           <label>Harga</label>
@@ -3383,6 +3424,116 @@ function exportHDD(){
 }
 
 // ==================== SETTINGS ====================
+// ==================== CATEGORY SETTINGS ====================
+const CFG_CAT_COLORS = [
+  {key:'violet', css:'#818cf8', rgb:'129,140,248'},
+  {key:'blue',   css:'#60a5fa', rgb:'96,165,250'},
+  {key:'teal',   css:'#2dd4bf', rgb:'45,212,191'},
+  {key:'green',  css:'#34d399', rgb:'52,211,153'},
+  {key:'amber',  css:'#fbbf24', rgb:'251,191,36'},
+  {key:'orange', css:'#fb923c', rgb:'251,146,60'},
+  {key:'red',    css:'#f87171', rgb:'248,113,113'},
+  {key:'purple', css:'#c084fc', rgb:'192,132,252'},
+  {key:'magenta',css:'#e879f9', rgb:'232,121,249'},
+  {key:'gray',   css:'#9ca3af', rgb:'156,163,175'},
+];
+let cfgSelCatColor = 'violet';
+
+function etlCatCssColor(key){
+  const c=CFG_CAT_COLORS.find(x=>x.key===key);
+  return c?c.css:'#818cf8';
+}
+function etlCatRgb(key){
+  const c=CFG_CAT_COLORS.find(x=>x.key===key);
+  return c?c.rgb:'129,140,248';
+}
+
+function renderCfgCatList(){
+  const list=document.getElementById('cfgCatList'); if(!list) return;
+  const cats=SETTINGS.etlCategories||[];
+  if(!cats.length){
+    list.innerHTML='<div style="color:var(--muted);font-family:\'Inter\',sans-serif;font-size:12px;padding:8px 0;text-align:center">Belum ada kategori — tambah di bawah.</div>';
+    return;
+  }
+  list.innerHTML=cats.map((c,i)=>{
+    const css=etlCatCssColor(c.color);
+    const rgb=etlCatRgb(c.color);
+    return `<div class="cfg-cat-item">
+      <span class="cfg-cat-swatch" style="background:${css};border-color:rgba(${rgb},.4)"></span>
+      <span class="cfg-cat-name">${esc(c.name)}</span>
+      ${c.tag?`<span class="cfg-cat-tag" style="color:${css}">${esc(c.tag)}</span>`:''}
+      <span class="etl-cat-badge" style="background:rgba(${rgb},.12);border-color:rgba(${rgb},.3);color:${css};font-size:9px;padding:1px 7px;border-radius:10px;font-weight:800">${c.tag?c.tag+' ':''}${esc(c.name)}</span>
+      <button class="cfg-item-del" data-cfgdelidx="${i}" title="Hapus">×</button>
+    </div>`;
+  }).join('');
+  list.querySelectorAll('[data-cfgdelidx]').forEach(b=>{
+    b.onclick=()=>{
+      SETTINGS.etlCategories.splice(+b.dataset.cfgdelidx,1);
+      saveSettings(); renderCfgCatList(); etlUpdateCatFilter();
+    };
+  });
+}
+
+function renderCfgCatColorPicker(){
+  const el=document.getElementById('cfgCatColorPick'); if(!el) return;
+  el.innerHTML=CFG_CAT_COLORS.map(c=>`
+    <span class="cfg-color-pick${c.key===cfgSelCatColor?' sel':''}"
+      data-catcolor="${c.key}"
+      style="background:${c.css}"
+      title="${c.key}"></span>`).join('');
+  el.querySelectorAll('.cfg-color-pick').forEach(b=>{
+    b.onclick=()=>{
+      cfgSelCatColor=b.dataset.catcolor;
+      renderCfgCatColorPicker();
+      updateCfgCatPreview();
+    };
+  });
+}
+
+function updateCfgCatPreview(){
+  const pv=document.getElementById('cfgCatPreview'); if(!pv) return;
+  const name=document.getElementById('cfgCatName')?.value.trim()||'Kategori';
+  const tag=(document.getElementById('cfgCatTag')?.value.trim().toUpperCase()||'').slice(0,5);
+  const css=etlCatCssColor(cfgSelCatColor);
+  const rgb=etlCatRgb(cfgSelCatColor);
+  pv.style.cssText=`background:rgba(${rgb},.12);border-color:rgba(${rgb},.35);color:${css};font-size:9px;font-weight:800;padding:2px 9px;border-radius:10px;border:1px solid;margin-left:4px`;
+  pv.textContent=(tag?tag+' ':'')+name;
+}
+
+function wireCfgEtalase(){
+  const nameInp=document.getElementById('cfgCatName');
+  const tagInp=document.getElementById('cfgCatTag');
+  const addBtn=document.getElementById('cfgCatAddBtn');
+
+  if(nameInp){
+    nameInp.oninput=updateCfgCatPreview;
+    nameInp.onkeydown=e=>{ if(e.key==='Enter') addBtn&&addBtn.click(); };
+  }
+  if(tagInp){
+    tagInp.oninput=()=>{
+      tagInp.value=tagInp.value.toUpperCase().slice(0,5);
+      updateCfgCatPreview();
+    };
+  }
+  if(addBtn) addBtn.onclick=()=>{
+    const name=(document.getElementById('cfgCatName')?.value.trim()||'').slice(0,40);
+    const tag=(document.getElementById('cfgCatTag')?.value.trim().toUpperCase()||'').slice(0,5);
+    if(!name){ toast('⚠ Nama kategori wajib diisi'); return; }
+    if(!SETTINGS.etlCategories) SETTINGS.etlCategories=[];
+    if(SETTINGS.etlCategories.find(c=>c.name===name)){ toast('⚠ Kategori "'+name+'" sudah ada'); return; }
+    SETTINGS.etlCategories.push({ name, tag, color:cfgSelCatColor });
+    if(nameInp) nameInp.value='';
+    if(tagInp) tagInp.value='';
+    saveSettings(); renderCfgCatList(); etlUpdateCatFilter();
+    updateCfgCatPreview();
+    toast('✓ Kategori "'+name+'" ditambahkan');
+  };
+
+  renderCfgCatColorPicker();
+  updateCfgCatPreview();
+  renderCfgCatList();
+}
+
 const CFG_STATUS_COLORS = [
   {key:'green', css:'var(--green)'}, {key:'amber', css:'var(--amber)'},
   {key:'orange', css:'var(--orange)'}, {key:'red', css:'var(--red)'},
@@ -3393,7 +3544,7 @@ const CFG_STATUS_COLORS = [
 let cfgSelColor = 'cyan';
 
 // SETTINGS persisted separately
-let SETTINGS = { regions:[], outputs:[], customStatuses:[] };
+let SETTINGS = { regions:[], outputs:[], customStatuses:[], etlCategories:[] };
 
 async function loadSettings(){
   try{
@@ -3457,11 +3608,15 @@ function renderCfgColorPicker(){
   el.querySelectorAll('.cfg-color-btn').forEach(b=>{ b.onclick=()=>{ cfgSelColor=b.dataset.color; renderCfgColorPicker(); }; });
 }
 
-function openSettings(){
+function openSettings(tab){
   renderCfgStatus(); renderCfgRegion(); renderCfgOutput(); renderCfgColorPicker();
-  // activate first tab
-  document.querySelectorAll('.cfg-tab').forEach(t=>t.classList.toggle('active',t.dataset.cfg==='status'));
-  document.querySelectorAll('.cfg-pane').forEach(p=>p.classList.toggle('active',p.id==='cfgPaneStatus'));
+  renderCfgCatList(); renderCfgCatColorPicker(); updateCfgCatPreview();
+  const activeTab = tab||'status';
+  document.querySelectorAll('.cfg-tab').forEach(t=>t.classList.toggle('active',t.dataset.cfg===activeTab));
+  document.querySelectorAll('.cfg-pane').forEach(p=>{
+    const key='cfgPane'+p.id.replace('cfgPane','');
+    p.classList.toggle('active', p.id==='cfgPane'+activeTab.charAt(0).toUpperCase()+activeTab.slice(1));
+  });
   document.getElementById('settingsOverlay').classList.add('show');
 }
 
@@ -3513,6 +3668,21 @@ function wireSettings(){
     saveSettings(); renderCfgOutput(); refreshFilterOptions(); toast('✓ Output "'+val+'" ditambahkan');
   };
   document.getElementById('cfgOutputInp').onkeydown=e=>{ if(e.key==='Enter') document.getElementById('cfgOutputAddBtn').click(); };
+
+  // Etalase tab
+  wireCfgEtalase();
+
+  // Tab switching — override to also handle etalase tab
+  document.querySelectorAll('.cfg-tab').forEach(tab=>{
+    tab.onclick=()=>{
+      document.querySelectorAll('.cfg-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.cfg-pane').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      const paneId='cfgPane'+tab.dataset.cfg.charAt(0).toUpperCase()+tab.dataset.cfg.slice(1);
+      const pane=document.getElementById(paneId);
+      if(pane) pane.classList.add('active');
+    };
+  });
 }
 
 // ==================== ADD LINK MANUAL ====================
@@ -4997,6 +5167,27 @@ function wireEtlToolbar(){
   const addBtn2=document.getElementById('etlAddBtn2');
   if(addBtn2) addBtn2.onclick=()=>{ closeEtlDds(); etlOpenAdd(); };
 
+  // ---- Event delegation pada grid (FIX bug edit button) ----
+  const gridEl=document.getElementById('etlGrid');
+  if(gridEl){
+    gridEl.addEventListener('click',function(e){
+      // Edit button
+      const editBtn=e.target.closest('.etl-edit-btn');
+      if(editBtn){
+        e.stopPropagation();
+        etlOpenEdit(editBtn.dataset.etlid);
+        return;
+      }
+      // Lightbox trigger (img-wrap)
+      const lbTrig=e.target.closest('.etl-lb-trigger');
+      if(lbTrig && !e.target.closest('.etl-edit-btn')){
+        const idx=+lbTrig.dataset.lbidx;
+        etlLbOpen(idx);
+        return;
+      }
+    });
+  }
+
   // Content type chip toggles
   ['foto','video'].forEach(type=>{
     const chip=document.getElementById('ctype'+type.charAt(0).toUpperCase()+type.slice(1)+'Chip');
@@ -5064,9 +5255,15 @@ function etlRenderKpi(){
 
 function etlUpdateCatFilter(){
   const sel=$('#etlCatFilter'); if(!sel) return;
-  const cats=[...new Set(ETL_DATA.map(p=>p.cat).filter(Boolean))].sort();
+  // merge: settings categories + categories from data
+  const fromSettings=(SETTINGS.etlCategories||[]).map(c=>c.name);
+  const fromData=ETL_DATA.map(p=>p.cat).filter(Boolean);
+  const cats=[...new Set([...fromSettings,...fromData])].sort();
   const cur=sel.value;
   sel.innerHTML='<option value="">Semua Kategori</option>'+cats.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
+  // also update datalist in add/edit form
+  const dl=document.getElementById('etlCatList');
+  if(dl) dl.innerHTML=cats.map(c=>`<option value="${c}">`).join('');
 }
 
 function etlRenderGrid(){
@@ -5093,17 +5290,34 @@ function etlRenderGrid(){
   const isCrop = etlViewState.cropImg;
   const imgStyle = isCrop ? 'width:100%;height:100%;object-fit:cover' : 'width:100%;height:100%;object-fit:contain;padding:4px';
 
-  el.innerHTML=filtered.map((p,idx)=>`
-    <div class="etl-card" data-etlid="${p.id}">
-      <div class="etl-img-wrap" onclick="etlLbOpen(${idx})" title="Klik untuk gambar penuh">
+  // resolve category style from settings
+  function getCatStyle(catName){
+    const found=(SETTINGS.etlCategories||[]).find(c=>c.name===catName);
+    if(found) return {
+      css: etlCatCssColor(found.color||'violet'),
+      rgb: etlCatRgb(found.color||'violet'),
+      tag: found.tag||''
+    };
+    // default: violet
+    return { css:'#818cf8', rgb:'129,140,248', tag:'' };
+  }
+
+  el.innerHTML=filtered.map((p,idx)=>{
+    const cs=getCatStyle(p.cat||'');
+    const catBadge=p.cat
+      ? `<span class="etl-badge" style="background:rgba(${cs.rgb},.16);border:1px solid rgba(${cs.rgb},.35);color:${cs.css};font-size:9px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:10px;backdrop-filter:blur(4px)">${cs.tag?cs.tag+'&nbsp;':''}${esc(p.cat)}</span>`
+      : '';
+    return `
+    <div class="etl-card" data-etlid="${p.id}" data-lbidx="${idx}">
+      <div class="etl-img-wrap etl-lb-trigger" data-lbidx="${idx}" title="Klik untuk gambar penuh">
         ${p.img
-          ? `<img src="${p.img}" alt="${esc(p.name||'')}" style="${imgStyle}" onerror="this.style.display='none';this.nextElementSibling&&(this.nextElementSibling.style.display='')">
+          ? `<img src="${p.img}" alt="${esc(p.name||'')}" style="${imgStyle}" onerror="this.style.display='none';this.nextSibling&&(this.nextSibling.style.display='flex')">
              <div class="etl-img-placeholder" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
           : `<div class="etl-img-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`}
-        <div class="etl-img-zoom">
+        <div class="etl-img-zoom" style="pointer-events:none">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
         </div>
-        ${p.cat?`<span class="etl-badge">${esc(p.cat)}</span>`:''}
+        ${catBadge}
       </div>
       <div class="etl-body">
         <div class="etl-title">${esc(p.name||'(Tanpa Nama)')}</div>
@@ -5118,15 +5332,17 @@ function etlRenderGrid(){
         ${p.price?`<div style="font-size:15px;font-weight:800;color:var(--green);letter-spacing:-.02em;margin-top:2px">${esc(p.price)}</div>`:''}
       </div>
       <div class="etl-footer">
-        <a href="${esc(p.link||'#')}" target="_blank" rel="noopener" class="etl-link-btn" ${!p.link?'onclick="return false" style="opacity:.4;cursor:not-allowed"':''}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-          Beli
+        <a href="${esc(p.link||'#')}" target="_blank" rel="noopener" class="etl-link-btn" ${!p.link?'tabindex="-1" style="opacity:.4;pointer-events:none"':''}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Beli
         </a>
         <div class="etl-actions">
-          <button class="iconbtn edit" onclick="etlOpenEdit('${esc(p.id)}')" title="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg></button>
+          <button class="iconbtn edit etl-edit-btn" data-etlid="${p.id}" title="Edit produk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/></svg>
+          </button>
         </div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
   // store filtered for lightbox navigation
   etlLbList = filtered;
 }
@@ -5581,6 +5797,15 @@ function wireEtlImport(){
   // template
   const tplBtn=document.getElementById('etlTemplateBtn');
   if(tplBtn) tplBtn.onclick=()=>etlDownloadTemplate();
+
+  // shortcut: buka settings → tab Etalase
+  const catSettBtn=document.getElementById('etlCatSettingsBtn');
+  if(catSettBtn) catSettBtn.onclick=()=>{
+    // close more dropdown first
+    document.querySelectorAll('.view-dd').forEach(d=>d.classList.remove('open'));
+    document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('active'));
+    openSettings('etalase');
+  };
 }
 
 async function etlInit(){
