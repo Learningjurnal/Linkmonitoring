@@ -63,6 +63,82 @@ html.light select,html.light input,html.light textarea{background:rgba(0,0,0,.04
 html.light .btn{color:var(--muted)}
 html.light .etl-lightbox{background:rgba(240,242,248,.95)}
 
+/* ===== LIGHT MODE: missing component overrides ===== */
+html.light input[type="date"]{color-scheme:light}
+html.light ::selection{background:rgba(91,106,240,.25);color:#1a1a2e}
+html.light ::-webkit-scrollbar-thumb{background:rgba(91,106,240,.2)}
+html.light ::-webkit-scrollbar-thumb:hover{background:rgba(91,106,240,.4)}
+
+/* Dropdowns & floating panels */
+html.light .view-dd,html.light .cell-dd{
+  background:rgba(255,255,255,.97);
+  border-color:rgba(0,0,0,.1);
+  box-shadow:0 8px 40px rgba(0,0,0,.15),0 0 0 1px rgba(91,106,240,.08)
+}
+html.light .view-dd-item:hover{background:rgba(91,106,240,.07)}
+html.light .view-dd-label{color:var(--muted)}
+html.light .view-dd-section+.view-dd-section{border-top-color:rgba(0,0,0,.06)}
+html.light .cell-dd-item:hover{background:rgba(91,106,240,.07)}
+
+/* Table */
+html.light .table-wrap{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.07)}
+html.light tbody tr:hover{background:rgba(91,106,240,.05)}
+html.light .controls{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.07)}
+html.light .search input{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1)}
+html.light .search input:focus{border-color:rgba(91,106,240,.4)}
+html.light .selbar{background:rgba(91,106,240,.06);border-color:rgba(91,106,240,.2)}
+
+/* Buttons & forms */
+html.light .btn{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12);color:var(--muted)}
+html.light .btn:hover{background:rgba(91,106,240,.08);border-color:rgba(91,106,240,.35);color:var(--cyan)}
+html.light .btn.primary{background:linear-gradient(135deg,rgba(91,106,240,.15),rgba(74,88,208,.1));border-color:rgba(91,106,240,.5);color:var(--cyan)}
+html.light .btn.ghost{background:transparent;border-color:rgba(0,0,0,.12)}
+html.light select,html.light textarea{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);color:var(--text)}
+html.light .iconbtn{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);color:var(--muted)}
+
+/* Selbar / pills */
+html.light .linkbtn{color:var(--muted);border-bottom-color:rgba(0,0,0,.15)}
+html.light .linkbtn:hover{color:var(--cyan);border-bottom-color:var(--cyan)}
+
+/* KPI cards */
+html.light .kpi{background:rgba(255,255,255,.8);border-color:rgba(0,0,0,.07)}
+html.light .kpi:hover{box-shadow:0 8px 24px rgba(0,0,0,.1)}
+
+/* View toolbar */
+html.light .view-toolbar{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.07)}
+html.light .vt-btn:hover{background:rgba(0,0,0,.05)}
+html.light .vt-btn.active{background:rgba(91,106,240,.12);color:var(--cyan)}
+html.light .vt-sep{background:rgba(0,0,0,.1)}
+
+/* Modals */
+html.light .modal{background:rgba(255,255,255,.98);border-color:rgba(0,0,0,.08)}
+html.light .modal-head{border-bottom-color:rgba(0,0,0,.07)}
+html.light .fg label{color:var(--muted)}
+html.light .note-box{background:rgba(91,106,240,.06);border-left-color:rgba(91,106,240,.4);color:var(--muted)}
+html.light .drop{background:rgba(0,0,0,.03);border-color:rgba(91,106,240,.25);color:var(--muted)}
+html.light .modes .mode{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1)}
+html.light .modes .mode.sel{background:rgba(91,106,240,.1);border-color:rgba(91,106,240,.4)}
+
+/* Pagination */
+html.light .pager{border-top-color:rgba(0,0,0,.07)}
+html.light .pg{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);color:var(--muted)}
+html.light .pg.active{background:rgba(91,106,240,.15);border-color:rgba(91,106,240,.4);color:var(--cyan)}
+html.light .pg:hover:not(:disabled){background:rgba(91,106,240,.08);border-color:rgba(91,106,240,.3);color:var(--cyan)}
+
+/* Tabs */
+html.light .tab-nav{background:rgba(255,255,255,.8);border-bottom-color:rgba(0,0,0,.08)}
+html.light .tab-btn{color:var(--muted)}
+html.light .tab-btn.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+html.light .tab-pane{color:var(--text)}
+
+/* Section titles & misc */
+html.light .section-title{color:var(--text);border-bottom-color:rgba(0,0,0,.07)}
+html.light .chartpanel{background:rgba(255,255,255,.7);border-color:rgba(0,0,0,.07)}
+html.light .pgsize{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.1);color:var(--text)}
+html.light .toggle input{background:rgba(0,0,0,.12)}
+html.light .mode{background:rgba(0,0,0,.04);border:1px solid rgba(0,0,0,.1);color:var(--text)}
+html.light .mode.sel{background:rgba(91,106,240,.1);border-color:rgba(91,106,240,.4);color:var(--cyan)}
+
 /* Theme toggle button */
 .theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-soft);background:rgba(255,255,255,.06);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--spring);font-size:16px;flex:none}
 .theme-btn:hover{background:rgba(129,140,248,.15);border-color:rgba(129,140,248,.3);transform:scale(1.08) rotate(20deg)}
@@ -765,7 +841,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .cfg-locked{font-size:9px;font-family:'Inter',system-ui,sans-serif;font-weight:700;color:var(--amber);letter-spacing:.04em;padding:2px 7px;border:1px solid rgba(251,191,36,.25);border-radius:20px;background:rgba(251,191,36,.08)}
 
 /* ===== ADD LINK MODAL ===== */
-.add-link-modal{width:min(520px,100%)}
+.add-link-modal{width:min(640px,100%)}
 
 /* ===== INLINE CELL DROPDOWN (Google Sheets style) ===== */
 .cell-dd{position:fixed;background:rgba(18,18,32,.96);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);min-width:160px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,.7),0 0 0 1px rgba(129,140,248,.08);overflow:hidden;animation:ddFadeIn .14s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(20px)}
@@ -1747,9 +1823,17 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
     <div class="modal-body">
       <div class="form-grid">
         <div class="fg full">
-          <label>Link *</label>
+          <label>Link / URL Download *</label>
           <input id="alLink" type="text" placeholder="https://… atau dl.surf/file/…">
-          <span class="hint">URL langsung — teks + link otomatis diekstrak.</span>
+          <span class="hint">URL utama — teks + link otomatis diekstrak.</span>
+        </div>
+        <div class="fg full">
+          <label>Judul / Nama File</label>
+          <input id="alJudul" type="text" placeholder="Nama konten atau judul file…">
+        </div>
+        <div class="fg full">
+          <label>Mirror Link</label>
+          <input id="alMirrorLink" type="text" placeholder="URL alternatif / mirror…">
         </div>
         <div class="fg">
           <label>Status</label>
@@ -1761,9 +1845,21 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
           <datalist id="alRegionList"></datalist>
         </div>
         <div class="fg">
-          <label>Output</label>
+          <label>Output / Part</label>
           <input id="alOutput" type="text" placeholder="Part 1, BD-1080p…" list="alOutputList">
           <datalist id="alOutputList"></datalist>
+        </div>
+        <div class="fg">
+          <label>Ukuran File</label>
+          <input id="alUkuranFile" type="text" placeholder="mis. 2.4 GB, 850 MB…">
+        </div>
+        <div class="fg">
+          <label>Format File</label>
+          <input id="alFormatFile" type="text" placeholder="MKV, MP4, ZIP, RAR…">
+        </div>
+        <div class="fg">
+          <label>Sumber / Source</label>
+          <input id="alSumber" type="text" placeholder="Google Drive, Mega, dll…">
         </div>
         <div class="fg">
           <label>Update / Tanggal</label>
@@ -1772,6 +1868,18 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
         <div class="fg">
           <label>Last Page</label>
           <input id="alLastpage" type="text" placeholder="opsional">
+        </div>
+        <div class="fg">
+          <label>Tag</label>
+          <input id="alTag" type="text" placeholder="anime, movie, series… (pisah koma)">
+        </div>
+        <div class="fg full">
+          <label>Deskripsi</label>
+          <textarea id="alDeskripsi" placeholder="Deskripsi konten…" style="height:60px;resize:vertical"></textarea>
+        </div>
+        <div class="fg full">
+          <label>Catatan</label>
+          <textarea id="alCatatan" placeholder="Catatan pribadi, peringatan, dll…" style="height:50px;resize:vertical"></textarea>
         </div>
       </div>
       <div id="alErr" style="color:var(--red);font-size:11px;font-family:'Share Tech Mono',monospace;min-height:16px;margin-top:8px"></div>
@@ -1995,14 +2103,22 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
     </div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="fg full"><label>Link</label><input id="eLink" type="text" placeholder="dl.surf/file/...">
+        <div class="fg full"><label>Link / URL Download *</label><input id="eLink" type="text" placeholder="dl.surf/file/...">
           <span class="hint">Jika berisi teks + link, URL-nya otomatis diekstrak saat disimpan.</span></div>
+        <div class="fg full"><label>Judul / Nama File</label><input id="eJudul" type="text" placeholder="Nama konten atau judul file…"></div>
+        <div class="fg full"><label>Mirror Link</label><input id="eMirrorLink" type="text" placeholder="URL alternatif / mirror…"></div>
         <div class="fg"><label>Status</label><select id="eStatus"></select></div>
         <div class="fg"><label>Region</label><input id="eRegion" type="text"></div>
-        <div class="fg"><label>Output</label><input id="ePart" type="text"></div>
+        <div class="fg"><label>Output / Part</label><input id="ePart" type="text"></div>
+        <div class="fg"><label>Ukuran File</label><input id="eUkuranFile" type="text" placeholder="mis. 2.4 GB"></div>
+        <div class="fg"><label>Format File</label><input id="eFormatFile" type="text" placeholder="MKV, MP4, ZIP…"></div>
+        <div class="fg"><label>Sumber / Source</label><input id="eSumber" type="text" placeholder="Google Drive, Mega…"></div>
         <div class="fg"><label>Test</label><input id="eTest" type="text"></div>
-        <div class="fg"><label>Update</label><input id="eUpdate" type="text"></div>
+        <div class="fg"><label>Update / Tanggal</label><input id="eUpdate" type="text"></div>
         <div class="fg"><label>Last Page</label><input id="eLastpage" type="text"></div>
+        <div class="fg"><label>Tag</label><input id="eTag" type="text" placeholder="anime, movie… (pisah koma)"></div>
+        <div class="fg full"><label>Deskripsi</label><textarea id="eDeskripsi" placeholder="Deskripsi konten…" style="height:60px;resize:vertical"></textarea></div>
+        <div class="fg full"><label>Catatan</label><textarea id="eCatatan" placeholder="Catatan pribadi, peringatan…" style="height:50px;resize:vertical"></textarea></div>
       </div>
       <div class="modal-foot" style="justify-content:space-between">
         <button class="btn" id="deleteEdit" style="border-color:var(--red);color:var(--red)">Hapus</button>
@@ -2209,15 +2325,23 @@ const COLORBG = {green:'--green-bg',amber:'--amber-bg',orange:'--orange-bg',red:
 function normH(h){return String(h||'').toLowerCase().replace(/[^a-z0-9]/g,'');}
 const FIELD_ALIASES = {
   name:['name','no','nomor','index','idx','id'],
-  link:['link','url','tautan','linkurl','downloadlink'],
+  link:['link','url','tautan','linkurl','downloadlink','urldownload'],
   test:['test','tes','tested','check'],
   status:['status','state','keterangan'],
-  part:['linkpart','part','type','jenis','tipe'],
+  part:['linkpart','part','type','jenis','tipe','output'],
   date:['date','tanggal','tgl'],
   region:['region','wilayah','negara','country','area'],
-  update:['update','updated','pembaruan'],
+  update:['update','updated','pembaruan','tanggalupload'],
   lastpage:['lastpage','page','halaman','lastpg'],
-  active:['active','aktif','status2']
+  active:['active','aktif','status2'],
+  judul:['judul','title','nama','namafile','filename','juduljudul'],
+  mirrorLink:['mirror','mirrorlink','mirror2','urlmirror','altlink'],
+  ukuranFile:['ukuran','ukuranfile','filesize','size','besar'],
+  formatFile:['format','formatfile','ekstensi','ext','extension'],
+  sumber:['sumber','source','asal','from'],
+  deskripsi:['deskripsi','description','desc','keterangan2'],
+  catatan:['catatan','notes','note','keterangan3'],
+  tag:['tag','tags','label','kategori2']
 };
 function buildMap(headers){
   const map={};
@@ -2251,7 +2375,11 @@ function rowsFromMatrix(matrix){
     out.push(buildRecord({
       name:get('name'), link, test:get('test'), status:get('status'),
       part:get('part'), date:get('date'), region:get('region'),
-      update:get('update'), lastpage:get('lastpage'), active:get('active')
+      update:get('update'), lastpage:get('lastpage'), active:get('active'),
+      judul:get('judul'), mirrorLink:get('mirrorLink'),
+      ukuranFile:get('ukuranFile'), formatFile:get('formatFile'),
+      sumber:get('sumber'), deskripsi:get('deskripsi'),
+      catatan:get('catatan'), tag:get('tag')
     }));
   }
   return out;
@@ -2268,6 +2396,15 @@ function buildRecord(o){
     update:String(o.update||'').trim(),
     lastpage:String(o.lastpage||'').trim(),
     active:String(o.active||'').trim(),
+    // extended fields
+    judul:String(o.judul||'').trim(),
+    mirrorLink:String(o.mirrorLink||'').trim(),
+    ukuranFile:String(o.ukuranFile||'').trim(),
+    formatFile:String(o.formatFile||'').trim(),
+    sumber:String(o.sumber||'').trim(),
+    deskripsi:String(o.deskripsi||'').trim(),
+    catatan:String(o.catatan||'').trim(),
+    tag:String(o.tag||'').trim(),
     updatedAt:Date.now(),
     inputAt:Date.now(),
     _flag:null,
@@ -2584,7 +2721,7 @@ function renderPager(pages,total){
   const pageSizeOpts=[25,50,100,200].map(n=>`<option value="${n}"${PAGE_SIZE===n?' selected':''}>${n}/hal</option>`).join('');
   $('#pager').innerHTML=`<span class="pg-info">Hal. ${page} / ${pages} · ${fmt(total)} baris</span><select class="pgsize" id="pageSizeSel">${pageSizeOpts}</select><div class="pg-btns">${html}</div>`;
   $('#pager').querySelectorAll('.pg[data-p]').forEach(b=>b.onclick=()=>{const p=+b.dataset.p; if(p>=1&&p<=pages){page=p;renderTable();}});
-  const pss=$('#pageSizeSel'); if(pss) pss.onchange=e=>{PAGE_SIZE=+e.target.value;page=1;renderTable();};
+  const pss=$('#pageSizeSel'); if(pss) pss.onchange=e=>{PAGE_SIZE=+e.target.value;page=1;renderTable();saveViewPrefs();};
 }
 
 // ---------- inline cell dropdown ----------
@@ -2830,24 +2967,36 @@ function openEdit(id){
   const r=DATA.find(x=>x._id===id); if(!r) return;
   editId=id;
   $('#eStatus').innerHTML=(typeof cfgAllStatuses==='function'?cfgAllStatuses():Object.entries(STATUS).map(([k,v])=>({key:k,label:v.label}))).map(s=>`<option value="${s.key}" ${s.key===r.status?'selected':''}>${s.label}</option>`).join('');
-  $('#eLink').value=r.link; $('#eRegion').value=r.region; $('#ePart').value=r.part;
-  $('#eTest').value=r.test; $('#eUpdate').value=r.update; $('#eLastpage').value=r.lastpage;
+  const _es=id=>{const el=$('#'+id);if(el)el.value=r[id.slice(1)]||'';};
+  $('#eLink').value=r.link||'';
+  $('#eRegion').value=r.region||''; $('#ePart').value=r.part||'';
+  $('#eTest').value=r.test||''; $('#eUpdate').value=r.update||''; $('#eLastpage').value=r.lastpage||'';
+  const _ef=(id,field)=>{const el=$('#'+id);if(el)el.value=r[field]||'';};
+  _ef('eJudul','judul'); _ef('eMirrorLink','mirrorLink');
+  _ef('eUkuranFile','ukuranFile'); _ef('eFormatFile','formatFile');
+  _ef('eSumber','sumber'); _ef('eTag','tag');
+  _ef('eDeskripsi','deskripsi'); _ef('eCatatan','catatan');
   $('#editOverlay').classList.add('show');
 }
 function saveEdit(){
   const r=DATA.find(x=>x._id===editId); if(!r) return;
-  pushUndo({kind:'edit',id:r._id,prev:{link:r.link,status:r.status,region:r.region,part:r.part,test:r.test,update:r.update,lastpage:r.lastpage,_flag:r._flag,updatedAt:r.updatedAt,_statusLocked:r._statusLocked}});
+  pushUndo({kind:'edit',id:r._id,prev:{link:r.link,status:r.status,region:r.region,part:r.part,test:r.test,update:r.update,lastpage:r.lastpage,judul:r.judul,mirrorLink:r.mirrorLink,ukuranFile:r.ukuranFile,formatFile:r.formatFile,sumber:r.sumber,tag:r.tag,deskripsi:r.deskripsi,catatan:r.catatan,_flag:r._flag,updatedAt:r.updatedAt,_statusLocked:r._statusLocked}});
   const raw=$('#eLink').value.trim();
-  const url=extractUrl(raw);            // embedded link -> di-generate jadi link bersih
+  const url=extractUrl(raw);
   r.link = url||raw;
   const newStatus=$('#eStatus').value;
-  if(newStatus!==r.status) r._statusLocked=true;   // status diubah manual → kunci dari penimpaan sync
+  if(newStatus!==r.status) r._statusLocked=true;
   r.status=newStatus;
   r.region=$('#eRegion').value.trim().toUpperCase();
   r.part=$('#ePart').value.trim();
   r.test=$('#eTest').value.trim();
   r.update=$('#eUpdate').value.trim();
   r.lastpage=$('#eLastpage').value.trim();
+  const _gf=(id,field)=>{const el=$('#'+id);if(el)r[field]=el.value.trim();};
+  _gf('eJudul','judul'); _gf('eMirrorLink','mirrorLink');
+  _gf('eUkuranFile','ukuranFile'); _gf('eFormatFile','formatFile');
+  _gf('eSumber','sumber'); _gf('eTag','tag');
+  _gf('eDeskripsi','deskripsi'); _gf('eCatatan','catatan');
   r.updatedAt=Date.now(); r._flag='upd';
   logActivity('edit_link',(r.link||'').slice(0,80),'data');
   $('#editOverlay').classList.remove('show');
@@ -2917,7 +3066,11 @@ function importRows(rows,mode){
         const ex=DATA[i];
         // Jaga status yang sudah dikunci manual (_statusLocked), dan jangan timpa dengan blank
         const newStatus=(!r.status||r.status==='blank')?ex.status:(ex._statusLocked?ex.status:r.status);
-        DATA[i]={...ex,...r,link:ex.link,status:newStatus,_statusLocked:ex._statusLocked,inputAt:ex.inputAt,_flag:'upd',updatedAt:Date.now()};
+        // Preserve existing extended fields if incoming value is empty
+        const extFields=['judul','mirrorLink','ukuranFile','formatFile','sumber','deskripsi','catatan','tag'];
+        const extPreserved={};
+        extFields.forEach(f=>{ if(!r[f]&&ex[f]) extPreserved[f]=ex[f]; });
+        DATA[i]={...ex,...r,...extPreserved,link:ex.link,status:newStatus,_statusLocked:ex._statusLocked,inputAt:ex.inputAt,_flag:'upd',updatedAt:Date.now()};
         updated++;
       }else{ DATA.push({...r,_flag:'new'}); if(k) idx.set(k,DATA.length-1); added++; }
     });
@@ -3841,7 +3994,7 @@ function openAddLink(){
   const outs=cfgPresetOutputs();
   document.getElementById('alOutputList').innerHTML=outs.map(o=>`<option value="${o}">`).join('');
   // clear fields
-  ['alLink','alRegion','alOutput','alUpdate','alLastpage'].forEach(id=>{ document.getElementById(id).value=''; });
+  ['alLink','alJudul','alMirrorLink','alRegion','alOutput','alUkuranFile','alFormatFile','alSumber','alUpdate','alLastpage','alTag','alDeskripsi','alCatatan'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('alErr').textContent='';
   document.getElementById('addLinkOverlay').classList.add('show');
   setTimeout(()=>document.getElementById('alLink').focus(),80);
@@ -3851,13 +4004,22 @@ function saveAddLink(){
   const rawLink = document.getElementById('alLink').value.trim();
   if(!rawLink){ document.getElementById('alErr').textContent='⚠ Link wajib diisi.'; return; }
   const url = extractUrl(rawLink) || rawLink;
+  const g2=id=>{const el=document.getElementById(id);return el?el.value.trim():'';};
   const rec = buildRecord({
     link: url,
-    status: document.getElementById('alStatus').value,
-    region: document.getElementById('alRegion').value.trim().toUpperCase(),
-    part: document.getElementById('alOutput').value.trim(),
-    update: document.getElementById('alUpdate').value.trim(),
-    lastpage: document.getElementById('alLastpage').value.trim(),
+    status: g2('alStatus'),
+    region: g2('alRegion').toUpperCase(),
+    part: g2('alOutput'),
+    update: g2('alUpdate'),
+    lastpage: g2('alLastpage'),
+    judul: g2('alJudul'),
+    mirrorLink: g2('alMirrorLink'),
+    ukuranFile: g2('alUkuranFile'),
+    formatFile: g2('alFormatFile'),
+    sumber: g2('alSumber'),
+    tag: g2('alTag'),
+    deskripsi: g2('alDeskripsi'),
+    catatan: g2('alCatatan'),
   });
   rec._flag = 'new';
   DATA.push(rec);
@@ -3878,11 +4040,25 @@ function wireAddLink(){
 
 // ==================== VIEW TOOLBAR ====================
 const viewState = {
-  density: 'normal',   // 'compact' | 'normal' | 'comfortable'
+  density: 'normal',
   chart: true,
   cols: { output:true, region:true, date:true, perubahan:true, lastpage:true },
   sort: ''
 };
+function saveViewPrefs(){
+  try{ localStorage.setItem('app:viewState',JSON.stringify(viewState)); }catch(_){}
+  try{ localStorage.setItem('app:pageSize',String(PAGE_SIZE)); }catch(_){}
+}
+function loadViewPrefs(){
+  try{
+    const vs=localStorage.getItem('app:viewState');
+    if(vs){ const p=JSON.parse(vs); Object.assign(viewState,p); }
+  }catch(_){}
+  try{
+    const ps=localStorage.getItem('app:pageSize');
+    if(ps){ const n=+ps; if(n>=10&&n<=500) PAGE_SIZE=n; }
+  }catch(_){}
+}
 
 function vt_applyAll(){
   const tbl = document.querySelector('#tab-monitor table');
@@ -3962,7 +4138,7 @@ function wireViewToolbar(){
   const sortBtn=g('vtSortBtn'), sortDd=g('vtSortDd');
   if(sortBtn) sortBtn.onclick=e=>{e.stopPropagation();sortDd?.classList.contains('open')?vt_closeAll():vt_openDd('vtSortDd','vtSortBtn');};
   if(sortDd) sortDd.querySelectorAll('.view-dd-item[data-sort]').forEach(item=>{
-    item.onclick=()=>{ viewState.sort=item.dataset.sort; filters.sort=viewState.sort; vt_updateSortChecks(); vt_closeAll(); applyFilters(); };
+    item.onclick=()=>{ viewState.sort=item.dataset.sort; filters.sort=viewState.sort; vt_updateSortChecks(); vt_closeAll(); applyFilters(); saveViewPrefs(); };
   });
 
   // ---- View ----
@@ -3970,12 +4146,12 @@ function wireViewToolbar(){
   if(viewBtn) viewBtn.onclick=e=>{e.stopPropagation();viewDd?.classList.contains('open')?vt_closeAll():vt_openDd('vtViewDd','vtViewBtn');};
   if(viewDd){
     viewDd.querySelectorAll('.vd-density').forEach(item=>{
-      item.onclick=()=>{ viewState.density=item.dataset.density; vt_updateViewChecks(); vt_applyAll(); };
+      item.onclick=()=>{ viewState.density=item.dataset.density; vt_updateViewChecks(); vt_applyAll(); saveViewPrefs(); };
     });
     const ct=g('vdChartToggle');
-    if(ct) ct.onclick=()=>{ viewState.chart=!viewState.chart; vt_updateViewChecks(); vt_applyAll(); };
+    if(ct) ct.onclick=()=>{ viewState.chart=!viewState.chart; vt_updateViewChecks(); vt_applyAll(); saveViewPrefs(); };
     viewDd.querySelectorAll('.vd-col').forEach(item=>{
-      item.onclick=()=>{ const c=item.dataset.col; viewState.cols[c]=!viewState.cols[c]; vt_updateViewChecks(); vt_applyAll(); };
+      item.onclick=()=>{ const c=item.dataset.col; viewState.cols[c]=!viewState.cols[c]; vt_updateViewChecks(); vt_applyAll(); saveViewPrefs(); };
     });
   }
 
@@ -5220,6 +5396,7 @@ function vdlShowPlayer(){
 // ---------- init ----------
 (async function(){
   sbLoadConfig();
+  loadViewPrefs();
   await usersLoad(); await activityLogLoad(); showAuth();
   await loadSettings();
   // restore custom statuses into STATUS object
