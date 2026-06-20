@@ -556,6 +556,32 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .etl-empty svg{width:46px;height:46px;color:var(--muted-2);margin-bottom:14px;filter:drop-shadow(0 0 8px rgba(129,140,248,.22))}
 .etl-empty h3{font-family:'Orbitron',monospace;font-weight:700;font-size:16px;color:var(--cyan);text-shadow:0 0 10px rgba(129,140,248,.5);margin-bottom:8px;letter-spacing:.08em}
 .etl-empty p{font-size:12px;max-width:360px;margin:0 auto 18px;font-family:'Share Tech Mono',monospace;color:var(--muted);letter-spacing:.04em}
+/* ===== ETALASE — CONTENT TYPE & FILE INFO ===== */
+/* Chip toggle (Foto / Video) di form */
+.ctype-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.ctype-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px solid var(--line-soft);border-radius:20px;cursor:pointer;font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:600;color:var(--muted);transition:all var(--spring);user-select:none;background:rgba(255,255,255,.03)}
+.ctype-chip:hover{border-color:rgba(129,140,248,.3);color:var(--text)}
+.ctype-chip input[type=checkbox]{display:none}
+.ctype-chip.foto.checked{background:rgba(96,165,250,.15);border-color:rgba(96,165,250,.5);color:#93c5fd}
+.ctype-chip.video.checked{background:rgba(251,146,60,.12);border-color:rgba(251,146,60,.45);color:#fdba74}
+.ctype-chip .chip-icon{font-size:14px;line-height:1}
+.ctype-chip .chip-check{width:14px;height:14px;border:1.5px solid currentColor;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all var(--ease);flex:none}
+.ctype-chip.checked .chip-check::after{content:'✓';font-weight:900}
+
+/* Card info badges */
+.etl-info-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+.etl-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;font-family:'Inter',system-ui,sans-serif;letter-spacing:.02em;white-space:nowrap}
+.etl-tag.size{background:rgba(129,140,248,.12);border:1px solid rgba(129,140,248,.25);color:#a5b4fc}
+.etl-tag.count{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#6ee7b7}
+.etl-tag.foto{background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3);color:#93c5fd}
+.etl-tag.video{background:rgba(251,146,60,.1);border:1px solid rgba(251,146,60,.3);color:#fdba74}
+.etl-tag.res{background:rgba(192,132,252,.1);border:1px solid rgba(192,132,252,.25);color:#c4b5fd}
+
+/* File size input row */
+.size-inp-row{display:flex;gap:6px;align-items:center}
+.size-inp-row input{flex:1;min-width:0}
+.size-inp-row select{width:72px;flex:none}
+
 /* ===== ETALASE TOOLBAR ===== */
 .etl-vt{display:flex;align-items:center;gap:2px;background:rgba(255,255,255,.03);border:1px solid var(--line-soft);border-radius:var(--r-md);padding:4px;width:fit-content;margin-bottom:14px}
 .etl-vt-sep{width:1px;height:20px;background:var(--line-soft);flex:none;margin:0 2px}
@@ -1157,6 +1183,23 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
                 <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
                 Tambah Produk
               </div>
+              <div class="view-dd-item" id="etlImportBtn">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+                Import XLSX / CSV / TXT
+              </div>
+              <div class="view-dd-item" id="etlExportBtn">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+                Export Etalase (.xlsx)
+              </div>
+            </div>
+            <div class="view-dd-section">
+              <div class="view-dd-item" id="etlTemplateBtn">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+                Unduh Template Excel
+              </div>
             </div>
           </div>
         </div>
@@ -1613,19 +1656,68 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
       <div class="form-grid">
         <div class="fg full">
           <label>Nama Produk *</label>
-          <input id="etlName" type="text" placeholder="Contoh: Laptop Gaming ASUS ROG…">
+          <input id="etlName" type="text" placeholder="Contoh: Pack Foto Cosplay Vol.1…">
         </div>
         <div class="fg">
           <label>Kategori</label>
-          <input id="etlCat" type="text" placeholder="Elektronik, Fashion, dll…">
+          <input id="etlCat" type="text" placeholder="Pack Foto, Video, dll…">
         </div>
         <div class="fg">
-          <label>Harga (opsional)</label>
-          <input id="etlPrice" type="text" placeholder="Rp 1.500.000">
+          <label>Harga</label>
+          <input id="etlPrice" type="text" placeholder="Rp 50.000">
         </div>
+
+        <!-- TIPE KONTEN -->
+        <div class="fg full">
+          <label>Tipe Konten</label>
+          <div class="ctype-row">
+            <label class="ctype-chip foto" id="ctypeFotoChip">
+              <input type="checkbox" id="etlTypeFoto">
+              <span class="chip-icon">🖼</span>
+              <span>Foto</span>
+              <span class="chip-check"></span>
+            </label>
+            <label class="ctype-chip video" id="ctypeVideoChip">
+              <input type="checkbox" id="etlTypeVideo">
+              <span class="chip-icon">🎬</span>
+              <span>Video</span>
+              <span class="chip-check"></span>
+            </label>
+          </div>
+          <span class="hint" style="margin-top:5px">Centang satu atau keduanya sesuai isi pack.</span>
+        </div>
+
+        <!-- UKURAN FILE -->
+        <div class="fg">
+          <label>Ukuran File (ZIP)</label>
+          <div class="size-inp-row">
+            <input id="etlFileSize" type="number" min="0" step="0.01" placeholder="0">
+            <select id="etlFileSizeUnit">
+              <option value="MB">MB</option>
+              <option value="GB" selected>GB</option>
+              <option value="TB">TB</option>
+            </select>
+          </div>
+          <span class="hint">Ukuran total file ZIP.</span>
+        </div>
+
+        <!-- JUMLAH FILE -->
+        <div class="fg">
+          <label>Jumlah File</label>
+          <input id="etlFileCount" type="number" min="0" step="1" placeholder="mis. 150">
+          <span class="hint">Jumlah foto/video di dalam pack.</span>
+        </div>
+
+        <!-- RESOLUSI / KUALITAS -->
+        <div class="fg full">
+          <label>Resolusi / Kualitas</label>
+          <input id="etlResolution" type="text" placeholder="mis. 4K, 1080p, RAW, HD…">
+          <span class="hint">Opsional — kualitas atau resolusi file.</span>
+        </div>
+
         <div class="fg full">
           <label>Deskripsi Produk</label>
-          <textarea id="etlDesc" style="min-height:90px" placeholder="Deskripsi singkat produk, fitur utama, kondisi, dll…"></textarea>
+          <textarea id="etlDesc" style="min-height:80px" placeholder="Deskripsi singkat: isi, kondisi, tema, dll…"></textarea>
         </div>
         <div class="fg full">
           <label>Link Jualan *</label>
@@ -1640,6 +1732,69 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
           <button class="btn ghost" id="etlCancel">Batal</button>
           <button class="btn primary" id="etlSave">Simpan Produk</button>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ETALASE IMPORT MODAL ===== -->
+<div class="overlay" id="etlImportOverlay">
+  <div class="modal" style="width:min(680px,100%)">
+    <div class="modal-head">
+      <div>
+        <h2>Import Produk ke Etalase</h2>
+        <p>Upload file Excel / CSV / TXT — header otomatis dipetakan ke kolom etalase.</p>
+      </div>
+      <button class="x" id="etlImportClose">&times;</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Drop zone -->
+      <div class="drop" id="etlImportDrop">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        <b>Klik atau seret file ke sini</b>
+        <span>.xlsx · .xls · .csv · .txt — header dideteksi otomatis</span>
+        <input type="file" id="etlImportFile" accept=".xlsx,.xls,.csv,.txt" hidden>
+      </div>
+
+      <div class="divider">atau tempel data</div>
+
+      <textarea id="etlImportPaste" placeholder="Tempel CSV / TSV di sini. Baris pertama = header.&#10;Contoh:&#10;Nama Produk,Kategori,Harga,Foto,Video,Ukuran,Satuan,Jumlah File,Resolusi,Deskripsi,Link Jualan,URL Foto&#10;Pack Foto Model Vol.1,Pack Foto,Rp50.000,ya,tidak,1.2,GB,150,4K,Pack foto model...,https://shopee.co.id/...,https://img.com/thumb.jpg" style="min-height:90px"></textarea>
+
+      <!-- Mode -->
+      <div class="field-lab">Mode import</div>
+      <div class="modes" id="etlImportModes">
+        <div class="mode sel" data-mode="append"><b>Append</b><span>Tambah semua sebagai produk baru</span></div>
+        <div class="mode" data-mode="merge"><b>Merge</b><span>Update produk yang sama (cocok via Nama)</span></div>
+        <div class="mode" data-mode="replace"><b>Replace</b><span>Hapus semua, ganti dengan file ini</span></div>
+      </div>
+
+      <!-- Preview -->
+      <div id="etlImportPreview" style="display:none;margin-top:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:12px;font-weight:700;color:var(--text)" id="etlImportPreviewTitle">Preview</div>
+          <div style="font-size:11px;color:var(--muted)" id="etlImportPreviewCount"></div>
+        </div>
+        <!-- kolom yang dipetakan -->
+        <div id="etlImportMapping" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px"></div>
+        <!-- tabel preview 5 baris -->
+        <div style="overflow-x:auto;border:1px solid var(--line-soft);border-radius:var(--r-md);max-height:220px;overflow-y:auto">
+          <table id="etlImportTable" style="width:100%;border-collapse:collapse;min-width:600px;font-size:11px">
+            <thead id="etlImportThead" style="position:sticky;top:0;background:rgba(15,15,28,.97)"></thead>
+            <tbody id="etlImportTbody"></tbody>
+          </table>
+        </div>
+        <div class="note-box" id="etlImportNote" style="margin-top:10px"></div>
+      </div>
+
+      <div id="etlImportErr" style="color:var(--red);font-size:12px;font-family:'Inter',sans-serif;min-height:16px;margin-top:10px"></div>
+
+      <div class="modal-foot">
+        <button class="btn ghost" id="etlImportCancel">Batal</button>
+        <button class="btn primary" id="etlImportDo" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Proses Import
+        </button>
       </div>
     </div>
   </div>
@@ -4842,6 +4997,16 @@ function wireEtlToolbar(){
   const addBtn2=document.getElementById('etlAddBtn2');
   if(addBtn2) addBtn2.onclick=()=>{ closeEtlDds(); etlOpenAdd(); };
 
+  // Content type chip toggles
+  ['foto','video'].forEach(type=>{
+    const chip=document.getElementById('ctype'+type.charAt(0).toUpperCase()+type.slice(1)+'Chip');
+    if(!chip) return;
+    chip.addEventListener('click',()=>{
+      const chk=chip.querySelector('input[type=checkbox]');
+      if(chk){ chk.checked=!chk.checked; chip.classList.toggle('checked',chk.checked); }
+    });
+  });
+
   // Search & category (inside filter dropdown — keep open while typing)
   const srch=document.getElementById('etlSearch');
   if(srch){ srch.oninput=()=>etlRenderGrid(); srch.onclick=e=>e.stopPropagation(); }
@@ -4943,7 +5108,14 @@ function etlRenderGrid(){
       <div class="etl-body">
         <div class="etl-title">${esc(p.name||'(Tanpa Nama)')}</div>
         ${p.desc?`<div class="etl-desc">${esc(p.desc)}</div>`:''}
-        ${p.price?`<div style="font-size:14px;font-weight:800;color:var(--green);letter-spacing:-.01em">${esc(p.price)}</div>`:''}
+        <div class="etl-info-row">
+          ${p.typeFoto ?`<span class="etl-tag foto">🖼 Foto</span>`:''}
+          ${p.typeVideo?`<span class="etl-tag video">🎬 Video</span>`:''}
+          ${(p.fileSize&&p.fileSizeUnit)?`<span class="etl-tag size">📦 ${esc(p.fileSize)} ${esc(p.fileSizeUnit)}</span>`:''}
+          ${p.fileCount?`<span class="etl-tag count">${esc(p.fileCount)} file</span>`:''}
+          ${p.resolution?`<span class="etl-tag res">${esc(p.resolution)}</span>`:''}
+        </div>
+        ${p.price?`<div style="font-size:15px;font-weight:800;color:var(--green);letter-spacing:-.02em;margin-top:2px">${esc(p.price)}</div>`:''}
       </div>
       <div class="etl-footer">
         <a href="${esc(p.link||'#')}" target="_blank" rel="noopener" class="etl-link-btn" ${!p.link?'onclick="return false" style="opacity:.4;cursor:not-allowed"':''}>
@@ -4965,12 +5137,24 @@ function etlRender(){
   etlRenderGrid();
 }
 
+function etlResetForm(){
+  ['etlName','etlDesc','etlLink','etlImgUrl','etlCat','etlPrice','etlFileSize','etlFileCount','etlResolution'].forEach(id=>{
+    const el=$('#'+id); if(el) el.value='';
+  });
+  const szUnit=$('#etlFileSizeUnit'); if(szUnit) szUnit.value='GB';
+  etlSetChip('foto',false); etlSetChip('video',false);
+  $('#etlImgPreview').innerHTML='<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Pratinjau foto</span></div>';
+}
+function etlSetChip(type, on){
+  const chk=$('#etlType'+type.charAt(0).toUpperCase()+type.slice(1));
+  const chip=$('#ctype'+type.charAt(0).toUpperCase()+type.slice(1)+'Chip');
+  if(chk) chk.checked=on;
+  if(chip) chip.classList.toggle('checked', on);
+}
 function etlOpenAdd(){
   etlEditId=null;
   $('#etlModalTitle').textContent='Tambah Produk';
-  $('#etlName').value=''; $('#etlDesc').value=''; $('#etlLink').value='';
-  $('#etlImgUrl').value=''; $('#etlCat').value=''; $('#etlPrice').value='';
-  $('#etlImgPreview').innerHTML='<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Pratinjau foto</span></div>';
+  etlResetForm();
   $('#etlDelete').style.display='none';
   $('#etlErr').textContent='';
   $('#etlOverlay').classList.add('show');
@@ -4981,16 +5165,21 @@ function etlOpenEdit(id){
   const p=ETL_DATA.find(x=>x.id===id); if(!p) return;
   etlEditId=id;
   $('#etlModalTitle').textContent='Edit Produk';
+  etlResetForm();
   $('#etlName').value=p.name||'';
   $('#etlDesc').value=p.desc||'';
   $('#etlLink').value=p.link||'';
   $('#etlImgUrl').value=p.img||'';
   $('#etlCat').value=p.cat||'';
   $('#etlPrice').value=p.price||'';
+  const fsEl=$('#etlFileSize'); if(fsEl) fsEl.value=p.fileSize||'';
+  const fuEl=$('#etlFileSizeUnit'); if(fuEl) fuEl.value=p.fileSizeUnit||'GB';
+  const fcEl=$('#etlFileCount'); if(fcEl) fcEl.value=p.fileCount||'';
+  const frEl=$('#etlResolution'); if(frEl) frEl.value=p.resolution||'';
+  etlSetChip('foto', !!p.typeFoto);
+  etlSetChip('video', !!p.typeVideo);
   if(p.img){
-    $('#etlImgPreview').innerHTML=`<img src="${p.img}" alt="preview">`;
-  } else {
-    $('#etlImgPreview').innerHTML='<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Pratinjau foto</span></div>';
+    $('#etlImgPreview').innerHTML=`<img src="${p.img}" alt="preview" style="width:100%;height:100%;object-fit:cover">`;
   }
   $('#etlDelete').style.display='';
   $('#etlErr').textContent='';
@@ -5060,10 +5249,16 @@ async function etlSaveProduct(){
   const product={
     id: etlEditId || ('etl_'+Date.now()),
     name, link,
-    desc: $('#etlDesc').value.trim(),
-    img: $('#etlImgUrl').value.trim(),
-    cat: $('#etlCat').value.trim(),
-    price: $('#etlPrice').value.trim(),
+    desc:       $('#etlDesc').value.trim(),
+    img:        $('#etlImgUrl').value.trim(),
+    cat:        $('#etlCat').value.trim(),
+    price:      $('#etlPrice').value.trim(),
+    typeFoto:   !!($('#etlTypeFoto')&&$('#etlTypeFoto').checked),
+    typeVideo:  !!($('#etlTypeVideo')&&$('#etlTypeVideo').checked),
+    fileSize:   ($('#etlFileSize')&&$('#etlFileSize').value.trim())||'',
+    fileSizeUnit:($('#etlFileSizeUnit')&&$('#etlFileSizeUnit').value)||'GB',
+    fileCount:  ($('#etlFileCount')&&$('#etlFileCount').value.trim())||'',
+    resolution: ($('#etlResolution')&&$('#etlResolution').value.trim())||'',
     ts: Date.now()
   };
   if(etlEditId){
@@ -5091,10 +5286,307 @@ async function etlDeleteProduct(){
   });
 }
 
+// ==================== ETALASE IMPORT ====================
+let etlImportRows = null;   // parsed rows ready to import
+let etlImportMode = 'append';
+
+// ----- header aliases → field key -----
+const ETL_FIELD_ALIASES = {
+  name:        ['nama','name','produk','judul','title','nama produk','product'],
+  cat:         ['kategori','cat','category','tipe kategori','jenis'],
+  price:       ['harga','price','harga jual','harga jual (rp)'],
+  typeFoto:    ['foto','typefoto','ada foto','foto?','gambar?','type foto','images','image','photo'],
+  typeVideo:   ['video','typevideo','ada video','video?','type video','videos'],
+  fileSize:    ['ukuran','size','filesize','ukuran file','besar','besar file','file size'],
+  fileSizeUnit:['satuan','unit','satuan ukuran'],
+  fileCount:   ['jumlah','count','files','jumlah file','total file','qty','jumlah files'],
+  resolution:  ['resolusi','resolution','kualitas','quality','res'],
+  desc:        ['deskripsi','desc','description','keterangan','info'],
+  link:        ['link','url','jualan','link jualan','toko','beli','link toko','shop url'],
+  img:         ['foto produk','url foto','img','image url','thumbnail','cover','foto url','gambar url','preview']
+};
+
+function etlNormH(h){ return String(h||'').toLowerCase().replace(/[^a-z0-9]/g,''); }
+
+function etlBuildMap(headers){
+  const map={};
+  headers.forEach((h,i)=>{
+    const n=etlNormH(h);
+    for(const field in ETL_FIELD_ALIASES){
+      if(map[field]!==undefined) continue;
+      if(ETL_FIELD_ALIASES[field].some(a=>etlNormH(a)===n)) map[field]=i;
+    }
+  });
+  return map;
+}
+
+function etlParseMatrix(matrix){
+  if(!matrix.length) return [];
+  // cari baris header = baris pertama yang punya ≥2 kolom dikenali
+  let hIdx=0;
+  for(let i=0;i<Math.min(matrix.length,5);i++){
+    const m=etlBuildMap(matrix[i]);
+    if(Object.keys(m).length>=2){ hIdx=i; break; }
+  }
+  const headers=matrix[hIdx];
+  const map=etlBuildMap(headers);
+  const get=(r,k)=> map[k]!==undefined ? String(r[map[k]]||'').trim() : '';
+  const yesNo=(v)=>{ const s=v.toLowerCase(); return s==='ya'||s==='yes'||s==='1'||s==='true'||s==='y'; };
+
+  const rows=[];
+  for(let i=hIdx+1;i<matrix.length;i++){
+    const r=matrix[i]; if(!r||!r.filter(Boolean).length) continue;
+    const name=get(r,'name');
+    rows.push({
+      _id:'etl_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+      name,
+      cat:        get(r,'cat'),
+      price:      get(r,'price'),
+      typeFoto:   map.typeFoto!==undefined ? yesNo(get(r,'typeFoto')) : false,
+      typeVideo:  map.typeVideo!==undefined ? yesNo(get(r,'typeVideo')) : false,
+      fileSize:   get(r,'fileSize'),
+      fileSizeUnit: get(r,'fileSizeUnit')||'GB',
+      fileCount:  get(r,'fileCount'),
+      resolution: get(r,'resolution'),
+      desc:       get(r,'desc'),
+      link:       get(r,'link'),
+      img:        get(r,'img'),
+      ts:         Date.now()
+    });
+  }
+  return { rows, map, headers };
+}
+
+function etlReadFile(file){
+  const name=file.name.toLowerCase();
+  if(name.endsWith('.txt')||name.endsWith('.csv')){
+    const reader=new FileReader();
+    reader.onload=e=>{ etlHandleText(e.target.result); };
+    reader.readAsText(file,'UTF-8');
+  } else {
+    const reader=new FileReader();
+    reader.onload=e=>{
+      try{
+        const wb=XLSX.read(e.target.result,{type:'binary'});
+        const ws=wb.Sheets[wb.SheetNames[0]];
+        const matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+        etlHandleParsed(matrix);
+      }catch(err){ etlImportShowErr('Gagal baca file: '+err.message); }
+    };
+    reader.readAsBinaryString(file);
+  }
+}
+
+function etlHandleText(txt){
+  txt=txt.trim(); if(!txt){ etlImportShowErr('File kosong.'); return; }
+  const lines=txt.split(/\r?\n/).filter(l=>l.trim());
+  let delim='\t';
+  if(lines[0].includes(',') && !lines[0].includes('\t')) delim=',';
+  const matrix=lines.map(l=>l.split(delim).map(c=>c.replace(/^"|"$/g,'').trim()));
+  etlHandleParsed(matrix);
+}
+
+function etlHandleParsed(matrix){
+  const result=etlParseMatrix(matrix);
+  if(!result||!result.rows||!result.rows.length){
+    etlImportShowErr('Tidak ada baris data yang terbaca. Pastikan header sesuai template.');
+    return;
+  }
+  etlImportRows=result.rows;
+  etlShowImportPreview(result);
+  document.getElementById('etlImportDo').disabled=false;
+  document.getElementById('etlImportErr').textContent='';
+}
+
+function etlImportShowErr(msg){
+  document.getElementById('etlImportErr').textContent=msg;
+  document.getElementById('etlImportPreview').style.display='none';
+  document.getElementById('etlImportDo').disabled=true;
+  etlImportRows=null;
+}
+
+const ETL_FIELD_LABELS={
+  name:'Nama',cat:'Kategori',price:'Harga',typeFoto:'Foto?',typeVideo:'Video?',
+  fileSize:'Ukuran',fileSizeUnit:'Satuan',fileCount:'Jml File',
+  resolution:'Resolusi',desc:'Deskripsi',link:'Link',img:'URL Foto'
+};
+
+function etlShowImportPreview({rows, map, headers}){
+  const pv=document.getElementById('etlImportPreview');
+  pv.style.display='block';
+
+  document.getElementById('etlImportPreviewCount').textContent=`${rows.length} produk ditemukan`;
+
+  // mapping badges
+  const mp=document.getElementById('etlImportMapping');
+  mp.innerHTML=Object.entries(map).map(([field,idx])=>`
+    <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(129,140,248,.12);border:1px solid rgba(129,140,248,.25);color:#a5b4fc;font-family:'Inter',sans-serif">
+      <span style="opacity:.6">${ETL_FIELD_LABELS[field]||field}</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      <span>"${esc(headers[idx]||'')}"</span>
+    </span>`).join('');
+
+  // header tabel
+  const thead=document.getElementById('etlImportThead');
+  const visFields=Object.keys(map).filter(f=>['name','cat','price','typeFoto','typeVideo','fileSize','fileCount','resolution','link'].includes(f));
+  thead.innerHTML='<tr>'+
+    '<th style="padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line-soft);white-space:nowrap">#</th>'+
+    visFields.map(f=>`<th style="padding:7px 10px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line-soft);white-space:nowrap">${ETL_FIELD_LABELS[f]||f}</th>`).join('')+
+    '</tr>';
+
+  // body preview (max 8 rows)
+  const tbody=document.getElementById('etlImportTbody');
+  tbody.innerHTML=rows.slice(0,8).map((r,i)=>`<tr style="${i%2?'background:rgba(255,255,255,.02)':''}">
+    <td style="padding:6px 10px;color:var(--muted-2);font-size:11px">${i+1}</td>
+    ${visFields.map(f=>{
+      let v=r[f];
+      if(f==='typeFoto'||f==='typeVideo') v=v?'✓':'—';
+      v=String(v||'—').slice(0,40);
+      return `<td style="padding:6px 10px;font-size:11px;color:var(--text);white-space:nowrap;max-width:160px;overflow:hidden;text-overflow:ellipsis">${esc(v)}</td>`;
+    }).join('')}
+  </tr>`).join('');
+
+  // catatan
+  const unmapped=Object.keys(ETL_FIELD_LABELS).filter(f=>map[f]===undefined);
+  const note=document.getElementById('etlImportNote');
+  note.innerHTML=unmapped.length
+    ? `Kolom tidak ditemukan di file: <b style="color:var(--amber)">${unmapped.map(f=>ETL_FIELD_LABELS[f]).join(', ')}</b> — akan dikosongkan. Unduh <b>Template Excel</b> untuk format lengkap.`
+    : '✓ Semua kolom berhasil dipetakan.';
+  note.style.borderLeftColor=unmapped.length?'var(--amber)':'var(--green)';
+}
+
+function etlDoImport(){
+  if(!etlImportRows||!etlImportRows.length){ toast('⚠ Tidak ada data untuk diimport'); return; }
+  const mode=etlImportMode;
+  let added=0, updated=0;
+  if(mode==='replace'){
+    ETL_DATA=etlImportRows.map(r=>({...r,id:'etl_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}));
+    added=ETL_DATA.length;
+  } else if(mode==='append'){
+    etlImportRows.forEach(r=>{ ETL_DATA.unshift({...r,id:'etl_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}); added++; });
+  } else { // merge by name
+    const idx=new Map(ETL_DATA.map((p,i)=>[(p.name||'').toLowerCase().trim(),i]));
+    etlImportRows.forEach(r=>{
+      const key=(r.name||'').toLowerCase().trim();
+      if(key && idx.has(key)){ Object.assign(ETL_DATA[idx.get(key)],r); updated++; }
+      else { ETL_DATA.unshift({...r,id:'etl_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)}); added++; }
+    });
+  }
+  etlImportRows=null;
+  document.getElementById('etlImportOverlay').classList.remove('show');
+  etlSave().then(()=>{ etlRender(); toast(`✓ Import selesai — ${added} ditambah${updated?', '+updated+' diperbarui':''}`); });
+  logActivity('etl_import',`${added} produk diimport (mode: ${mode})`,'etl');
+}
+
+function etlExportXlsx(){
+  if(!ETL_DATA.length){ toast('Tidak ada data untuk diekspor'); return; }
+  const headers=['Nama Produk','Kategori','Harga','Foto','Video','Ukuran','Satuan','Jumlah File','Resolusi','Deskripsi','Link Jualan','URL Foto'];
+  const aoa=[headers];
+  ETL_DATA.forEach(p=>aoa.push([
+    p.name||'', p.cat||'', p.price||'',
+    p.typeFoto?'ya':'tidak', p.typeVideo?'ya':'tidak',
+    p.fileSize||'', p.fileSizeUnit||'GB', p.fileCount||'',
+    p.resolution||'', p.desc||'', p.link||'', p.img||''
+  ]));
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  // set kolom width
+  ws['!cols']=[{wch:30},{wch:16},{wch:14},{wch:8},{wch:8},{wch:10},{wch:8},{wch:12},{wch:10},{wch:40},{wch:40},{wch:40}];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Etalase');
+  XLSX.writeFile(wb,'etalase-'+new Date().toISOString().slice(0,10)+'.xlsx');
+  toast('✓ Etalase diekspor ke XLSX');
+}
+
+function etlDownloadTemplate(){
+  const headers=['Nama Produk','Kategori','Harga','Foto','Video','Ukuran','Satuan','Jumlah File','Resolusi','Deskripsi','Link Jualan','URL Foto'];
+  const sample=[
+    ['Pack Foto Model Vol.1','Pack Foto','Rp 50.000','ya','tidak','1.2','GB','150','4K','Pack foto model...',  'https://shopee.co.id/...','https://img.com/thumb.jpg'],
+    ['Pack Video BTS','Pack Video','Rp 75.000','tidak','ya','4.5','GB','30','1080p','Behind the scene...','https://shopee.co.id/...',''],
+    ['Pack Foto+Video','Bundle','Rp 100.000','ya','ya','8','GB','200','4K','Paket lengkap...','https://shopee.co.id/...',''],
+  ];
+  const ws=XLSX.utils.aoa_to_sheet([headers,...sample]);
+  ws['!cols']=[{wch:30},{wch:16},{wch:14},{wch:8},{wch:8},{wch:10},{wch:8},{wch:12},{wch:10},{wch:40},{wch:40},{wch:40}];
+  // warna header row (xlsx-style)
+  headers.forEach((_,c)=>{
+    const cell=ws[XLSX.utils.encode_cell({r:0,c})];
+    if(cell) cell.s={fill:{fgColor:{rgb:'1E1E2E'}},font:{bold:true,color:{rgb:'818CF8'}}};
+  });
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Template Etalase');
+  XLSX.writeFile(wb,'template-etalase.xlsx');
+  toast('✓ Template diunduh');
+}
+
+function wireEtlImport(){
+  const overlay=document.getElementById('etlImportOverlay');
+  const closeBtn=document.getElementById('etlImportClose');
+  const cancelBtn=document.getElementById('etlImportCancel');
+  const doBtn=document.getElementById('etlImportDo');
+  const drop=document.getElementById('etlImportDrop');
+  const fileInp=document.getElementById('etlImportFile');
+  const pasteArea=document.getElementById('etlImportPaste');
+
+  function openImport(){
+    etlImportRows=null;
+    if(pasteArea) pasteArea.value='';
+    if(fileInp) fileInp.value='';
+    document.getElementById('etlImportPreview').style.display='none';
+    document.getElementById('etlImportErr').textContent='';
+    if(doBtn) doBtn.disabled=true;
+    // reset mode
+    document.querySelectorAll('#etlImportModes .mode').forEach(m=>m.classList.toggle('sel',m.dataset.mode==='append'));
+    etlImportMode='append';
+    overlay.classList.add('show');
+  }
+  function closeImport(){
+    overlay.classList.remove('show');
+    etlImportRows=null;
+  }
+
+  const importBtn=document.getElementById('etlImportBtn');
+  if(importBtn) importBtn.onclick=()=>{ openImport(); };
+  if(closeBtn)  closeBtn.onclick=closeImport;
+  if(cancelBtn) cancelBtn.onclick=closeImport;
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeImport(); });
+
+  // file input
+  if(drop)    drop.onclick=()=>fileInp&&fileInp.click();
+  if(fileInp) fileInp.onchange=e=>{ if(e.target.files[0]) etlReadFile(e.target.files[0]); };
+
+  // drag & drop
+  if(drop){
+    ['dragover','dragenter'].forEach(ev=>drop.addEventListener(ev,e=>{ e.preventDefault(); drop.classList.add('over'); }));
+    ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{ e.preventDefault(); drop.classList.remove('over'); }));
+    drop.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) etlReadFile(f); });
+  }
+
+  // paste area
+  if(pasteArea) pasteArea.addEventListener('input',()=>{
+    const v=pasteArea.value.trim();
+    if(v.length>10) etlHandleText(v);
+    else { etlImportRows=null; document.getElementById('etlImportPreview').style.display='none'; if(doBtn) doBtn.disabled=true; }
+  });
+
+  // mode selector
+  document.querySelectorAll('#etlImportModes .mode').forEach(m=>m.onclick=()=>{
+    document.querySelectorAll('#etlImportModes .mode').forEach(x=>x.classList.remove('sel'));
+    m.classList.add('sel'); etlImportMode=m.dataset.mode;
+  });
+
+  // do import
+  if(doBtn) doBtn.onclick=etlDoImport;
+
+  // export
+  const exportBtn=document.getElementById('etlExportBtn');
+  if(exportBtn) exportBtn.onclick=()=>etlExportXlsx();
+
+  // template
+  const tplBtn=document.getElementById('etlTemplateBtn');
+  if(tplBtn) tplBtn.onclick=()=>etlDownloadTemplate();
+}
+
 async function etlInit(){
   await etlLoad();
   etlRender();
-  // wiring — modal
+  // wiring — modal produk
   const addBtn=$('#addEtlBtn'); if(addBtn) addBtn.onclick=etlOpenAdd;
   $('#etlClose').onclick=$('#etlCancel').onclick=()=>{ $('#etlOverlay').classList.remove('show'); };
   $('#etlOverlay').onclick=e=>{ if(e.target===$('#etlOverlay')) $('#etlOverlay').classList.remove('show'); };
@@ -5102,8 +5594,9 @@ async function etlInit(){
   $('#etlDelete').onclick=etlDeleteProduct;
   $('#etlImgUrl').onblur=etlPreviewImg;
   $('#etlImgUrl').addEventListener('keydown',e=>{ if(e.key==='Enter') etlPreviewImg(); });
-  // wiring — toolbar & lightbox
+  // wiring — toolbar, lightbox, import
   wireEtlToolbar();
+  wireEtlImport();
 }
 
 </script>
