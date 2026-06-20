@@ -4286,11 +4286,11 @@ function authReveal(user){
 }
 function showAuth(){
   const setup=!usersConfigured();
-  $('#authSetup').style.display=setup?'':'none';
-  $('#authLogin').style.display=setup?'none':'';
+  $('#authSetup').style.display=setup?'block':'none';
+  $('#authLogin').style.display=setup?'none':'block';
   $('#suErr').textContent=''; $('#liErr').textContent='';
   $('#authOverlay').classList.add('show');
-  setTimeout(()=>{ (setup?$('#suUser'):$('#liUser')).focus(); },50);
+  setTimeout(()=>{ try{ (setup?$('#suUser'):$('#liUser')).focus(); }catch(_){} },50);
 }
 // ── Wiring auth ──
 $('#suBtn').onclick=async()=>{
