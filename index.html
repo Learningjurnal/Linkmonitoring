@@ -4030,12 +4030,13 @@ function saveAddLink(){
 }
 
 function wireAddLink(){
-  document.getElementById('addLinkBtn').onclick = openAddLink;
-  document.getElementById('closeAddLink').onclick = ()=>document.getElementById('addLinkOverlay').classList.remove('show');
-  document.getElementById('cancelAddLink').onclick = ()=>document.getElementById('addLinkOverlay').classList.remove('show');
-  document.getElementById('addLinkOverlay').onclick = e=>{ if(e.target===document.getElementById('addLinkOverlay')) document.getElementById('addLinkOverlay').classList.remove('show'); };
-  document.getElementById('saveAddLink').onclick = saveAddLink;
-  document.getElementById('alLink').onkeydown = e=>{ if(e.key==='Enter') document.getElementById('saveAddLink').click(); };
+  const _g=id=>document.getElementById(id);
+  const _alBtn=_g('addLinkBtn'); if(_alBtn) _alBtn.onclick=openAddLink;
+  const _cl=_g('closeAddLink'); if(_cl) _cl.onclick=()=>_g('addLinkOverlay')?.classList.remove('show');
+  const _ca=_g('cancelAddLink'); if(_ca) _ca.onclick=()=>_g('addLinkOverlay')?.classList.remove('show');
+  const _ov=_g('addLinkOverlay'); if(_ov) _ov.onclick=e=>{ if(e.target===_ov) _ov.classList.remove('show'); };
+  const _sv=_g('saveAddLink'); if(_sv) _sv.onclick=saveAddLink;
+  const _lk=_g('alLink'); if(_lk) _lk.onkeydown=e=>{ if(e.key==='Enter') _g('saveAddLink')?.click(); };
 }
 
 // ==================== VIEW TOOLBAR ====================
