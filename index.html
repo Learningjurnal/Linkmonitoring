@@ -2,6 +2,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -816,6 +817,19 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
 .cfg-color-pick{width:20px;height:20px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all var(--spring);flex:none}
 .cfg-color-pick.sel,.cfg-color-pick:hover{border-color:#fff;transform:scale(1.2)}
 
+/* ===== RATING STARS ===== */
+.etl-rating{display:flex;align-items:center;gap:3px;margin-top:3px}
+.etl-star{font-size:13px;line-height:1;color:rgba(255,255,255,.12);transition:color var(--ease)}
+.etl-star.on{color:#fbbf24}
+.etl-star.half{color:#fbbf24;opacity:.55}
+.etl-hot-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;background:linear-gradient(135deg,rgba(251,63,32,.25),rgba(251,146,60,.18));border:1px solid rgba(251,100,32,.5);color:#fb923c;box-shadow:0 0 8px rgba(251,100,32,.3);animation:hotPulse 2s ease-in-out infinite;flex:none}
+@keyframes hotPulse{0%,100%{box-shadow:0 0 6px rgba(251,100,32,.3)}50%{box-shadow:0 0 14px rgba(251,100,32,.6)}}
+/* Star picker di form */
+.star-picker{display:flex;gap:5px;margin-top:4px}
+.star-picker-star{font-size:22px;cursor:pointer;color:rgba(255,255,255,.12);transition:color .1s,transform .1s;user-select:none;line-height:1}
+.star-picker-star.on{color:#fbbf24}
+.star-picker-star:hover{transform:scale(1.2);color:#fde68a}
+
 /* ===== SETTINGS MODAL ===== */
 .cfg-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line-soft);margin-bottom:16px;padding-bottom:0}
 .cfg-tab{flex:1;padding:9px 8px;font-family:'Inter',system-ui,sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all var(--ease);text-align:center;border-bottom:2px solid transparent}
@@ -1267,6 +1281,16 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
                 <span class="vdi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
                 Kategori A → Z
               </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="rating-desc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon">⭐</span>
+                Rating Tertinggi
+              </div>
+              <div class="view-dd-item etl-sort-item" data-etlsort="rating-asc">
+                <span class="vdi-check"></span>
+                <span class="vdi-icon">⭐</span>
+                Rating Terendah
+              </div>
             </div>
           </div>
         </div>
@@ -1360,6 +1384,19 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
               <div style="padding:4px 10px 8px">
                 <select id="etlCatFilter" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;outline:none">
                   <option value="">Semua Kategori</option>
+                </select>
+              </div>
+            </div>
+            <div class="view-dd-section">
+              <div class="view-dd-label">Rating Minimum</div>
+              <div style="padding:4px 10px 8px">
+                <select id="etlRatingFilter" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-family:'Inter',sans-serif;font-size:12px;outline:none">
+                  <option value="">Semua Rating</option>
+                  <option value="4.5">⭐ 4.5+ (HOT 🔥)</option>
+                  <option value="4">⭐ 4+</option>
+                  <option value="3">⭐ 3+</option>
+                  <option value="2">⭐ 2+</option>
+                  <option value="1">⭐ 1+</option>
                 </select>
               </div>
             </div>
@@ -1976,6 +2013,18 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
           <span class="hint">Opsional — kualitas atau resolusi file.</span>
         </div>
 
+        <div class="fg full">
+          <label>Rating Produk</label>
+          <div class="star-picker" id="etlStarPicker">
+            <span class="star-picker-star" data-val="1">★</span>
+            <span class="star-picker-star" data-val="2">★</span>
+            <span class="star-picker-star" data-val="3">★</span>
+            <span class="star-picker-star" data-val="4">★</span>
+            <span class="star-picker-star" data-val="5">★</span>
+          </div>
+          <input type="hidden" id="etlRating" value="">
+          <span class="hint" id="etlRatingHint">Klik bintang untuk memberi rating. Rating ≥ 4.5 akan muncul label 🔥 HOT.</span>
+        </div>
         <div class="fg full">
           <label>Deskripsi Produk</label>
           <textarea id="etlDesc" style="min-height:80px" placeholder="Deskripsi singkat: isi, kondisi, tema, dll…"></textarea>
@@ -5514,10 +5563,11 @@ async function etlDeleteSelected(){
 
 // ---- Etalase view state ----
 const etlViewState={
-  sort:'',        // ''|name-asc|name-desc|price-asc|price-desc|cat-asc
-  mode:'tiles',   // 'tiles'|'list'
-  thumbPx:260,    // thumbnail min-width in px
-  cropImg:true    // true=cover(crop), false=contain(full)
+  sort:'',          // ''|name-asc|name-desc|price-asc|price-desc|cat-asc|rating-desc|rating-asc
+  mode:'tiles',     // 'tiles'|'list'
+  thumbPx:260,      // thumbnail min-width in px
+  cropImg:true,     // true=cover(crop), false=contain(full)
+  filterRating:''   // ''|'1'|'2'|'3'|'4'|'4.5'
 };
 
 // ---- Sort helper ----
@@ -5528,8 +5578,10 @@ function etlSortedData(arr){
     case 'name-desc': return a.sort((x,y)=>(y.name||'').localeCompare(x.name||''));
     case 'price-asc': return a.sort((x,y)=>parseNum(x.price)-parseNum(y.price));
     case 'price-desc':return a.sort((x,y)=>parseNum(y.price)-parseNum(x.price));
-    case 'cat-asc':   return a.sort((x,y)=>(x.cat||'').localeCompare(y.cat||''));
-    default:          return a;
+    case 'cat-asc':    return a.sort((x,y)=>(x.cat||'').localeCompare(y.cat||''));
+    case 'rating-desc':return a.sort((x,y)=>(+y.rating||0)-(+x.rating||0));
+    case 'rating-asc': return a.sort((x,y)=>(+x.rating||0)-(+y.rating||0));
+    default:           return a;
   }
 }
 function parseNum(s){ return parseFloat(String(s||'').replace(/[^\d.]/g,''))||0; }
@@ -5735,11 +5787,16 @@ function wireEtlToolbar(){
     });
   });
 
-  // Search & category (inside filter dropdown — keep open while typing)
+  // Search, category & rating filter (inside filter dropdown)
   const srch=document.getElementById('etlSearch');
   if(srch){ srch.oninput=()=>etlRenderGrid(); srch.onclick=e=>e.stopPropagation(); }
   const cat=document.getElementById('etlCatFilter');
   if(cat){ cat.onchange=()=>etlRenderGrid(); cat.onclick=e=>e.stopPropagation(); }
+  const ratingF=document.getElementById('etlRatingFilter');
+  if(ratingF){ ratingF.onchange=()=>{ etlViewState.filterRating=ratingF.value; etlRenderGrid(); }; ratingF.onclick=e=>e.stopPropagation(); }
+
+  // Star picker wiring
+  wireEtlStarPicker();
 
   // Lightbox wiring
   const lb=document.getElementById('etlLightbox');
@@ -5807,8 +5864,10 @@ function etlRenderGrid(){
   const el=$('#etlGrid'); if(!el) return;
   const q=($('#etlSearch')||{value:''}).value.trim().toLowerCase();
   const cat=($('#etlCatFilter')||{value:''}).value;
+  const ratingMin=parseFloat(($('#etlRatingFilter')||{value:''}).value)||0;
   let filtered=etlSortedData(ETL_DATA.filter(p=>{
     if(cat && p.cat!==cat) return false;
+    if(ratingMin && (+p.rating||0)<ratingMin) return false;
     if(q && !((p.name||'').toLowerCase().includes(q)||(p.desc||'').toLowerCase().includes(q)||(p.cat||'').toLowerCase().includes(q))) return false;
     return true;
   }));
@@ -5869,6 +5928,19 @@ function etlRenderGrid(){
           ${p.resolution?`<span class="etl-tag res">${esc(p.resolution)}</span>`:''}
         </div>
         ${p.price?`<div style="font-size:15px;font-weight:800;color:var(--green);letter-spacing:-.02em;margin-top:2px">${esc(p.price)}</div>`:''}
+        ${(()=>{
+          const r=+p.rating||0;
+          if(!r) return '';
+          const isHot=r>=4.5;
+          let stars='';
+          for(let i=1;i<=5;i++){
+            if(r>=i) stars+=`<span class="etl-star on">★</span>`;
+            else if(r>=i-.5) stars+=`<span class="etl-star half">★</span>`;
+            else stars+=`<span class="etl-star">★</span>`;
+          }
+          const hotBadge=isHot?`<span class="etl-hot-badge">🔥 HOT</span>`:'';
+          return `<div class="etl-rating">${stars}<span style="font-size:10px;color:var(--muted);font-family:'Inter',sans-serif;margin-left:3px">${r.toFixed(1)}</span>${hotBadge}</div>`;
+        })()}
       </div>
       <div class="etl-footer">
         <a href="${esc(p.link||'#')}" target="_blank" rel="noopener" class="etl-link-btn" ${!p.link?'tabindex="-1" style="opacity:.4;pointer-events:none"':''}>
@@ -5895,12 +5967,38 @@ function etlRender(){
 }
 
 function etlResetForm(){
-  ['etlName','etlDesc','etlLink','etlImgUrl','etlCat','etlPrice','etlFileSize','etlFileCount','etlResolution'].forEach(id=>{
+  ['etlName','etlDesc','etlLink','etlImgUrl','etlCat','etlPrice','etlFileSize','etlFileCount','etlResolution','etlRating'].forEach(id=>{
     const el=$('#'+id); if(el) el.value='';
   });
+  etlSetRating(0);
   const szUnit=$('#etlFileSizeUnit'); if(szUnit) szUnit.value='GB';
   etlSetChip('foto',false); etlSetChip('video',false);
   $('#etlImgPreview').innerHTML='<div class="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Pratinjau foto</span></div>';
+}
+function etlSetRating(val){
+  const inp=$('#etlRating'); if(inp) inp.value=val||'';
+  const hint=$('#etlRatingHint');
+  document.querySelectorAll('.star-picker-star').forEach(s=>{
+    s.classList.toggle('on', +s.dataset.val<=val);
+  });
+  if(hint){
+    if(!val) hint.textContent='Klik bintang untuk memberi rating. Rating ≥ 4.5 akan muncul label 🔥 HOT.';
+    else hint.textContent='Rating: '+val+'/5'+(val>=4.5?' 🔥 HOT!':'');
+  }
+}
+function wireEtlStarPicker(){
+  document.querySelectorAll('.star-picker-star').forEach(s=>{
+    s.onmouseenter=()=>document.querySelectorAll('.star-picker-star').forEach(x=>x.classList.toggle('on',+x.dataset.val<=+s.dataset.val));
+    s.onmouseleave=()=>{ const cur=+($('#etlRating')||{value:0}).value||0; document.querySelectorAll('.star-picker-star').forEach(x=>x.classList.toggle('on',+x.dataset.val<=cur)); };
+    s.onclick=()=>{
+      const cur=+($('#etlRating')||{value:0}).value||0;
+      const v=+s.dataset.val;
+      // klik bintang yang sama → toggle ke .5 atau hapus
+      let newVal=v;
+      if(cur===v) newVal=v-0.5>0?v-0.5:0;
+      etlSetRating(newVal);
+    };
+  });
 }
 function etlSetChip(type, on){
   const chk=$('#etlType'+type.charAt(0).toUpperCase()+type.slice(1));
@@ -5933,6 +6031,7 @@ function etlOpenEdit(id){
   const fuEl=$('#etlFileSizeUnit'); if(fuEl) fuEl.value=p.fileSizeUnit||'GB';
   const fcEl=$('#etlFileCount'); if(fcEl) fcEl.value=p.fileCount||'';
   const frEl=$('#etlResolution'); if(frEl) frEl.value=p.resolution||'';
+  etlSetRating(+p.rating||0);
   etlSetChip('foto', !!p.typeFoto);
   etlSetChip('video', !!p.typeVideo);
   if(p.img){
@@ -6016,6 +6115,7 @@ async function etlSaveProduct(){
     fileSizeUnit:($('#etlFileSizeUnit')&&$('#etlFileSizeUnit').value)||'GB',
     fileCount:  ($('#etlFileCount')&&$('#etlFileCount').value.trim())||'',
     resolution: ($('#etlResolution')&&$('#etlResolution').value.trim())||'',
+    rating:     parseFloat($('#etlRating')&&$('#etlRating').value)||0,
     ts: Date.now()
   };
   if(etlEditId){
@@ -6058,6 +6158,7 @@ const ETL_FIELD_ALIASES = {
   fileSizeUnit:['satuan','unit','satuan ukuran'],
   fileCount:   ['jumlah','count','files','jumlah file','total file','qty','jumlah files'],
   resolution:  ['resolusi','resolution','kualitas','quality','res'],
+  rating:      ['rating','bintang','nilai','score','penilaian','rate'],
   desc:        ['deskripsi','desc','description','keterangan','info'],
   link:        ['link','url','jualan','link jualan','toko','beli','link toko','shop url'],
   img:         ['foto produk','url foto','img','image url','thumbnail','cover','foto url','gambar url','preview']
