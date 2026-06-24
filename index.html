@@ -3,6 +3,7 @@
 
 
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -910,6 +911,10 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
       </div>
     </div>
     <div class="head-actions">
+      <button class="btn ghost" id="sbQuickBtn" title="Status koneksi Supabase" style="gap:5px;font-size:11px">
+        <span id="sbQuickDot" style="width:7px;height:7px;border-radius:50%;background:var(--muted-2);flex-shrink:0;display:inline-block"></span>
+        <span id="sbQuickLbl">Supabase</span>
+      </button>
       <button class="btn ghost" id="logoutBtn" title="Kunci dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5M21 12H9"/></svg>Keluar</button>
       <button class="theme-btn" id="themeBtn" title="Ganti tema terang/gelap">🌙</button>
       <button class="btn ghost" id="settingsBtn" title="Pengaturan Status / Region / Output"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Pengaturan</button>
@@ -940,8 +945,8 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
       Log Update
     </button>
     <button class="tab-btn" data-tab="downloader">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Downloader
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      Player
     </button>
     <button class="tab-btn" data-tab="admin" id="adminTabBtn" style="display:none;margin-left:auto;border-left:1px solid var(--line-soft)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
@@ -1203,6 +1208,12 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
         <option value="skip">Skip</option>
         <option value="broken">Broken Link</option>
         <option value="blank">Blank</option>
+      </select>
+      <select id="bulkRegion" title="Ubah region terpilih (opsional)" style="padding:7px 10px">
+        <option value="">Region… (opsional)</option>
+      </select>
+      <select id="bulkPart" title="Ubah output terpilih (opsional)" style="padding:7px 10px">
+        <option value="">Output… (opsional)</option>
       </select>
       <button class="btn" id="bulkStatusApply">Terapkan</button>
       <button class="btn" id="selOpenAll" style="border-color:var(--green);color:var(--green)" title="Buka semua link terpilih di tab baru sekaligus"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Buka Terpilih</button>
@@ -1595,7 +1606,7 @@ table.hdd-file-table tfoot td{padding:7px 12px;font-family:'Share Tech Mono',mon
   <div class="tab-pane" id="tab-downloader">
     <div class="vdl-wrap">
       <div class="vdl-hero">
-        <div class="vdl-hero-title">&#9660; Video Downloader</div>
+        <div class="vdl-hero-title">&#9654; Video Player</div>
         <div class="vdl-hero-sub">multi-engine · cobalt · ytdl-proxy · page extractor · direct fetch</div>
       </div>
       <div class="vdl-platform-row">
@@ -2237,6 +2248,18 @@ CREATE POLICY "anon_all" ON linkmon_kv FOR ALL USING (true) WITH CHECK (true);</
         </div>
         <div class="fg full"><label>Lokasi / Keterangan</label><input id="hddLocation" type="text" placeholder="Rak server, PC utama, Lemari, dll"></div>
         <div class="fg full"><label>Catatan</label><input id="hddNote" type="text" placeholder="opsional"></div>
+        <div class="fg full">
+          <label>Foto HDD (opsional)</label>
+          <div id="hddPhotoPreview" style="display:none;margin-bottom:8px;position:relative;width:fit-content">
+            <img id="hddPhotoImg" src="" style="max-height:120px;max-width:100%;border-radius:var(--r-md);border:1px solid var(--line-soft);display:block">
+            <button type="button" id="hddPhotoRemove" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,.6);border:none;color:#fff;width:22px;height:22px;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center" title="Hapus foto">&times;</button>
+          </div>
+          <label id="hddPhotoLabel" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;padding:7px 12px;background:rgba(255,255,255,.04);border:1px dashed var(--line-soft);border-radius:var(--r-sm);font-size:11px;color:var(--muted);transition:.15s">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            Pilih / drag foto…
+            <input type="file" id="hddPhotoFile" accept="image/*" hidden>
+          </label>
+        </div>
       </div>
       <div id="hddModalErr" style="color:var(--red);font-size:11px;font-family:'Share Tech Mono',monospace;min-height:16px;margin-top:8px"></div>
       <div class="modal-foot" style="justify-content:space-between;margin-top:14px">
@@ -2648,10 +2671,13 @@ function refreshFilterOptions(){
   fill('#fPart','Semua Output',parts);
   fill('#fStatus','Semua Status',Object.keys(STATUS).map(k=>STATUS[k].label));
 }
+const _fillVisMap={fRegion:'fRegionV',fPart:'fPartV',fStatus:'fStatusV'};
 function fill(sel,allLabel,items){
   const el=$(sel); const cur=el.value;
   el.innerHTML=`<option value="">${allLabel}</option>`+items.map(i=>`<option>${i}</option>`).join('');
   if([...el.options].some(o=>o.value===cur)) el.value=cur;
+  const vid=_fillVisMap[sel.replace('#','')];
+  if(vid){const v=document.getElementById(vid);if(v){const vc=v.value;v.innerHTML=el.innerHTML;if([...v.options].some(o=>o.value===vc))v.value=vc;}}
 }
 function applyFilters(){
   const q=filters.q.toLowerCase();
@@ -2917,6 +2943,20 @@ function renderSelectionBar(){
     const cur=bs.value;
     bs.innerHTML='<option value="">Ubah status…</option>'+(typeof cfgAllStatuses==='function'?cfgAllStatuses():Object.entries(STATUS).map(([k,v])=>({key:k,label:v.label}))).map(s=>`<option value="${s.key}">${s.label}</option>`).join('');
     if(cur) bs.value=cur;
+  }
+  const br=$('#bulkRegion');
+  if(br){
+    const cur=br.value;
+    const regs=[...new Set([...(typeof cfgPresetRegions==='function'?cfgPresetRegions():[]),...DATA.map(r=>r.region).filter(Boolean)])].sort();
+    br.innerHTML='<option value="">Region… (opsional)</option>'+regs.map(r=>`<option>${r}</option>`).join('');
+    if(cur) br.value=cur;
+  }
+  const bp=$('#bulkPart');
+  if(bp){
+    const cur=bp.value;
+    const parts=[...new Set([...(typeof cfgPresetOutputs==='function'?cfgPresetOutputs():[]),...DATA.map(r=>r.part).filter(Boolean)])].sort();
+    bp.innerHTML='<option value="">Output… (opsional)</option>'+parts.map(p=>`<option>${p}</option>`).join('');
+    if(cur) bp.value=cur;
   }
   const fb=$('#selAllFiltered');
   if(n>0 && view.length>n){ fb.style.display=''; fb.textContent='Pilih semua '+fmt(view.length)+' hasil terfilter'; }
@@ -3322,9 +3362,11 @@ function renderHDD(){
         <button class="iconbtn del" data-hid="${h._id}" data-fid="${f._id}" title="Hapus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
       </td></tr>`).join('');
     const totalFilesSize=used;
+    const photoHtml=h.photo?`<img src="${h.photo}" data-photo-hid="${h._id}" style="width:38px;height:38px;object-fit:cover;border-radius:6px;border:1px solid var(--line-soft);flex-shrink:0;cursor:pointer" title="Klik untuk perbesar foto HDD">`:'';
     return `<div class="hdd-card${isOpen?' open':''}" data-hid="${h._id}">
       <div class="hdd-card-head" data-toggle="${h._id}">
         <span class="hdd-expand-icon">▶</span>
+        ${photoHtml}
         <span class="hdd-card-name">${esc(h.name)}</span>
         <div class="hdd-card-meta">
           <span class="pill" style="background:rgba(129,140,248,.08);color:var(--cyan-dim);border:1px solid var(--cyan-deep);font-size:9px">${esc(h.type||'HDD')}</span>
@@ -3361,6 +3403,15 @@ function renderHDD(){
       </div>
     </div>`;
   }).join('');
+
+  // bind foto HDD klik → lightbox
+  el.querySelectorAll('[data-photo-hid]').forEach(img=>{
+    img.onclick=e=>{ e.stopPropagation();
+      const h=HDD_DATA.find(x=>x._id===img.dataset.photoHid); if(!h||!h.photo) return;
+      const lb=document.getElementById('hddPhotoLightbox'); if(!lb) return;
+      lb.querySelector('img').src=h.photo; lb.style.display='grid';
+    };
+  });
 
   // bind expand toggle
   el.querySelectorAll('[data-toggle]').forEach(btn=>{
@@ -3417,6 +3468,29 @@ function renderHDD(){
   });
 }
 
+// ---- HDD photo helpers ----
+let _hddPendingPhoto=null; // base64 or null=unchanged, ''=removed
+function _hddPhotoReset(src){
+  _hddPendingPhoto=null;
+  const prev=$('#hddPhotoPreview'), img=$('#hddPhotoImg'), lbl=$('#hddPhotoLabel');
+  if(src){ if(prev) prev.style.display=''; if(img) img.src=src; if(lbl) lbl.style.display='none'; }
+  else { if(prev) prev.style.display='none'; if(img) img.src=''; if(lbl) lbl.style.display=''; }
+  const fi=$('#hddPhotoFile'); if(fi) fi.value='';
+}
+function _hddPhotoWire(){
+  const fi=$('#hddPhotoFile'), rm=$('#hddPhotoRemove'), lbl=$('#hddPhotoLabel');
+  if(!fi) return;
+  fi.onchange=()=>{
+    const f=fi.files[0]; if(!f) return;
+    const r=new FileReader();
+    r.onload=ev=>{ _hddPendingPhoto=ev.target.result; _hddPhotoReset(ev.target.result); };
+    r.readAsDataURL(f);
+  };
+  if(rm) rm.onclick=()=>{ _hddPendingPhoto=''; _hddPhotoReset(null); };
+  // drag onto label
+  if(lbl){ lbl.ondragover=e=>e.preventDefault(); lbl.ondrop=e=>{ e.preventDefault(); const f=e.dataTransfer.files[0]; if(f&&f.type.startsWith('image/')){ const r=new FileReader(); r.onload=ev=>{ _hddPendingPhoto=ev.target.result; _hddPhotoReset(ev.target.result); }; r.readAsDataURL(f); } }; }
+}
+
 // ---- HDD CRUD ----
 function openHDDAdd(){
   hddEditId=null;
@@ -3427,6 +3501,7 @@ function openHDDAdd(){
   $('#hddLocation').value=''; $('#hddNote').value='';
   $('#hddModalErr').textContent='';
   $('#deleteHDDBtn').style.display='none';
+  _hddPhotoReset(null);
   $('#hddOverlay').classList.add('show');
   setTimeout(()=>$('#hddName').focus(),50);
 }
@@ -3442,6 +3517,7 @@ function openHDDEdit(id){
   $('#hddLocation').value=h.location||''; $('#hddNote').value=h.note||'';
   $('#hddModalErr').textContent='';
   $('#deleteHDDBtn').style.display='';
+  _hddPhotoReset(h.photo||null);
   $('#hddOverlay').classList.add('show');
   setTimeout(()=>$('#hddName').focus(),50);
 }
@@ -3451,16 +3527,19 @@ async function saveHDDEntry(){
   if(!name){ errEl.textContent='⚠ Nama wajib diisi.'; return; }
   const totalGB=toGB($('#hddTotal').value,$('#hddTotalUnit').value);
   errEl.textContent='';
+  const base={name,type:$('#hddType').value,totalGB,status:$('#hddStatus').value,
+    location:$('#hddLocation').value.trim(),note:$('#hddNote').value.trim(),updatedAt:Date.now()};
   if(hddEditId){
     const idx=HDD_DATA.findIndex(x=>x._id===hddEditId);
-    if(idx>=0) HDD_DATA[idx]={...HDD_DATA[idx],name,type:$('#hddType').value,totalGB,
-      status:$('#hddStatus').value,location:$('#hddLocation').value.trim(),
-      note:$('#hddNote').value.trim(),updatedAt:Date.now()};
+    if(idx>=0){
+      const existing=HDD_DATA[idx];
+      const photo=_hddPendingPhoto===null?existing.photo:(_hddPendingPhoto===''?undefined:_hddPendingPhoto);
+      HDD_DATA[idx]={...existing,...base,...(photo?{photo}:{photo:undefined})};
+    }
   }else{
+    const photo=(_hddPendingPhoto&&_hddPendingPhoto!=='')?_hddPendingPhoto:undefined;
     HDD_DATA.push({_id:'h'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
-      name,type:$('#hddType').value,totalGB,status:$('#hddStatus').value,
-      location:$('#hddLocation').value.trim(),note:$('#hddNote').value.trim(),
-      files:[],updatedAt:Date.now()});
+      ...base,...(photo?{photo}:{}),files:[]});
   }
   await saveHDD(); renderHDD();
   $('#hddOverlay').classList.remove('show');
@@ -4345,7 +4424,30 @@ $('#fFrom').onchange=e=>{filters.from=e.target.value;applyFilters();};
 $('#fTo').onchange=e=>{filters.to=e.target.value;applyFilters();};
 $('#fUpdated').onchange=e=>{filters.updated=e.target.checked;applyFilters();};
 $('#fDups').onchange=e=>{filters.dups=e.target.checked;applyFilters();};
-$('#bulkStatusApply').onclick=()=>{ const v=$('#bulkStatus').value; if(!v){toast('Pilih status dulu');return;} bulkSetStatus(v); $('#bulkStatus').value=''; };
+$('#bulkStatusApply').onclick=()=>{
+  const st=$('#bulkStatus').value;
+  const reg=$('#bulkRegion').value;
+  const prt=$('#bulkPart').value;
+  if(!st&&!reg&&!prt){toast('Pilih minimal status, region, atau output');return;}
+  const items=[];
+  DATA.forEach(r=>{
+    if(!selected.has(r._id)) return;
+    const prev={status:r.status,region:r.region,part:r.part,_flag:r._flag,updatedAt:r.updatedAt,_statusLocked:r._statusLocked};
+    items.push({id:r._id,prev});
+    if(st){ r.status=st; r._statusLocked=true; r._flag='upd'; r.updatedAt=Date.now(); }
+    if(reg) r.region=reg.toUpperCase();
+    if(prt) r.part=prt;
+  });
+  if(!items.length) return;
+  pushUndo({kind:'fields',items});
+  markDuplicates(); refreshFilterOptions(); renderKPI(); applyFilters(); scheduleSave();
+  const parts=[];
+  if(st) parts.push('Status → '+STATUS[st].label);
+  if(reg) parts.push('Region → '+reg.toUpperCase());
+  if(prt) parts.push('Output → '+prt);
+  toast('✓ '+items.length+' link: '+parts.join(', '));
+  $('#bulkStatus').value=''; $('#bulkRegion').value=''; $('#bulkPart').value='';
+};
 const _dupBtn=$('#dupBtn'); if(_dupBtn) _dupBtn.onclick=selectDuplicates;
 $('#undoBtn').onclick=undo;
 
@@ -4409,6 +4511,16 @@ $('#hddCalcToggle').onclick=()=>$('#hddCalcPanel').classList.toggle('open');
 $('#closeHDD').onclick=$('#cancelHDD').onclick=()=>{ $('#hddOverlay').classList.remove('show'); $('#hddModalErr').textContent=''; };
 $('#hddOverlay').onclick=e=>{ if(e.target===$('#hddOverlay')){ $('#hddOverlay').classList.remove('show'); $('#hddModalErr').textContent=''; } };
 $('#saveHDDBtn').onclick=saveHDDEntry;
+_hddPhotoWire();
+// Lightbox foto HDD
+(()=>{
+  const lb=document.createElement('div');
+  lb.id='hddPhotoLightbox';
+  lb.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;place-items:center;z-index:10000;cursor:zoom-out;backdrop-filter:blur(10px)';
+  lb.innerHTML='<img style="max-width:90vw;max-height:90vh;border-radius:var(--r-lg);box-shadow:0 0 60px rgba(0,0,0,.8)">';
+  lb.onclick=()=>{ lb.style.display='none'; lb.querySelector('img').src=''; };
+  document.body.appendChild(lb);
+})();
 $('#deleteHDDBtn').onclick=()=>confirmDeleteHDD(hddEditId);
 // File modal
 $('#closeHDDFile').onclick=$('#cancelHDDFile').onclick=()=>{ $('#hddFileOverlay').classList.remove('show'); $('#hddFileErr').textContent=''; };
@@ -5483,6 +5595,85 @@ function vdlShowPlayer(){
   // ---- Fix: addLinkBtn (now in More dropdown via vtAddLink) ----
   const addLinkBtn=document.getElementById('addLinkBtn');
   if(addLinkBtn) addLinkBtn.onclick=openAddLink;
+
+  // ---- Supabase quick-connect header button ----
+  (function wireSbQuick(){
+    function updateDot(){
+      const dot=document.getElementById('sbQuickDot');
+      const lbl=document.getElementById('sbQuickLbl');
+      if(!dot||!lbl) return;
+      if(_SB){ dot.style.background='var(--green)'; lbl.textContent='Supabase ✓'; }
+      else { dot.style.background='var(--muted-2)'; lbl.textContent='Supabase'; }
+    }
+    updateDot();
+
+    // Build quick-connect popup
+    const popup=document.createElement('div');
+    popup.id='sbQuickPopup';
+    popup.style.cssText='position:fixed;top:56px;right:16px;width:340px;background:rgba(18,18,30,.97);border:1px solid rgba(255,255,255,.1);border-radius:var(--r-lg);box-shadow:0 8px 40px rgba(0,0,0,.6);z-index:9000;padding:16px;display:none;backdrop-filter:blur(20px);font-family:"Inter",sans-serif';
+    popup.innerHTML=`
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>
+        Koneksi Supabase
+        <span id="sbQStatus" style="margin-left:auto;font-size:10px;color:var(--muted)"></span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="sbQUrl" type="text" placeholder="https://xxxx.supabase.co" style="background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-size:11px;outline:none;width:100%;box-sizing:border-box">
+        <input id="sbQKey" type="password" placeholder="anon/public key…" style="background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-size:11px;outline:none;width:100%;box-sizing:border-box">
+        <input id="sbQTable" type="text" placeholder="Nama tabel (default: linkmon_kv)" style="background:rgba(255,255,255,.05);border:1px solid var(--line-soft);border-radius:var(--r-sm);color:var(--text);padding:7px 10px;font-size:11px;outline:none;width:100%;box-sizing:border-box">
+      </div>
+      <div style="display:flex;gap:6px;margin-top:10px">
+        <button id="sbQConnect" class="btn primary" style="flex:1;font-size:11px;padding:7px">Hubungkan</button>
+        <button id="sbQDisconnect" class="btn ghost" style="font-size:11px;padding:7px 10px" title="Putuskan">Putus</button>
+      </div>
+      <div id="sbQMsg" style="font-size:10px;font-family:'Share Tech Mono',monospace;color:var(--muted);margin-top:8px;min-height:14px"></div>
+      <div style="font-size:10px;color:var(--muted-2);margin-top:8px;line-height:1.5">Data disimpan ke cloud Supabase — bisa diakses dari perangkat lain dengan URL &amp; Key yang sama.</div>`;
+    document.body.appendChild(popup);
+
+    // pre-fill saved credentials
+    const qu=document.getElementById('sbQUrl'); if(qu) qu.value=localStorage.getItem('sb:url')||'';
+    const qk=document.getElementById('sbQKey'); if(qk) qk.value=localStorage.getItem('sb:key')||'';
+    const qt=document.getElementById('sbQTable'); if(qt) qt.value=localStorage.getItem('sb:table')||'linkmon_kv';
+    const qm=document.getElementById('sbQMsg');
+    if(_SB && qm) qm.textContent='✓ Terhubung ke "'+(localStorage.getItem('sb:table')||'linkmon_kv')+'"';
+
+    const btn=document.getElementById('sbQuickBtn');
+    if(btn) btn.onclick=e=>{ e.stopPropagation(); popup.style.display=popup.style.display==='none'?'block':'none'; };
+    document.addEventListener('click',e=>{ if(!popup.contains(e.target)&&e.target!==btn) popup.style.display='none'; });
+    popup.addEventListener('click',e=>e.stopPropagation());
+
+    document.getElementById('sbQConnect').onclick=async()=>{
+      const url=(document.getElementById('sbQUrl')||{}).value?.trim();
+      const key=(document.getElementById('sbQKey')||{}).value?.trim();
+      const tbl=((document.getElementById('sbQTable')||{}).value?.trim()||'linkmon_kv').replace(/[^a-z0-9_]/gi,'_');
+      if(!url||!key){ if(qm) qm.textContent='⚠ Isi URL dan Key'; return; }
+      if(qm) qm.textContent='Menghubungkan…';
+      const ok=sbSaveConfig(url,key,tbl);
+      if(!ok){ if(qm) qm.textContent='⚠ Gagal inisialisasi'; return; }
+      try{
+        const {error}=await _SB.from(_SB_TABLE).select('key').limit(1);
+        if(error) throw error;
+        if(qm) qm.textContent='✓ Terhubung ke "'+_SB_TABLE+'"! Data di-sync ke cloud.';
+        updateDot(); updateSbStatusBadge();
+        // sync admin inputs too
+        const su=$('#sbUrl'); if(su) su.value=url;
+        const sk=$('#sbKey'); if(sk) sk.value=key;
+        const st=$('#sbTable'); if(st) st.value=tbl;
+        toast('✓ Supabase terhubung!');
+      }catch(e){
+        if(qm) qm.textContent='⚠ '+e.message;
+        _SB=null; updateDot();
+      }
+    };
+    document.getElementById('sbQDisconnect').onclick=()=>{
+      _SB=null; localStorage.removeItem('sb:url'); localStorage.removeItem('sb:key');
+      const qu2=document.getElementById('sbQUrl'); if(qu2) qu2.value='';
+      const qk2=document.getElementById('sbQKey'); if(qk2) qk2.value='';
+      if(qm) qm.textContent='Koneksi diputus. Data tersimpan lokal.';
+      updateDot(); updateSbStatusBadge();
+      toast('Supabase diputus — data kembali ke lokal');
+    };
+  })();
 })();
 
 
