@@ -4149,6 +4149,12 @@ function saveAddLink(){
     deskripsi: g2('alDeskripsi'),
     catatan: g2('alCatatan'),
   });
+  // cek apakah link sudah ada di DATA — hanya tampilkan warning, tetap izinkan ditambah
+  const normNew = normalizeLink(url);
+  const existing = normNew && DATA.find(r => normalizeLink(r.link) === normNew);
+  if(existing){
+    document.getElementById('alErr').textContent='⚠ Link ini sudah ada di daftar (duplikat) — tetap ditambahkan.';
+  }
   rec._flag = 'new';
   DATA.push(rec);
   logActivity('add_link_manual', url.slice(0,80), 'data');
